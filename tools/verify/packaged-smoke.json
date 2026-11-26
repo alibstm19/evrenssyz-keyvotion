@@ -1,7 +1,7 @@
 {
   "exe": "dist\\Keyvotion Console\\Keyvotion Console.exe",
   "exeBytes": 249788928,
-  "bootMs": 453,
+  "bootMs": 447,
   "url": "dist/Keyvotion%20Console/resources/app/renderer/index.html",
   "onboard": {
     "open": true,

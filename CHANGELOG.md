@@ -4,6 +4,21 @@ All notable changes to Keyvotion Console are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and the project follows [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- **Görünüm rolü (Yönetici/Eğitmen/Öğrenci) tamamen kaldırıldı.** Her kullanıcı
+  23 ekranın tamamını, Ayarlar'ın bütün bloklarını ve MCP/entegrasyonlar dahil
+  her gezinme öğesini görür. Rol seçici, `viewRole` tercihi ve rol tabanlı
+  gizleme kaynaktan çıktı; eski `kv.prefs.v2` değeri yok sayılır. Rol zaten
+  güvenlik sınırı değildi: yazma yine `confirmToken` + izin matrisinden geçer.
+- **The view-role profile (Admin/Instructor/Student) is gone.** Everyone sees all
+  23 screens, every Settings block and every nav item, including MCP and
+  integrations. The picker, the `viewRole` preference and all role-based hiding
+  were removed rather than disabled; an old stored value is ignored. Writes are
+  still guarded by `confirmToken` and the permission matrix, so nothing loosens
+  in authority.
+
 ## [3.4.0] — 2026-11-26
 
 ### Fixed
