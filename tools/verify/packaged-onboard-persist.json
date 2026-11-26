@@ -15,7 +15,7 @@
   "configAfterSkip": {
     "exists": true,
     "onboarded": true,
-    "projectDir": "<HOME>\\work\\onboard-persist-home\\Keyvotion"
+    "projectDir": "<HOME>\\Keyvotion"
   },
   "secondLaunch": {
     "open": false,
@@ -25,7 +25,7 @@
   "configAfterSecond": {
     "exists": true,
     "onboarded": true,
-    "projectDir": "<HOME>\\work\\onboard-persist-home\\Keyvotion"
+    "projectDir": "<HOME>\\Keyvotion"
   },
   "projectDirIsPortable": true,
   "ok": true
