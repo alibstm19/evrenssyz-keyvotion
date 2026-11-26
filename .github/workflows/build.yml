@@ -1,0 +1,56 @@
+name: Build package
+
+# Manual only: produces the portable Windows build as a workflow artifact.
+# It never creates a tag, a release or a deployment.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Windows portable build
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/package-lock.json
+
+      - name: Install dependencies
+        working-directory: src
+        run: npm ci
+
+      - name: Quality gates
+        run: |
+          node tools/verify/tap-count.js tests
+          node tools/doctor.js
+          node tools/k3.js
+          node tools/verify/html-check.js
+
+      - name: Build ZIP and checksums
+        run: node tools/package.js --zip
+
+      # T-194: yayın hazırlığı kanıtı tek komutta. Canlı Electron kapıları
+      # (ldr-smoke, packaged-*, boot-budget) etkileşimli masaüstü ister; bu
+      # yüzden koşucuda --static kipi kullanılır ve atlananlar çıktıda yazılır.
+      - name: Publish readiness (static)
+        run: node tools/verify/publish-readiness.js --static
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: keyvotion-console-win32-x64
+          path: |
+            dist/Keyvotion-Console-win32-x64-*.zip
+            dist/SHA256SUMS.txt
+            work/package-report.json
+          if-no-files-found: error
+          retention-days: 14

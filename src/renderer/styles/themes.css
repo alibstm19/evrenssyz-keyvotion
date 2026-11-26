@@ -1,0 +1,220 @@
+/* keyvotion-console · temalar + kişiselleştirme (Tur 4)
+   Sahip: DSN · Aynı token adları; yalnız değer değişir (tokens.css sözleşmesi).
+   Varsayılan ve açık tema: theme-dark.css / theme-light.css
+   Bu dosya onların ÜZERİNE yüklenir; yeni temalar burada tanımlıdır. */
+
+/* ---------------------------------------------------------------- Gece Yarısı */
+[data-theme="midnight"] {
+  --kv-bg: #0b1020;
+  --kv-bg-elev-1: #131a30;
+  --kv-bg-elev-2: #1b2440;
+  --kv-bg-hover: #232e50;
+  --kv-overlay: rgba(4, 8, 20, 0.68);
+
+  --kv-fg: #e8efff;
+  --kv-fg-muted: #9fb0d4;
+  --kv-fg-subtle: #8091bd;
+
+  --kv-border: #26325a;
+  --kv-border-strong: #3a4a7c;
+
+  --kv-accent: #6d8dff;
+  --kv-accent-hover: #8aa4ff;
+  --kv-on-accent: #08101f;
+
+  --kv-success: #3ddc97;
+  --kv-warning: #ffc46b;
+  --kv-danger: #ff6b81;
+  --kv-info: #63c7ff;
+  --kv-focus-ring: #8aa4ff;
+
+  --kv-state-idle: #6c7da6;
+  --kv-state-busy: #6d8dff;
+  --kv-state-error: #ff6b81;
+  --kv-state-offline: #6c7da6;
+  --kv-on-state: #08101f;
+
+  --kv-shadow-sm: 0 1px 2px rgba(3, 6, 16, 0.5);
+  --kv-shadow-md: 0 8px 24px rgba(3, 6, 16, 0.55);
+}
+
+/* --------------------------------------------------------------------- Orman */
+[data-theme="forest"] {
+  --kv-bg: #0e1612;
+  --kv-bg-elev-1: #16211b;
+  --kv-bg-elev-2: #1e2c25;
+  --kv-bg-hover: #26382f;
+  --kv-overlay: rgba(6, 12, 9, 0.66);
+
+  --kv-fg: #e9f5ec;
+  --kv-fg-muted: #a3bdaa;
+  --kv-fg-subtle: #7a9c88;
+
+  --kv-border: #2a3d33;
+  --kv-border-strong: #3d5648;
+
+  --kv-accent: #4fc98a;
+  --kv-accent-hover: #6ad9a0;
+  --kv-on-accent: #06130c;
+
+  --kv-success: #4fc98a;
+  --kv-warning: #e5c07b;
+  --kv-danger: #e8746b;
+  --kv-info: #6fb3c9;
+  --kv-focus-ring: #6ad9a0;
+
+  --kv-state-idle: #729180;
+  --kv-state-busy: #4fc98a;
+  --kv-state-error: #e8746b;
+  --kv-state-offline: #729180;
+  --kv-on-state: #06130c;
+
+  --kv-shadow-sm: 0 1px 2px rgba(4, 10, 7, 0.45);
+  --kv-shadow-md: 0 8px 22px rgba(4, 10, 7, 0.5);
+}
+
+/* ------------------------------------------------------------------ Gün Batımı */
+[data-theme="sunset"] {
+  --kv-bg: #1a1113;
+  --kv-bg-elev-1: #241619;
+  --kv-bg-elev-2: #301d21;
+  --kv-bg-hover: #3d2529;
+  --kv-overlay: rgba(12, 6, 7, 0.66);
+
+  --kv-fg: #fdf0e8;
+  --kv-fg-muted: #d3ada2;
+  --kv-fg-subtle: #ad8f85;
+
+  --kv-border: #45292e;
+  --kv-border-strong: #5f3a40;
+
+  --kv-accent: #ff8a5c;
+  --kv-accent-hover: #ffa37e;
+  --kv-on-accent: #22100a;
+
+  --kv-success: #8fce8f;
+  --kv-warning: #ffc861;
+  --kv-danger: #ff6f61;
+  --kv-info: #f2b8a2;
+  --kv-focus-ring: #ffa37e;
+
+  --kv-state-idle: #a17f76;
+  --kv-state-busy: #ff8a5c;
+  --kv-state-error: #ff6f61;
+  --kv-state-offline: #a17f76;
+  --kv-on-state: #22100a;
+
+  --kv-shadow-sm: 0 1px 2px rgba(10, 5, 6, 0.45);
+  --kv-shadow-md: 0 8px 24px rgba(10, 5, 6, 0.5);
+}
+
+/* ------------------------------------------------------- Yüksek Kontrast (a11y) */
+[data-theme="mono"] {
+  --kv-bg: #000000;
+  --kv-bg-elev-1: #0b0b0b;
+  --kv-bg-elev-2: #161616;
+  --kv-bg-hover: #242424;
+  --kv-overlay: rgba(0, 0, 0, 0.85);
+
+  --kv-fg: #ffffff;
+  --kv-fg-muted: #d6d6d6;
+  --kv-fg-subtle: #b0b0b0;
+
+  --kv-border: #6a6a6a;
+  --kv-border-strong: #b9b9b9;
+
+  --kv-accent: #ffe14d;
+  --kv-accent-hover: #fff07a;
+  --kv-on-accent: #000000;
+
+  --kv-success: #56ff9b;
+  --kv-warning: #ffe14d;
+  --kv-danger: #ff6b6b;
+  --kv-info: #7cd4ff;
+  --kv-focus-ring: #ffe14d;
+
+  --kv-state-idle: #b0b0b0;
+  --kv-state-busy: #ffe14d;
+  --kv-state-error: #ff6b6b;
+  --kv-state-offline: #b0b0b0;
+  --kv-on-state: #000000;
+
+  --kv-shadow-sm: none;
+  --kv-shadow-md: 0 0 0 1px var(--kv-border-strong);
+}
+
+/* ---------------------------------------------------------- yazı tipi seçimi */
+[data-font="sistem"] {
+  --kv-font-sans: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+[data-font="okunakli"] {
+  --kv-font-sans: "Verdana", "Tahoma", "Segoe UI", sans-serif;
+}
+[data-font="serif"] {
+  --kv-font-sans: "Georgia", "Cambria", "Times New Roman", serif;
+}
+[data-font="mono"] {
+  --kv-font-sans: "Cascadia Mono", "Consolas", ui-monospace, monospace;
+}
+
+/* ------------------------------------------------------------- yazı boyutu */
+[data-size="kucuk"] {
+  --kv-fs-xs: 11px;
+  --kv-fs-sm: 12px;
+  --kv-fs-md: 13px;
+  --kv-fs-lg: 15px;
+  --kv-fs-xl: 18px;
+  --kv-fs-2xl: 23px;
+}
+[data-size="normal"] {
+  --kv-fs-xs: 12px;
+  --kv-fs-sm: 13px;
+  --kv-fs-md: 14px;
+  --kv-fs-lg: 16px;
+  --kv-fs-xl: 20px;
+  --kv-fs-2xl: 26px;
+}
+[data-size="buyuk"] {
+  --kv-fs-xs: 13px;
+  --kv-fs-sm: 15px;
+  --kv-fs-md: 16px;
+  --kv-fs-lg: 18px;
+  --kv-fs-xl: 23px;
+  --kv-fs-2xl: 30px;
+}
+[data-size="cok-buyuk"] {
+  --kv-fs-xs: 15px;
+  --kv-fs-sm: 17px;
+  --kv-fs-md: 19px;
+  --kv-fs-lg: 21px;
+  --kv-fs-xl: 27px;
+  --kv-fs-2xl: 35px;
+}
+
+/* -------------------------------------------------------- köşe yuvarlaklığı */
+[data-radius="keskin"] {
+  --kv-radius-sm: 0px;
+  --kv-radius-md: 0px;
+  --kv-radius-lg: 0px;
+  --kv-radius-pill: 2px;
+}
+[data-radius="normal"] {
+  --kv-radius-sm: 4px;
+  --kv-radius-md: 8px;
+  --kv-radius-lg: 12px;
+  --kv-radius-pill: 999px;
+}
+[data-radius="yuvarlak"] {
+  --kv-radius-sm: 8px;
+  --kv-radius-md: 14px;
+  --kv-radius-lg: 20px;
+  --kv-radius-pill: 999px;
+}
+
+/* Renk körlüğü / düşük hareket tercihi */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

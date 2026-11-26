@@ -1,0 +1,309 @@
+/* keyvotion-console · Tur 12 (Integration & MCP)
+   Kural: UI-46 (No raw colors), UI-136 (Depth layers), UI-138 (Accessibility)
+*/
+
+/* --- Integrations Surface (.kv-integrations) --- */
+.kv-integrations {
+  display: grid;
+  gap: var(--kv-grid-gap);
+  width: 100%;
+  max-width: var(--kv-content-max);
+  margin: 0 auto;
+}
+
+@media (min-width: 1400px) {
+  .kv-integrations {
+    grid-template-columns: minmax(280px, 1fr) minmax(380px, 1.3fr);
+  }
+  .kv-integrations [data-integrations-block="b5"] {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1023px) {
+  .kv-integrations {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Integrations detail drill-in (T-196) ---
+   Liste ↔ detay tek ekranda: karta tıklanınca katalog gizlenir, başlık şeridi
+   açılır; geri düğmesi / Esc / Alt+Sol listeye döner. */
+.kv-detail-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--kv-space-2) var(--kv-space-3);
+  padding: var(--kv-space-3);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  background: var(--kv-bg-elev-1);
+}
+
+.kv-detail-head__back {
+  grid-row: 1;
+}
+
+.kv-detail-head__title {
+  grid-row: 1;
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.kv-detail-head__sub {
+  grid-column: 2 / -1;
+  grid-row: 2;
+  margin: 0;
+}
+
+.kv-integrations[data-integrations-view="detail"] [data-integrations-block="b1"] {
+  display: none;
+}
+
+@media (min-width: 1400px) {
+  .kv-integrations[data-integrations-view="detail"] {
+    grid-template-columns: minmax(280px, 1fr) minmax(380px, 1.3fr);
+  }
+  .kv-integrations[data-integrations-view="detail"] .kv-detail-head {
+    grid-column: 1 / -1;
+  }
+  .kv-integrations[data-integrations-view="detail"] [data-integrations-block="b5"] {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Integration Catalog */
+[data-integration-catalog] {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--kv-card-min), 1fr));
+  gap: var(--kv-space-2);
+}
+
+[data-integration-catalog] > article {
+  background: var(--kv-bg-elev-1);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  padding: var(--kv-space-2);
+}
+
+[data-integration-catalog] [data-action="integration-pick"] {
+  min-height: 36px;
+}
+
+/* Blocks Support §15 */
+[data-integration-accounts],
+[data-integration-form],
+[data-integration-capabilities],
+[data-integration-activity] {
+  padding: var(--kv-space-3);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  background: var(--kv-bg-elev-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+}
+
+[data-integration-form] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--kv-space-4);
+}
+
+[data-integration-activity] {
+  overflow-y: auto;
+  max-height: var(--kv-log-h);
+}
+
+/* Connectivity Dots & Labels */
+[data-conn-state="connected"],
+.kv-badge[data-tone="success"] {
+  background-color: var(--kv-linked);
+  color: var(--kv-bg);
+}
+
+[data-conn-state="untested"],
+.kv-badge[data-tone="idle"] {
+  background-color: var(--kv-unlinked);
+  color: var(--kv-bg);
+}
+
+[data-conn-state="error"],
+.kv-badge[data-tone="danger"] {
+  background-color: var(--kv-state-error);
+  color: var(--kv-bg);
+}
+
+[data-conn-state="degraded"],
+.kv-badge[data-tone="warning"] {
+  background-color: var(--kv-warning);
+  color: var(--kv-bg);
+}
+
+[data-field="integration-account-state"],
+[data-field="mcp-server-state"] {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  font-size: var(--kv-fs-xs);
+}
+
+[data-field="integration-account-state"]::before,
+[data-field="mcp-server-state"]::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--kv-unlinked);
+}
+
+[data-conn-state="connected"] [data-field="integration-account-state"]::before,
+[data-conn-state="connected"] [data-field="mcp-server-state"]::before {
+  background: var(--kv-linked);
+}
+
+[data-conn-state="error"] [data-field="integration-account-state"]::before,
+[data-conn-state="error"] [data-field="mcp-server-state"]::before {
+  background: var(--kv-state-error);
+}
+
+[data-conn-state="degraded"] [data-field="integration-account-state"]::before,
+[data-conn-state="degraded"] [data-field="mcp-server-state"]::before {
+  background: var(--kv-warning);
+}
+
+[data-conn-state="untested"] [data-field="integration-account-state"]::before,
+[data-conn-state="untested"] [data-field="mcp-server-state"]::before {
+  background: var(--kv-unlinked);
+}
+
+/* Account states background effect */
+[data-conn-state="connected"] {
+  background: color-mix(in srgb, var(--kv-linked) 12%, transparent);
+}
+
+/* Secret Fields */
+[data-field="integration-token"],
+input[type="password"] {
+  border-color: var(--kv-secret);
+}
+[data-field="integration-token"]:focus,
+input[type="password"]:focus {
+  outline: 2px solid var(--kv-secret);
+}
+
+/* --- MCP Surface (.kv-mcps) --- */
+.kv-mcps {
+  display: grid;
+  gap: var(--kv-grid-gap);
+  width: 100%;
+  max-width: var(--kv-content-max);
+  margin: 0 auto;
+}
+
+@media (min-width: 1400px) {
+  .kv-mcps {
+    grid-template-columns: minmax(260px, 1fr) minmax(320px, 1.2fr) minmax(320px, 1.2fr);
+  }
+  .kv-mcps [data-mcp-block="b5"] {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1023px) {
+  .kv-mcps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* MCP Blocks support §15 */
+[data-mcp-servers],
+[data-mcp-form] {
+  padding: var(--kv-space-3);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  background: var(--kv-bg-elev-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+}
+
+[data-mcp-form] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--kv-space-4);
+}
+
+/* MCP Log Queue */
+[data-mcp-log] {
+  height: var(--kv-log-h);
+  overflow-y: auto;
+  background: var(--kv-log-bg);
+  border: 1px solid var(--kv-log-line);
+  border-radius: var(--kv-radius-sm);
+  font-family: var(--kv-font-mono);
+  font-size: var(--kv-fs-code);
+  line-height: var(--kv-lh-code);
+  list-style: none;
+  padding: var(--kv-space-2);
+  margin: 0;
+}
+
+[data-mcp-log] > li:last-child {
+  animation: kvFlash var(--kv-dur-flash) var(--kv-ease-line) 1;
+}
+
+@keyframes kvFlash {
+  from { background: color-mix(in srgb, var(--kv-accent) 18%, transparent); }
+  to { background: transparent; }
+}
+
+/* Tool Listing */
+[data-mcp-tools] > div {
+  padding: var(--kv-space-1) var(--kv-space-2);
+  border-bottom: 1px solid var(--kv-border);
+}
+
+[data-mcp-tools] .tool-name {
+  font-family: var(--kv-font-mono);
+  font-size: var(--kv-fs-code);
+}
+
+[data-mcp-tools] button {
+  min-height: 36px;
+}
+
+/* JSON Args Area */
+[data-field="mcp-args"] {
+  font-family: var(--kv-font-mono);
+  font-size: var(--kv-fs-code);
+  line-height: var(--kv-lh-code);
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* General Accessibility Overrides for Tur 12 */
+[data-action], 
+[data-integration-category], 
+[data-mcp-transport] {
+  min-height: 36px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* T-136: açık tema rozet metni — tema-light.css ile aynı token (kaskad güvenli). */
+[data-theme="light"] .kv-badge,
+[data-theme="light"] [data-conn-state] {
+  color: var(--kv-on-state);
+}

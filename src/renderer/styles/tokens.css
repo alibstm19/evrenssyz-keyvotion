@@ -1,0 +1,209 @@
+/* keyvotion-console · tasarım tokenları (v1.1)
+   Kaynak: docs/console-ui-contract.md §6 — adlar bağlayıcıdır, değiştirilemez.
+   Sürüm v2.9: Tur 11 "2040" genişlemesi включено.
+   Sahip: DSN · Koyu tema varsayılan. */
+
+:root {
+  /* ---- yüzeyler (koyu varsayılan) ---- */
+  --kv-bg: #121212;
+  --kv-bg-elev-1: #1e1e1e;
+  --kv-bg-elev-2: #2a2a2a;
+  --kv-bg-hover: #2f2f2f;
+  --kv-overlay: rgba(0, 0, 0, 0.6);
+
+  /* ---- metin ---- */
+  --kv-fg: #ffffff;
+  --kv-fg-muted: #a8a8b3;
+  --kv-fg-subtle: #9a9aa6;
+
+  /* ---- kenarlıklar ---- */
+  --kv-border: #333333;
+  --kv-border-strong: #4a4a4a;
+
+  /* ---- vurgu ---- */
+  --kv-accent: #3b82f6;
+  --kv-accent-hover: #2f6fd8;
+  --kv-on-accent: #ffffff;
+
+  /* ---- anlamsal ---- */
+  --kv-success: #22c55e;
+  --kv-warning: #f59e0b;
+  --kv-danger: #ef4444;
+  --kv-info: #38bdf8;
+  --kv-focus-ring: #93c5fd;
+
+  /* ---- durum renkleri (sözlük §5) ---- */
+  --kv-state-idle: #6e6e7a;
+  --kv-state-busy: #3b82f6;
+  --kv-state-error: #ef4444;
+  --kv-state-offline: #6e6e7a;
+  --kv-on-state: #ffffff;
+
+  /* ---- tipografi ---- */
+  --kv-font-sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --kv-font-mono: "Cascadia Mono", "Consolas", monospace;
+
+  --kv-fs-micro: 0.6875rem;
+  --kv-fs-xs: 0.75rem;
+  --kv-fs-sm: 0.8125rem;
+  --kv-fs-md: 0.875rem;
+  --kv-fs-lg: 1rem;
+  --kv-fs-xl: 1.25rem;
+  --kv-fs-2xl: 1.625rem;
+  --kv-fs-3xl: 2rem;
+  --kv-fs-4xl: 2.5rem;
+
+  --kv-lh-tight: 1.25;
+  --kv-lh-normal: 1.5;
+
+  --kv-fw-regular: 400;
+  --kv-fw-medium: 500;
+  --kv-fw-bold: 700;
+
+  /* ---- boşluk ölçeği ---- */
+  --kv-space-1: 4px;
+  --kv-space-2: 8px;
+  --kv-space-3: 12px;
+  --kv-space-4: 16px;
+  --kv-space-5: 24px;
+  --kv-space-6: 32px;
+  --kv-space-7: 48px;
+  --kv-space-8: 64px;
+
+  /* ---- yarıçap ---- */
+  --kv-radius-sm: 4px;
+  --kv-radius-md: 8px;
+  --kv-radius-lg: 12px;
+  --kv-radius-xl: 20px;
+  --kv-radius-pill: 999px;
+
+  /* ---- gölge ---- */
+  --kv-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --kv-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.25);
+  --kv-shadow-focus: 0 0 0 2px var(--kv-focus-ring);
+
+  /* ---- hareket ---- */
+  --kv-dur-micro: 90ms;
+  --kv-dur-fast: 120ms;
+  --kv-dur-normal: 200ms;
+  --kv-dur-enter: 220ms;
+  --kv-dur-screen: 260ms;
+  --kv-dur-progress: 400ms;
+  --kv-ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --kv-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --kv-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---- yerleşim ---- */
+  --kv-sidebar-w: 184px;
+  --kv-topbar-h: 48px;
+  --kv-grid-gap: var(--kv-space-4);
+  --kv-content-max: 1440px;
+
+  /* ---- katman ---- */
+  --kv-z-modal: 100;
+  --kv-z-toast: 200;
+
+  /* ---- Tur 11 Özel Genişletme (§6.7) ---- */
+  --kv-accent-2: #8aa0ff;
+  --kv-accent-2-hover: #a6b7ff;
+  --kv-hairline: #232a31;
+  --kv-glass: rgba(18, 22, 26, 0.72);
+  --kv-glass-border: rgba(255, 255, 255, 0.08);
+  --kv-glow-accent: 0 0 0 1px #3ddcb4, 0 0 18px rgba(61, 220, 180, 0.28);
+  --kv-chart-1: #3ddcb4;
+  --kv-chart-2: #8aa0ff;
+  --kv-chart-3: #f5b544;
+  --kv-chart-4: #f26d6d;
+  --kv-chart-5: #56c8f5;
+  --kv-chart-6: #b98cff;
+  --kv-progress-track: #1f262e;
+
+  /* ---- Tur 12 Özel Genişletme (§6.8) ---- */
+  --kv-linked: #3ddcb4;
+  --kv-linked-soft: rgba(61, 220, 180, 0.12);
+  --kv-unlinked: #a8a8b3;
+  --kv-secret: #f5b544;
+  --kv-log-bg: #0f1317;
+  --kv-log-line: #1d242b;
+  --kv-fs-code: 0.8125rem;
+  --kv-lh-code: 1.45;
+  --kv-card-min: 220px;
+  --kv-log-h: 240px;
+  --kv-dur-flash: 1400ms;
+  --kv-ease-line: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ---- Tur 13 Özel Genişletme (§6.9) ---- */
+  --kv-conn-ok: #3ddcb4;
+  --kv-conn-warn: #f0b03c;
+  --kv-catalog-card-w: 240px;
+  --kv-catalog-badge-w: 76px;
+  --kv-oauth-step: 24px;
+  --kv-audit-row-h: 32px;
+
+  /* ---- Tur 14 Özel Genişletme (§6.10) ---- */
+  --kv-preset-card-w: 280px;
+  --kv-preset-logo: 28px;
+  --kv-preset-field-w: 200px;
+  --kv-preset-ready: #3ddcb4;
+  --kv-preset-missing: #f0b03c;
+  --kv-preset-step-gap: 12px;
+}
+
+/* Açık tema override (§6.1, §6.2, §6.7, §6.8) */
+:root[data-theme="light"] {
+  --kv-bg: #f7f7f8;
+  --kv-bg-elev-1: #ffffff;
+  --kv-bg-elev-2: #f0f0f2;
+  --kv-bg-hover: #e8e8ec;
+  --kv-overlay: rgba(0, 0, 0, 0.35);
+  --kv-fg: #16161a;
+  --kv-fg-muted: #5b5b66;
+  --kv-fg-subtle: #5c5c68;
+  --kv-border: #dcdce2;
+  --kv-border-strong: #c2c2cc;
+  --kv-accent: #2563eb;
+  --kv-accent-hover: #1d4ed8;
+  --kv-on-accent: #ffffff;
+  --kv-success: #15803d;
+  --kv-warning: #b45309;
+  --kv-danger: #b91c1c;
+  --kv-info: #0369a1;
+  --kv-focus-ring: #2563eb;
+  
+  --kv-accent-2: #4056c8;
+  --kv-accent-2-hover: #3345ab;
+  --kv-hairline: #e3eaef;
+  --kv-glass: rgba(255, 255, 255, 0.72);
+  --kv-glass-border: rgba(14, 20, 24, 0.08);
+  --kv-glow-accent: 0 0 0 1px #0c8f72, 0 0 14px rgba(12, 143, 114, 0.20);
+  --kv-chart-1: #0c8f72;
+  --kv-chart-2: #4056c8;
+  --kv-chart-3: #9a6206;
+  --kv-chart-4: #b3261e;
+  --kv-chart-5: #0b6e99;
+  --kv-chart-6: #6d4bc4;
+  --kv-progress-track: #e3eaef;
+
+  /* T-136: beyaz rozet metniyle ≥4.5 kontrast (theme-light.css ile aynı değer). */
+  --kv-linked: #0a7a61;
+  --kv-linked-soft: rgba(12, 143, 114, 0.12);
+  --kv-unlinked: #5c5c68;
+  --kv-secret: #9a6206;
+  --kv-log-bg: #f4f7f9;
+  --kv-log-line: #e3eaef;
+
+  --kv-conn-ok: #0a6f59;
+  --kv-conn-warn: #8f5a05;
+
+  --kv-preset-ready: #0a6f59;
+  --kv-preset-missing: #8f5a05;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --kv-dur-fast: 0ms;
+    --kv-dur-normal: 0ms;
+    --kv-dur-flash: 0ms;
+    --kv-dur-progress: 0ms;
+  }
+}

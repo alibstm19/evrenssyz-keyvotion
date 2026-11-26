@@ -1,0 +1,24 @@
+{
+  "name": "keyvotion-console",
+  "productName": "Keyvotion Console",
+  "version": "3.4.0",
+  "private": true,
+  "description": "Local-first desktop console for running an AI agent team on Windows.",
+  "main": "main/main.js",
+  "license": "MIT",
+  "author": "Keyvotion",
+  "homepage": "https://github.com/alibstm19/evrenssyz-keyvotion#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alibstm19/evrenssyz-keyvotion.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "45.2.1"
+  }
+}

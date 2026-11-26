@@ -1,0 +1,32 @@
+{
+  "firstLaunch": {
+    "open": true,
+    "visitedScreens": 23,
+    "title": "Keyvotion Console"
+  },
+  "configAfterFirst": {
+    "exists": false
+  },
+  "skipAttempt": {
+    "skipped": true,
+    "openBefore": true,
+    "closedAfterSkip": true
+  },
+  "configAfterSkip": {
+    "exists": true,
+    "onboarded": true,
+    "projectDir": "<HOME>\\work\\onboard-persist-home\\Keyvotion"
+  },
+  "secondLaunch": {
+    "open": false,
+    "visitedScreens": 23,
+    "title": "Keyvotion Console"
+  },
+  "configAfterSecond": {
+    "exists": true,
+    "onboarded": true,
+    "projectDir": "<HOME>\\work\\onboard-persist-home\\Keyvotion"
+  },
+  "projectDirIsPortable": true,
+  "ok": true
+}

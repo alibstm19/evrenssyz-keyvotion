@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<title>Keyvotion · Remote</title>
+<style>
+:root {
+  --bg: #0b0d12;
+  --surface: #141821;
+  --surface-bright: #1b202b;
+  --line: #262d3b;
+  --fg: #eef2f9;
+  --muted: #9aa6bd;
+  --subtle: #6b778c;
+  --acc: #5b8cff;
+  --acc-light: #7aa2ff;
+  --ok: #38d39f;
+  --warn: #f0b45c;
+  --err: #f2667a;
+  --r: 16px;
+  --r-sm: 10px;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { 
+  height: 100%; margin: 0; background: var(--bg); color: var(--fg); 
+  font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 15px; line-height: 1.5; overflow: hidden;
+}
+body { 
+  display: flex; flex-direction: column; 
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom) 0;
+}
+
+/* HEADER */
+header {
+  display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  background: rgba(11,13,18,0.8); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 100;
+}
+.logo {
+  width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center;
+  background: linear-gradient(140deg, var(--acc), #8f6bff); color: #08101f; 
+  font-weight: 800; font-size: 14px; flex-shrink: 0;
+}
+.brand { display: flex; flex-direction: column; line-height: 1.2; flex: 1; }
+.brand b { font-size: 14px; letter-spacing: 0.01em; }
+.brand span { font-size: 11px; color: var(--subtle); text-transform: uppercase; }
+.conn-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--warn); transition: background 0.3s, box-shadow 0.3s; }
+.dot.on { background: var(--ok); box-shadow: 0 0 0 3px rgba(56,211,159,0.15); }
+
+/* NAVIGATION */
+.nav-bar { 
+  display: flex; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 10px 16px; 
+  gap: 8px; border-bottom: 1px solid var(--line);
+}
+.nav-bar::-webkit-scrollbar { display: none; }
+.nav-tab { 
+  flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+  min-height: 44px; padding: 12px 16px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--muted); font-size: 12px; 
+  font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.2s;
+}
+.nav-tab.active { 
+  background: linear-gradient(180deg, rgba(91,140,255,0.2), rgba(91,140,255,0.05));
+  border-color: var(--acc); color: #dbe6ff;
+}
+
+/* MAIN AREA */
+main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.view { 
+  position: absolute; inset: 0; padding: 16px; overflow-y: auto; 
+  display: none; flex-direction: column; gap: 12px;
+}
+.view.active { display: flex; }
+
+/* CHAT VIEW */
+#view-chat { padding-bottom: 80px; }
+.bubble { 
+  max-width: 85%; padding: 10px 14px; border-radius: 16px; 
+  font-size: 14.5px; line-height: 1.5; word-break: break-word;
+  border: 1px solid var(--line); background: var(--surface); align-self: flex-start;
+}
+.bubble.user { 
+  align-self: flex-end; background: linear-gradient(180deg, rgba(91,140,255,0.25), rgba(91,140,255,0.1));
+  border-color: rgba(91,140,255,0.4); 
+}
+.bubble.sys { 
+  align-self: center; background: transparent; border: none; 
+  color: var(--subtle); font-size: 12px; text-align: center; border-style: dashed;
+}
+.bubble-meta { font-size: 10px; color: var(--subtle); margin-top: 4px; opacity: 0.8; }
+.typing-indicator { 
+  align-self: flex-start; background: var(--surface); border: 1px solid var(--line);
+  padding: 8px 14px; border-radius: 16px; font-size: 12px; color: var(--muted);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* LIST VIEWS (Team, Memory, Board) */
+.list-item { 
+  display: flex; align-items: center; gap: 12px; padding: 12px; 
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+}
+.item-info { flex: 1; min-width: 0; }
+.item-title { display: block; font-size: 14px; font-weight: 600; }
+.item-sub { display: block; font-size: 12px; color: var(--subtle); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pill { 
+  font-size: 10px; padding: 2px 8px; border-radius: 999px; 
+  border: 1px solid var(--line); color: var(--muted); font-weight: 600;
+}
+.pill.ok { color: var(--ok); border-color: rgba(56,211,159,0.4); background: rgba(56,211,159,0.1); }
+.pill.warn { color: var(--warn); border-color: rgba(240,180,92,0.4); background: rgba(240,180,92,0.1); }
+.pill.err { color: var(--err); border-color: rgba(242,102,122,0.4); background: rgba(242,102,122,0.1); }
+
+/* COMPOSER */
+.composer { 
+  position: sticky; bottom: 0; display: flex; gap: 10px; padding: 12px 16px;
+  background: linear-gradient(0deg, var(--bg) 60%, rgba(11,13,18,0));
+  border-top: 1px solid var(--line); z-index: 10;
+}
+.composer textarea { 
+  flex: 1; resize: none; min-height: 44px; max-height: 140px; padding: 12px; 
+  border-radius: 14px; border: 1px solid var(--line); background: var(--surface); 
+  color: var(--fg); font: inherit; outline: none; transition: border-color 0.2s;
+}
+.composer textarea:focus { border-color: var(--acc); box-shadow: 0 0 0 3px rgba(91,140,255,0.15); }
+.composer button { 
+  width: 48px; height: 48px; border-radius: 14px; border: 0; 
+  background: linear-gradient(180deg, var(--acc-light), var(--acc)); 
+  color: #08101f; font-size: 20px; font-weight: 800; cursor: pointer;
+  display: grid; place-items: center; transition: transform 0.1s;
+}
+.composer button:active { transform: scale(0.95); }
+.composer button:disabled { opacity: 0.5; }
+
+/* LOGIN & OVERLAYS */
+/* `hidden` ozniteligi UA stilidir ve asagidaki `.overlay{display:flex}`
+   kurali onu EZER (sinif > oge). Bu yuzden hem giris hem hata katmani
+   telefonlarda HER ZAMAN gorunuyordu -> "Baglanti Hatasi" ekrani.
+   Acik kural ile `hidden` artik gercekten gizler. */
+[hidden] { display: none !important; }
+.overlay { 
+  position: fixed; inset: 0; background: var(--bg); z-index: 1000; 
+  display: flex; flex-direction: column; justify-content: center; align-items: center; 
+  padding: 24px; text-align: center;
+}
+.login-box { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 16px; }
+.login-box h1 { font-size: 24px; margin: 0; }
+.login-box p { font-size: 14px; color: var(--muted); margin: 0; }
+.login-box input { 
+  width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--fg); font-family: monospace; 
+  font-size: 20px; text-align: center; outline: none; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.login-box input:focus { border-color: var(--acc); }
+.login-box button { 
+  padding: 16px; border-radius: 12px; border: 0; background: var(--acc); 
+  color: #fff; font-weight: 700; font-size: 16px; cursor: pointer;
+}
+.error-msg { color: var(--err); font-size: 13px; min-height: 18px; }
+
+.skeleton { 
+  background: linear-gradient(90deg, var(--surface) 25%, var(--line) 50%, var(--surface) 75%);
+  background-size: 200% 100%; animation: skeleton-load 1.5s infinite;
+}
+@keyframes skeleton-load { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.fade-in { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* LEADER CYCLE CARD (T-092) */
+.leader-cycle {
+  display: flex; flex-direction: column; gap: 6px;
+  background: var(--surface-bright); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 12px;
+  overflow-wrap: anywhere; word-break: break-word;
+  margin-bottom: 12px;
+}
+.leader-cycle__head {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  font-size: 12px; color: var(--subtle); font-family: monospace;
+}
+.leader-cycle__title { 
+  font-size: 14px; font-weight: 700; 
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.leader-cycle__meta { 
+  font-size: 12px; color: var(--muted); 
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.leader-cycle[hidden] { display: none; }
+.leader-cycle__sep { width: 100%; border: 0; border-top: 1px solid var(--line); margin: 2px 0; }
+
+/* GUIDE STYLING */
+.guide-tile { 
+  background: var(--surface); border: 1px solid var(--line); 
+  padding: 16px; border-radius: var(--r); margin-bottom: 12px;
+}
+.guide-tile b { display: block; margin-bottom: 4px; color: var(--acc-light); }
+.guide-tile p { margin: 0; font-size: 13.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">K</div>
+  <div class="brand"><b id="brand-title">Keyvotion</b><span id="brand-sub">BAĞLANIYOR</span></div>
+  <div class="conn-indicator">
+    <i class="dot" id="dot"></i>
+    <span id="conn-text">kontrol ediliyor...</span>
+  </div>
+</header>
+
+<nav class="nav-bar" id="navBar">
+  <button class="nav-tab active" data-tab="chat">Sohbet</button>
+  <button class="nav-tab" data-tab="team">Ekip</button>
+  <button class="nav-tab" data-tab="board">Pano</button>
+  <button class="nav-tab" data-tab="memory">Hafıza</button>
+  <button class="nav-tab" data-tab="guide">Rehber</button>
+</nav>
+
+<main id="mainArea">
+  <!-- Views -->
+  <div id="view-chat" class="view active">
+    <div id="chat-container" style="display:flex; flex-direction:column; gap:12px;"></div>
+  </div>
+  <div id="view-team" class="view">
+    <div id="team-list" class="list"></div>
+  </div>
+  <div id="view-board" class="view">
+    <div id="leader-cycle" class="leader-cycle" hidden></div>
+    <div id="board-list" class="list"></div>
+  </div>
+  <div id="view-memory" class="view">
+    <div id="memory-list" class="list"></div>
+  </div>
+  <div id="view-guide" class="view">
+    <div id="guide-content"></div>
+  </div>
+
+  <!-- Bottom Composer (Global for Chat) -->
+  <div class="composer" id="globalComposer">
+    <textarea id="msgInput" rows="1" placeholder="Mesaj yaz…"></textarea>
+    <button id="sendBtn" aria-label="Gönder">➤</button>
+  </div>
+</main>
+
+<!-- Overlays -->
+<div id="overlay-login" class="overlay" hidden>
+  <div class="login-box">
+    <h1>Uzaktan Erişim</h1>
+    <p>Bilgisayarınızdaki <b>Ayarlar → Uzaktan erişim</b> ekranındaki 10 haneli kodu girin.</p>
+    <input id="tokenIn" inputmode="text" autocapitalize="characters" maxlength="10" placeholder="XXXX XXXXXX">
+    <button id="pairBtn">Bağlan</button>
+    <div class="error-msg" id="loginErr"></div>
+  </div>
+</div>
+
+<div id="overlay-error" class="overlay" hidden>
+  <div class="login-box">
+    <h1 style="color:var(--err)">Bağlantı Hatası</h1>
+    <p id="errorDesc">Sunucuya ulaşılamıyor. Lütfen aynı Wi-Fi ağında olduğunuzdan emin olun.</p>
+    <button id="retryBtn" class="cta">Yeniden Dene</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  // CONFIG
+  const STORAGE_KEY = 'kv_remote_token';
+  const POLL_INTERVAL = 15000;
+
+  // STATE
+  const state = {
+    token: '',
+    activeTab: 'chat',
+    busy: false,
+    conv: null,
+    caches: { team: [], memory: [], board: [] },
+    isConnected: false,
+    failures: 0
+  };
+
+  // DOM HELPERS
+  const $ = id => document.getElementById(id);
+  const $$ = sel => document.querySelectorAll(sel);
+  const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}));
+
+  // API WRAPPER
+  async function api(path, opts = {}) {
+    const headers = { 'content-type': 'application/json', 'x-kv-token': state.token };
+    let res;
+    try {
+      res = await fetch(path, {
+        method: opts.method || 'GET',
+        headers,
+        body: opts.body ? JSON.stringify(opts.body) : null
+      });
+    } catch {
+      /* fetch yalnızca ağ katmanında reddeder; sunucu yanıtı değildir. */
+      throw { code: 'E_NETWORK', status: null, message: 'Ağ hatası' };
+    }
+    let payload = null;
+    try { payload = await res.json(); } catch { payload = null; }
+    if (res.status === 401) throw { code: 'E_TOKEN', status: 401, message: 'Eşleşme kodu geçersiz.' };
+    if (!res.ok) {
+      const err = (payload && payload.error) || {};
+      throw {
+        code: err.code || 'E_HTTP',
+        status: res.status,
+        message: err.message || `Sunucu ${res.status} yanıtı verdi.`
+      };
+    }
+    return payload;
+  }
+
+  /** Hata kodunu telefonda anlaşılır tek cümleye çevirir (ham kod gösterme). */
+  function describeError(e) {
+    if (!e) return 'Bağlantı kurulamadı. Yeniden deneyin.';
+    if (e.code === 'E_NETWORK') {
+      return 'Bilgisayara ulaşılamıyor. Telefon ve bilgisayar aynı Wi-Fi ağında mı? Keyvotion Console açık mı?';
+    }
+    if (e.status === 403) return 'Bu ağdan erişim kapalı. Telefonun özel (Wi-Fi) ağda olduğundan emin olun.';
+    if (e.status === 429) return 'Çok fazla istek gönderildi. Bir dakika bekleyip yeniden deneyin.';
+    if (e.status === 500) return 'Bilgisayardaki uygulamada bir hata oluştu. Konsol penceresinden yeniden deneyin.';
+    if (e.status) return `Sunucu ${e.status} yanıtı verdi${e.message ? `: ${e.message}` : '.'}`;
+    return 'Bağlantı kurulamadı. Yeniden deneyin.';
+  }
+
+  function showError(e) {
+    $('errorDesc').textContent = describeError(e);
+    $('overlay-error').hidden = false;
+  }
+
+  // UI ACTIONS
+  function setConn(on, text) {
+    state.isConnected = on;
+    $('dot').className = 'dot' + (on ? ' on' : '');
+    $('conn-text').textContent = text;
+    $('brand-sub').textContent = text.toUpperCase();
+  }
+
+  function switchTab(tabId) {
+    state.activeTab = tabId;
+    $$('.nav-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+    $$('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + tabId));
+    $('globalComposer').style.display = (tabId === 'chat') ? 'flex' : 'none';
+    
+    if (tabId === 'chat') renderChat();
+    if (tabId === 'team') renderTeam();
+    if (tabId === 'board') {
+      renderBoard();
+      fetchBoard().catch(() => {});
+    }
+    if (tabId === 'memory') renderMemory();
+  }
+
+  function renderChat() {
+    const container = $('chat-container');
+    if (!state.conv || !state.conv.messages) {
+      container.innerHTML = '<div class="empty">Sohbet başlatılmadı. İlk mesajı yazın.</div>';
+      return;
+    }
+    const msgs = state.conv.messages;
+    container.innerHTML = msgs.map(m => {
+      const cls = m.role === 'user' ? 'user' : (m.role === 'assistant' ? 'assistant' : 'sys');
+      const meta = m.meta ? `<div class="bubble-meta">${esc(m.meta.model || '')}${m.meta.latency ? ' · ' + m.meta.latency + 'ms' : ''}</div>` : '';
+      return `<div class="bubble ${cls}">${esc(m.content)}${meta}</div>`;
+    }).join('');
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function renderTeam() {
+    const list = $('team-list');
+    const rows = state.caches.team;
+    if (!rows?.length) {
+      list.innerHTML = '<div class="empty">Ekip verisi yok.</div>';
+      return;
+    }
+    list.innerHTML = rows.map(r => {
+      const pillCls = r.state === 'busy' ? 'warn' : (r.state === 'error' ? 'err' : 'ok');
+      return `<div class="list-item">
+        <div class="item-info">
+          <span class="item-title">${esc(r.role)} (${esc(r.code)})</span>
+          <span class="item-sub">${esc(r.model)}</span>
+        </div>
+        <span class="pill ${pillCls}">${esc(r.state)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function renderBoard() {
+    const list = $('board-list');
+    const data = state.caches.board;
+    if (!data || !data.rows?.length) {
+      list.innerHTML = '<div class="empty">Panoda şu an görev yok.</div>';
+      return;
+    }
+    list.innerHTML = data.rows.map(r => `
+      <div class="list-item">
+        <div class="item-info">
+          <span class="item-title">${esc(r.id)}: ${esc(r.title)}</span>
+          <span class="item-sub">${esc(r.owner)} · ${esc(r.status)}</span>
+        </div>
+        <span class="pill ok">${esc(r.id)}</span>
+      </div>
+    `).join('');
+  }
+
+  function renderLeaderCycle() {
+    const box = $('leader-cycle');
+    if (!box) return;
+    const board = state.caches.board;
+    const cycles = board && Array.isArray(board.leaderCycles) ? board.leaderCycles : [];
+    if (!cycles.length) {
+      box.innerHTML = '';
+      box.hidden = true;
+      return;
+    }
+    const dash = v => (v === null || v === undefined || String(v).trim() === '') ? '—' : String(v);
+    box.hidden = false;
+    box.innerHTML = cycles.map(c => `
+      <div class="leader-cycle__head">
+        <span>${esc(dash(c.at))}</span>
+        ${c.derived === true ? '<span class="pill warn">türetildi</span>' : ''}
+      </div>
+      <div class="leader-cycle__title">${esc(dash(c.title))}</div>
+      <div class="leader-cycle__meta">Durum: ${esc(dash(c.status))} · Niyet: ${esc(dash(c.intent))}</div>
+    `).join('<hr class="leader-cycle__sep">');
+  }
+
+  function renderMemory() {
+    const list = $('memory-list');
+    const rows = state.caches.memory;
+    if (!rows?.length) {
+      list.innerHTML = '<div class="empty">Hafıza henüz boş.</div>';
+      return;
+    }
+    list.innerHTML = rows.map(m => `
+      <div class="list-item">
+        <div class="item-info">
+          <span class="item-title">${esc(m.text)}</span>
+          <span class="item-sub">${esc(m.scope)} · ${esc(m.kind)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderGuide() {
+    const cont = $('guide-content');
+    const guides = [
+      { t: 'Bu Sayfa Nedir?', d: 'Konsola uzaktan erişim sağlar. WiFi üzerinden ekibinizi izleyebilir ve modellere komut gönderebilirsiniz.' },
+      { t: 'Kod Nasıl Alınır?', d: 'PC üzerinden Ayarlar → Uzaktan Erişim menüsüne gidin. Oradaki 10 haneli kodu kopyalayın.' },
+      { t: 'Sohbet Kullanımı', d: 'Seçili ajanın sohbetine mesaj yazın. Model yanıt verdiğinde otomatik olarak aşağı kaydırılır.' },
+      { t: 'Ekip ve Pano', d: 'Ekip sekmesinden ajanların durumunu (Meşgul/Boşta), Pano sekmesinden mevcut görevleri izleyebilirsiniz.' },
+      { t: 'Güvenlik', d: 'Eşleşme kodu kişiseldir. Paylaşmayın. PC üzerinden "Durdur" derseniz bu erişim anında sona erer.' },
+    ];
+    cont.innerHTML = guides.map(g => `
+      <div class="guide-tile">
+        <b>${g.t}</b>
+        <p>${g.d}</p>
+      </div>
+    `).join('');
+  }
+
+  async function syncState() {
+    if (state.busy) return false;
+    try {
+      const res = await api('/api/state');
+      if (!res || !res.ok) throw { code: 'E_STATE', message: 'Durum okunamadı.' };
+
+      const d = res.data || {};
+      state.conv = d.conversation;
+      state.caches.team = d.team || [];
+      state.caches.memory = d.memory || [];
+      state.caches.board = d.board || null;
+
+      if (state.activeTab === 'chat') renderChat();
+      if (state.activeTab === 'team') renderTeam();
+      if (state.activeTab === 'memory') renderMemory();
+      if (state.activeTab === 'board') {
+        await fetchBoard();
+      }
+
+      state.failures = 0;
+      setConn(true, 'bağlı');
+      $('overlay-error').hidden = true;
+      return true;
+    } catch (e) {
+      if (e.code === 'E_TOKEN') {
+        showLogin('Kodun süresi dolmuş. Lütfen yeniden bağlanın.');
+        return false;
+      }
+      state.failures = (state.failures || 0) + 1;
+      setConn(false, 'bağlantı yok');
+      /* İlk başarısız yoklama kalıcı hata sayılmaz: sayfa sunucudan geldi,
+         geçici bir yarış olabilir. Kalıcı kartı iki üst üste hatadan sonra aç. */
+      if (state.failures >= 2) showError(e);
+      return false;
+    }
+  }
+
+  async function fetchBoard() {
+    try {
+      const res = await api('/api/board');
+      if (res.ok) {
+        state.caches.board = res.data;
+        renderBoard();
+        renderLeaderCycle();
+      }
+    } catch (e) {
+      console.error('Board fetch failed', e);
+    }
+  }
+
+  function showLogin(msg) {
+    $('overlay-login').hidden = false;
+    $('loginErr').textContent = msg || '';
+    $('tokenIn').value = '';
+    setConn(false, 'eşleşme gerekli');
+  }
+
+  function boot() {
+    const hash = location.hash.substring(1).toUpperCase();
+    const stored = localStorage.getItem(STORAGE_KEY);
+    state.token = hash || stored || '';
+
+    if (!state.token) {
+      showLogin();
+    } else {
+      const first = syncState();
+      setInterval(syncState, POLL_INTERVAL);
+      /* Uygulama yeni açılmış olabilir: ilk yoklama düşerse hızlıca iki kez
+         daha dene, sonra 15 sn'lik normal yoklamaya bırak. */
+      first.then((ok) => {
+        if (ok) return;
+        setTimeout(syncState, 2000);
+        setTimeout(syncState, 5000);
+      });
+    }
+    renderGuide();
+  }
+
+  $('pairBtn').onclick = async () => {
+    const t = $('tokenIn').value.trim().toUpperCase();
+    if (t.length < 6) { $('loginErr').textContent = 'Kod çok kısa.'; return; }
+    $('pairBtn').disabled = true;
+    state.token = t;
+    localStorage.setItem(STORAGE_KEY, t);
+    const ok = await syncState();
+    $('pairBtn').disabled = false;
+    if (ok) {
+      $('overlay-login').hidden = true;
+      location.hash = '';
+    } else if ($('overlay-login').hidden) {
+      /* Eşleşme geçti ama durum okunamadı; giriş ekranını kapatma. */
+      $('overlay-login').hidden = false;
+      $('loginErr').textContent = 'Bağlandı ama veri okunamadı. Yeniden deneyin.';
+    }
+  };
+
+  $('retryBtn').onclick = async () => {
+    $('overlay-error').hidden = true;
+    setConn(false, 'kontrol ediliyor...');
+    const ok = await syncState();
+    if (!ok) $('overlay-error').hidden = false;
+  };
+
+  $('sendBtn').onclick = async () => {
+    const input = $('msgInput');
+    const text = input.value.trim();
+    if (!text || state.busy) return;
+
+    state.busy = true;
+    $('sendBtn').disabled = true;
+    
+    const chatCont = $('chat-container');
+    chatCont.insertAdjacentHTML('beforeend', `<div class="bubble user">${esc(text)}</div>`);
+    chatCont.insertAdjacentHTML('beforeend', `<div class="typing-indicator" id="think-${Date.now()}">düşünüyor…</div>`);
+    chatCont.scrollTop = chatCont.scrollHeight;
+
+    try {
+      const res = await api('/api/send', {
+        method: 'POST',
+        body: { text: text, conversationId: state.conv ? state.conv.id : null }
+      });
+      
+      const indicators = document.querySelectorAll('.typing-indicator');
+      indicators.forEach(i => i.remove());
+
+      if (!res.ok) {
+        chatCont.insertAdjacentHTML('beforeend', `<div class="bubble sys">Hata: ${esc(res.error?.message || 'bilinmiyor')}</div>`);
+      } else {
+        await syncState();
+      }
+    } catch (e) {
+      const indicators = document.querySelectorAll('.typing-indicator');
+      indicators.forEach(i => i.remove());
+      chatCont.insertAdjacentHTML('beforeend', `<div class="bubble sys">Bağlantı hatası: ${esc(describeError(e))}</div>`);
+      if (e.code === 'E_TOKEN') showLogin('Süre doldu.');
+    } finally {
+      state.busy = false;
+      $('sendBtn').disabled = false;
+      input.value = '';
+      input.style.height = 'auto';
+    }
+  };
+
+  $('msgInput').oninput = function() {
+    this.style.height = 'auto';
+    this.style.height = Math.min(140, this.scrollHeight) + 'px';
+  };
+
+  $('msgInput').onkeydown = e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      $('sendBtn').click();
+    }
+  };
+
+  $$('.nav-tab').forEach(btn => {
+    btn.onclick = () => switchTab(btn.dataset.tab);
+  });
+
+  if (window.visualViewport) {
+    window.visualViewport.onresize = () => {
+      document.body.style.height = window.visualViewport.height + 'px';
+    };
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark" data-density="comfortable">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'; frame-src 'none'; child-src 'none'; form-action 'none'; frame-ancestors 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keyvotion Console</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/theme-dark.css">
+  <link rel="stylesheet" href="styles/theme-light.css">
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/shell.css">
+  <link rel="stylesheet" href="styles/screens.css">
+  <link rel="stylesheet" href="styles/components.css">
+<link rel="stylesheet" href="styles/polish.css">
+<link rel="stylesheet" href="styles/themes.css">
+<link rel="stylesheet" href="styles/tur4.css">
+<link rel="stylesheet" href="styles/tur5.css">
+<link rel="stylesheet" href="styles/tur6.css">
+<link rel="stylesheet" href="styles/tur8.css">
+<link rel="stylesheet" href="styles/tur11.css">
+<link rel="stylesheet" href="styles/tur12.css">
+<link rel="stylesheet" href="styles/tur13.css">
+<link rel="stylesheet" href="styles/tur14.css">
+<!-- T-199: alternatif tasarım dili ("Volt"). Yalnız [data-design="volt"] altında konuşur;
+     klasik görünüm bu dosyadan hiç etkilenmez. -->
+<link rel="stylesheet" href="styles/volt.css">
+<link rel="stylesheet" href="styles/prototip.css">
+</head>
+<body>
+<!-- T-180: klavye kullanıcısı 23 ekranlık menüyü sekmeyle geçmek zorunda kalmasın. -->
+<a class="kv-skip" href="#kv-main" data-field="skip-link">İçeriğe atla</a>
+<div class="kv-app" data-app data-font="sistem" data-size="normal" data-radius="normal">
+
+  <!-- ============ YAN GEZİNME ============ -->
+  <aside class="kv-nav" data-nav aria-label="Ekranlar">
+    <div class="kv-nav__brand">
+      <span class="kv-nav__logo" aria-hidden="true">K</span>
+      <span class="kv-nav__brandtext">Keyvotion<em>Console</em></span>
+    </div>
+    <nav class="kv-nav__list">
+      <div class="kv-nav__group">
+        <span class="kv-nav__group-label">Çalışma</span>
+        <button class="kv-nav__item" type="button" data-nav-item="chat" title="Sohbet">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></span><span>Sohbet</span><kbd>1</kbd>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="team" title="Ekip" aria-current="page">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.2"/><path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/><path d="M16 14.2c2.4.3 4 1.9 4 4.8"/></svg></span><span>Ekip</span><kbd>2</kbd>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="command" title="Komut">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 6l5 6-5 6"/><path d="M13 18h6"/></svg></span><span>Komut</span><kbd>3</kbd>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="board" title="Pano">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M9 9.5v10"/></svg></span><span>Pano</span><kbd>4</kbd>
+        </button>
+      </div>
+
+      <div class="kv-nav__group">
+        <span class="kv-nav__group-label">Düzen</span>
+        <button class="kv-nav__item" type="button" data-nav-item="teams" title="Ekipler">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="2.4"/><circle cx="17" cy="8" r="2.4"/><circle cx="12" cy="16" r="2.4"/><path d="M8.6 9.7l1.9 4M15.4 9.7l-1.9 4M9.4 8h5.2"/></svg></span><span>Ekipler</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="plans" title="Planlar">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4.5" y="4.5" width="15" height="15" rx="2"/><path d="M8 9.5h8M8 12.5h8M8 15.5h4"/></svg></span><span>Planlar</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="files" title="Dosyalar">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h7l5 5v12H6z"/><path d="M13 3.5v5h5"/></svg></span><span>Dosyalar</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="contexts" title="Bağlamlar">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8.5l8-4 8 4-8 4z"/><path d="M4 12.5l8 4 8-4"/><path d="M4 16.5l8 4 8-4"/></svg></span><span>Bağlamlar</span>
+        </button>
+      </div>
+
+      <div class="kv-nav__group">
+        <span class="kv-nav__group-label">Bilgi</span>
+        <button class="kv-nav__item" type="button" data-nav-item="memory" title="Hafıza">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 4.5v15"/><path d="M12 7c-2 0-3.4-1.4-5-1.4S4 6.6 4 8.3s1.4 2.4 3 2.4c-1.6 0-3 1-3 2.6s1.4 2.5 3 2.5c1.6 0 3-1 5-1"/><path d="M12 7c2 0 3.4-1.4 5-1.4S20 6.6 20 8.3s-1.4 2.4-3 2.4c1.6 0 3 1 3 2.6s-1.4 2.5-3 2.5c-1.6 0-3-1-5-1"/></svg></span><span>Hafıza</span><kbd>5</kbd>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="reports" title="Raporlar">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4"/><path d="M9 12h6M9 15.5h6"/></svg></span><span>Raporlar</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="projects" title="Projeler">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 7.5h6l2 2.5h9v9h-17z"/><path d="M3.5 7.5V5h6l2 2.5"/></svg></span><span>Projeler</span><kbd>6</kbd>
+        </button>
+      </div>
+
+      <div class="kv-nav__group">
+        <span class="kv-nav__group-label">Sistem</span>
+        <button class="kv-nav__item" type="button" data-nav-item="models" title="Modeller">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5l7 4v9l-7 4-7-4v-9z"/><path d="M12 12l7-4M12 12v8.5M12 12L5 8"/></svg></span><span>Modeller</span><kbd>7</kbd>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="providers" title="Sağlayıcılar">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="3.2"/><path d="M11.2 12H21"/><path d="M18 12v3M15 12v2.2"/></svg></span><span>Sağlayıcılar</span><kbd>8</kbd>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="browser" title="Tarayıcı">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.4 3.9 5.3 3.9 8.5S14.6 18.1 12 20.5c-2.6-2.4-3.9-5.3-3.9-8.5S9.4 5.9 12 3.5z"/></svg></span><span>Tarayıcı</span><kbd>9</kbd>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="remote" title="Uzaktan">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2.2"/><path d="M10.5 18h3"/></svg></span><span>Uzaktan</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="settings" title="Ayarlar">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M4.9 7.9l1.9 1.1M17.2 15l1.9 1.1M4.9 16.1l1.9-1.1M17.2 9l1.9-1.1"/></svg></span><span>Ayarlar</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="admin" title="Yönetim">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5l7 2.5v5c0 4.5-3 8-7 9.5-4-1.5-7-5-7-9.5V6z"/><path d="M9 11.5l2 2 4-4"/></svg></span><span>Yönetim</span>
+        </button>
+      </div>
+
+      <div class="kv-nav__group">
+        <span class="kv-nav__group-label">Bağlantı</span>
+        <button class="kv-nav__item" type="button" data-nav-item="integrations" title="Entegrasyonlar">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9.5 14.5l5-5"/><path d="M7 13l-2 2a3.5 3.5 0 0 0 5 5l2-2"/><path d="M17 11l2-2a3.5 3.5 0 0 0-5-5l-2 2"/></svg></span><span>Entegrasyonlar</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="mcps" title="MCP Sunucuları">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 9h6v6H9z"/><path d="M9 2.5v2.5M15 2.5v2.5M9 19v2.5M15 19v2.5M2.5 9H5M2.5 15H5M19 9h2.5M19 15h2.5"/></svg></span><span>MCP Sunucuları</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="catalog" title="Katalog">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5h16v13H4z"/><path d="M4 9.5h16M9 9.5v9"/><path d="M12 12.5h5M12 15.5h4"/></svg></span><span>Katalog</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="connect" title="Hazır Bağlantılar">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3v4M15 3v4"/><path d="M7 7h10v3a5 5 0 0 1-10 0z"/><path d="M12 15v6"/></svg></span><span>Hazır Bağlantılar</span>
+        </button>
+        <button class="kv-nav__item" type="button" data-nav-item="audit" title="Denetim">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4"/><path d="M8.5 11h7M8.5 14h7M8.5 17h4"/></svg></span><span>Denetim</span>
+        </button>
+      </div>
+
+      <div class="kv-nav__group">
+        <span class="kv-nav__group-label">Yardım</span>
+        <button class="kv-nav__item" type="button" data-nav-item="guide" title="Rehber">
+          <span class="kv-nav__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.6a2.4 2.4 0 1 1 3.4 2.2c-.8.4-1.1.9-1.1 1.7"/><path d="M12 17h.01"/></svg></span><span>Rehber</span>
+        </button>
+      </div>
+    </nav>
+    <div class="kv-nav__foot">
+      <button class="kv-button kv-button--ghost kv-button--block" type="button" data-action="open-palette">
+        <span>⌕</span> Komut paleti <kbd>Ctrl K</kbd>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============ ÜST ŞERİT ============ -->
+  <header class="kv-topbar" data-topbar>
+    <div class="kv-topbar__left">
+      <h1 class="kv-topbar__title" id="screen-title" data-screen-title tabindex="-1">Ekip</h1>
+      <span class="kv-topbar__sub" data-screen-sub>canlı ekip görünümü</span>
+    </div>
+    <div class="kv-topbar__right">
+      <button class="kv-chip kv-chip--button" type="button" data-connection="connecting" data-state="busy" data-action="go-settings" aria-live="polite">
+        <i class="kv-dot"></i><span data-connection-text>Bağlanıyor…</span>
+      </button>
+      <button class="kv-iconbtn" type="button" data-action="screen-help" data-guide-link="team" title="Bu ekranın yardımı" aria-label="Bu ekranın yardımı">?</button>
+      <button class="kv-iconbtn" type="button" data-action="tour-start" title="Canlı turu başlat" aria-label="Canlı turu başlat">◎</button>
+      <button class="kv-iconbtn" type="button" data-action="rail-toggle" data-rail-toggle title="Yan paneli aç/kapat" aria-label="Yan paneli aç/kapat" aria-pressed="true">▤</button>
+      <button class="kv-iconbtn" type="button" data-action="toggle-density" title="Yoğunluk">▦</button>
+      <button class="kv-iconbtn" type="button" data-action="toggle-design" title="Tasarım dili: Klasik → Volt → Prototip" aria-label="Tasarım dili">◈</button>
+      <button class="kv-iconbtn" type="button" data-action="toggle-theme" title="Tema">◐</button>
+      <button class="kv-iconbtn kv-iconbtn--badge" type="button" data-action="toggle-notifications" title="Bildirimler" aria-label="Bildirimler" aria-expanded="false" aria-controls="kv-notifications">
+        ✦<i class="kv-notif-count" data-notif-count hidden>0</i>
+      </button>
+      <span class="kv-muted kv-mono" data-last-sync>—</span>
+    </div>
+  </header>
+
+  <!-- T-178: ekran değişimini ekran okuyucuya duyuran görünmez bölge. -->
+  <p class="kv-sr-only" aria-live="polite" data-field="screen-live"></p>
+
+  <!-- ============ YAN PANEL (T8-4): lider sohbeti · sonuçlar · proje ============ -->
+  <aside class="kv-rail" data-rail data-rail-state="open" aria-label="Yan panel">
+    <div class="kv-rail__head">
+      <div class="kv-rail__tabs" role="tablist" aria-label="Yan panel sekmeleri">
+        <button class="kv-rail__tab" type="button" role="tab" data-rail-tab="lider" aria-selected="true">Lider</button>
+        <button class="kv-rail__tab" type="button" role="tab" data-rail-tab="results" aria-selected="false">Sonuçlar</button>
+        <button class="kv-rail__tab" type="button" role="tab" data-rail-tab="project" aria-selected="false">Proje</button>
+      </div>
+      <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="rail-close" title="Paneli kapat" aria-label="Paneli kapat">✕</button>
+    </div>
+
+    <div class="kv-rail__body">
+      <section class="kv-rail__pane" data-rail-pane="lider">
+        <div class="kv-rail__meta">
+          <span class="kv-badge" data-tone="info">LDR</span>
+          <span class="kv-muted kv-mono" data-field="rail-model">—</span>
+        </div>
+        <div class="kv-rail__stream" data-rail-stream aria-live="polite">
+          <p class="kv-empty">Lider’e hızlı bir not bırakın; yanıt burada akar.</p>
+        </div>
+        <form class="kv-rail__composer" data-rail-form>
+          <textarea class="kv-input kv-input--area" rows="2" data-field="rail-text" aria-label="Lider’e mesaj" placeholder="Lider’e yaz… (Ctrl+Enter)"></textarea>
+          <div class="kv-rail__composer-row">
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="rail-new">Yeni</button>
+            <button class="kv-button kv-button--sm" type="submit">Gönder</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="kv-rail__pane" data-rail-pane="results" hidden>
+        <div class="kv-rail__section-title">Son raporlar<span class="kv-muted" data-field="rail-report-count">0</span></div>
+        <div class="kv-rail__list" data-rail-reports>
+          <p class="kv-empty">Rapor toplanmadı.</p>
+        </div>
+        <div class="kv-rail__section-title">Hafıza izleri<span class="kv-muted" data-field="rail-memory-count">0</span></div>
+        <div class="kv-rail__list" data-rail-memory>
+          <p class="kv-empty">Hafıza boş.</p>
+        </div>
+        <button class="kv-button kv-button--ghost kv-button--sm kv-button--block" type="button" data-action="rail-open-reports">Rapor merkezini aç</button>
+      </section>
+
+      <section class="kv-rail__pane" data-rail-pane="project" hidden>
+        <div class="kv-rail__project" data-rail-project>
+          <p class="kv-empty">Proje seçilmedi.</p>
+        </div>
+        <div class="kv-rail__section-title">Token dağılımı<span class="kv-muted kv-mono" data-field="rail-token-total">0</span></div>
+        <div class="kv-rail__bars" data-rail-bars>
+          <p class="kv-empty">Ölçüm yok.</p>
+        </div>
+        <div class="kv-rail__section-title">Son işler</div>
+        <div class="kv-rail__list" data-rail-tasks>
+          <p class="kv-empty">Pano boş.</p>
+        </div>
+        <button class="kv-button kv-button--ghost kv-button--sm kv-button--block" type="button" data-action="rail-open-projects">Projeler ekranını aç</button>
+      </section>
+    </div>
+
+    <footer class="kv-rail__foot">
+      <span class="kv-muted">Genişlik</span>
+      <div class="kv-segmented kv-segmented--sm" role="group" aria-label="Panel genişliği">
+        <button type="button" data-rail-width="dar" aria-pressed="false">Dar</button>
+        <button type="button" data-rail-width="normal" aria-pressed="true">Normal</button>
+        <button type="button" data-rail-width="genis" aria-pressed="false">Geniş</button>
+      </div>
+    </footer>
+  </aside>
+
+  <!-- ============ BİLDİRİM MERKEZİ ============ -->
+  <section class="kv-notifications" id="kv-notifications" role="region" aria-label="Bildirimler" data-notifications hidden>
+    <header class="kv-notifications__head">
+      <strong>Bildirimler</strong>
+      <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="clear-notifications">Temizle</button>
+    </header>
+    <div class="kv-notifications__list" data-notif-list></div>
+  </section>
+
+  <!-- ============ ANA ALAN ============ -->
+  <main class="kv-main" data-main id="kv-main" tabindex="-1">
+
+    <!-- ---------- GEZGİN: tarayıcı benzeri sekmeler ---------- -->
+    <div class="kv-tabs" data-tabs>
+      <div class="kv-tabs__bar" role="tablist" aria-label="Gezgin sekmeleri">
+        <div class="kv-tabs__strip" data-tab-strip></div>
+        <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="nav-new-tab" title="Yeni sekme (Ctrl+T)" aria-label="Yeni sekme">＋</button>
+      </div>
+      <div class="kv-tabs__addr">
+        <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="nav-back" title="Geri (Alt+Sol)" aria-label="Geri">‹</button>
+        <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="nav-forward" title="İleri (Alt+Sağ)" aria-label="İleri">›</button>
+        <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="nav-reload" title="Yenile (Ctrl+R)" aria-label="Yenile">↻</button>
+        <form class="kv-tabs__field" data-nav-form>
+          <span class="kv-tabs__scheme" aria-hidden="true">kv://</span>
+          <input class="kv-input kv-mono" type="text" data-field="nav-address" spellcheck="false"
+                 autocomplete="off" aria-label="Adres" placeholder="team · board/T-031 · reports/… · session/…">
+        </form>
+        <span class="kv-tabs__hint kv-muted kv-mono" data-field="nav-hint">1/1</span>
+      </div>
+    </div>
+
+    <!-- ---------- EKİP ---------- -->
+    <section data-screen="team" aria-labelledby="screen-title">
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-button" type="button" data-action="team-add">＋ Ajan ekle</button>
+          <button class="kv-button" type="button" data-action="team-auto">✨ Otomatik ekip kur</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="set-leader">⇄ Lider değiştir</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="team-refresh">↻ Yenile</button>
+        </div>
+        <div class="kv-toolbar__group">
+          <input class="kv-input kv-input--search" type="search" placeholder="Seans / rol / model ara…" data-field="team-filter" aria-label="Ekip filtrele">
+          <div class="kv-segmented" data-field="team-filter-state" role="group" aria-label="Durum filtresi">
+            <button type="button" data-filter-state="all" aria-pressed="true">Tümü</button>
+            <button type="button" data-filter-state="busy" aria-pressed="false">Çalışan</button>
+            <button type="button" data-filter-state="idle" aria-pressed="false">Boşta</button>
+            <button type="button" data-filter-state="offline" aria-pressed="false">Çevrimdışı</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="kv-stats" data-team-stats>
+        <div class="kv-stat"><span class="kv-stat__value" data-stat="sessions">0</span><span class="kv-stat__label">Seans</span></div>
+        <div class="kv-stat"><span class="kv-stat__value" data-stat="busy">0</span><span class="kv-stat__label">Çalışan</span></div>
+        <div class="kv-stat"><span class="kv-stat__value" data-stat="idle">0</span><span class="kv-stat__label">Boşta</span></div>
+        <div class="kv-stat"><span class="kv-stat__value" data-stat="tokens">0</span><span class="kv-stat__label">Toplam token</span></div>
+        <div class="kv-stat"><span class="kv-stat__value" data-stat="reports">0</span><span class="kv-stat__label">Rapor</span></div>
+      </div>
+
+      <div class="kv-grid" data-team-grid></div>
+
+      <h2 class="kv-section-title" data-extra-title hidden>Kadro dışı seanslar</h2>
+      <div class="kv-grid kv-grid--extra" data-team-extra data-unassigned hidden></div>
+
+      <!-- gömülü görünüm (F7): seçili seansın canlı akışı -->
+      <section class="kv-panel kv-embed" data-embed-panel hidden>
+        <div class="kv-panel__header">
+          <span data-field="embed-title">Akış</span>
+          <div class="kv-row">
+            <span class="kv-muted kv-mono" data-embed-tokens>0 token</span>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="close-embed">✕</button>
+          </div>
+        </div>
+        <div class="kv-panel__body kv-thread" data-embed></div>
+      </section>
+
+      <!-- ---------- LİDER MASASI (T6-5): liderle konuş + ekibi izle ---------- -->
+      <h2 class="kv-section-title">Lider masası</h2>
+      <div class="kv-desk">
+        <section class="kv-panel kv-desk__main">
+          <div class="kv-panel__header">
+            <span>Lider ile konuşma</span>
+            <div class="kv-row">
+              <span class="kv-muted kv-mono" data-field="desk-model">—</span>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="desk-new" title="Yeni konuşma">＋</button>
+            </div>
+          </div>
+          <div class="kv-desk__stream" data-desk-stream>
+            <p class="kv-empty">Lider’e bir şey yazın: durum sorun, görev dağıtın, karar isteyin.</p>
+          </div>
+          <form class="kv-desk__composer" data-desk-form>
+            <textarea class="kv-input kv-input--area" rows="2" data-field="desk-text"
+                      placeholder="Lider’e yaz…  (Ctrl+Enter = gönder)" aria-label="Lider mesajı"></textarea>
+            <button class="kv-button" type="submit" data-action="desk-send">Gönder</button>
+          </form>
+        </section>
+
+        <aside class="kv-panel kv-desk__side">
+          <div class="kv-panel__header">
+            <span>Ekip nabzı</span>
+            <span class="kv-muted" data-field="desk-roster-count">0</span>
+          </div>
+          <div class="kv-desk__roster" data-desk-roster>
+            <p class="kv-empty">Ekip listesi boş.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ---------- KOMUT MERKEZİ ---------- -->
+    <section data-screen="command" aria-labelledby="screen-title" hidden>
+      <div class="kv-cmd">
+        <div class="kv-panel__header kv-cmd__head">
+          <div class="kv-row">
+            <span data-field="command-target-label">Hedef seçin</span>
+            <span class="kv-muted" data-field="command-count">0 seçili</span>
+          </div>
+          <div class="kv-row">
+            <input class="kv-input kv-input--search" type="search" placeholder="Seans ara…" data-field="command-filter" aria-label="Hedef seans ara">
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="command-select-all">Tümünü seç</button>
+          </div>
+        </div>
+
+        <div class="kv-cmd__targets" data-command-targets role="group" aria-label="Hedef seanslar">
+          <p class="kv-empty kv-cmd__empty">Ekip yükleniyor…</p>
+        </div>
+
+        <div class="kv-cmd__body">
+          <div class="kv-cmd__stream" data-command-thread aria-live="polite">
+            <p class="kv-empty">Hedef seçin — komut akışı burada görünür.</p>
+          </div>
+
+          <form class="kv-cmd__composer" data-command-form>
+            <textarea class="kv-input kv-input--area" rows="3" data-field="command-text"
+                      placeholder="Emir yazın…  (Ctrl+Enter = gönder)" aria-label="Komut metni"></textarea>
+            <div class="kv-cmd__actions">
+              <span class="kv-muted kv-mono" data-field="command-counter">0 / 8000</span>
+              <div class="kv-row">
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="command-history">Geçmiş</button>
+                <button class="kv-button kv-button--danger kv-button--sm" type="button" data-action="command-interrupt">Durdur</button>
+                <button class="kv-button kv-button--sm" type="button" data-action="command-send">Gönder</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="kv-cmd__quick" data-field="command-templates">
+            <button type="button" data-template="durum"><b>/durum</b><small>Her ajandan tek satır durum</small></button>
+            <button type="button" data-template="rapor"><b>/rapor</b><small>Biçimli rapor iste</small></button>
+            <button type="button" data-template="devam"><b>/devam</b><small>Kaldığı yerden sürdür</small></button>
+            <button type="button" data-template="dur"><b>/dur</b><small>Çalışan işi güvenle durdur</small></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- GÖREV PANOSU ---------- -->
+    <section data-screen="board" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-button" type="button" data-action="board-add">＋ Görev ekle</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="board-refresh">↻ Yenile</button>
+        </div>
+        <input class="kv-input kv-input--search" type="search" placeholder="ID / görev / sahip ara…" data-field="board-filter" aria-label="Görev panosu filtrele">
+      </div>
+      <div class="kv-board" data-board-root>
+        <p class="kv-empty">Pano okunuyor…</p>
+      </div>
+    </section>
+
+    <!-- ---------- MODEL MERKEZİ ---------- -->
+    <section data-screen="models" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <div class="kv-segmented" data-field="model-tab" role="group">
+            <button type="button" data-model-tab="pool" aria-pressed="true">Havuz</button>
+            <button type="button" data-model-tab="live" aria-pressed="false">Canlı katalog</button>
+            <button type="button" data-model-tab="guide" aria-pressed="false">Kılavuz</button>
+          </div>
+        </div>
+        <input class="kv-input kv-input--search" type="search" placeholder="Model ara…" data-field="model-filter" aria-label="Model kataloğu ara">
+      </div>
+      <div class="kv-panel">
+        <div class="kv-panel__header"><span data-field="model-tab-title">Model havuzu</span><span class="kv-muted" data-cost-summary data-field="model-count">0</span></div>
+        <div class="kv-panel__body kv-panel__body--flush">
+          <table class="kv-table" data-model-table>
+            <thead><tr><th>Model</th><th>Sağlayıcı</th><th>Karakter</th><th>Kullanan</th><th></th></tr></thead>
+            <tbody data-model-body><tr><td colspan="5" class="kv-empty">Yükleniyor…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- RAPOR MERKEZİ ---------- -->
+    <section data-screen="reports" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <select class="kv-input" data-field="report-role" aria-label="Rapor rolü"><option value="">Tüm roller</option></select>
+          <select class="kv-input" data-field="report-status" aria-label="Rapor durumu">
+            <option value="">Tüm durumlar</option>
+            <option value="TAMAM">TAMAM</option>
+            <option value="KISMI">KISMİ</option>
+            <option value="BLOKE">BLOKE</option>
+          </select>
+          <input class="kv-input kv-input--search" type="search" placeholder="Görev ID (T-…)" data-field="report-task" aria-label="Rapor görevi ara">
+        </div>
+        <div class="kv-toolbar__group">
+          <span class="kv-muted kv-mono" data-field="report-scan">—</span>
+          <button class="kv-button kv-button--ghost" type="button" data-action="reports-refresh">↻ Yenile</button>
+        </div>
+      </div>
+
+      <div class="kv-stats kv-stats--tight">
+        <div class="kv-stat"><span class="kv-stat__value" data-field="report-stat-total">0</span><span class="kv-stat__label">Rapor</span></div>
+        <div class="kv-stat"><span class="kv-stat__value" data-field="report-stat-tamam">0</span><span class="kv-stat__label">Tamam</span></div>
+        <div class="kv-stat"><span class="kv-stat__value" data-field="report-stat-kismi">0</span><span class="kv-stat__label">Kısmî</span></div>
+        <div class="kv-stat"><span class="kv-stat__value" data-field="report-stat-bloke">0</span><span class="kv-stat__label">Bloke</span></div>
+        <div class="kv-stat"><span class="kv-stat__value" data-field="report-count">0</span><span class="kv-stat__label">Gösterilen</span></div>
+      </div>
+
+      <div class="kv-reports--pro" data-report-list>
+        <p class="kv-empty">Henüz rapor toplanmadı.</p>
+      </div>
+
+      <div data-leader-cycle-list class="kv-cycle-list"></div>
+
+      <div class="kv-panel kv-report__drawer" data-report-drawer hidden>
+        <div class="kv-panel__header">
+          <span data-field="report-title">Rapor seçin</span>
+          <div class="kv-row">
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="report-copy">Kopyala</button>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="report-close">✕</button>
+          </div>
+        </div>
+        <div class="kv-panel__body kv-report" data-report-detail>
+          <p class="kv-empty">Bir rapor kartına tıklayın.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- AYARLAR ---------- -->
+    <section data-screen="settings" aria-labelledby="screen-title" hidden>
+      <nav class="kv-settings__nav" aria-label="Ayar bölümleri">
+        <span class="kv-settings__nav-label">Bölümler</span>
+        <div class="kv-settings__search">
+          <input class="kv-input kv-input--sm" type="search" data-field="settings-search" aria-label="Ayarlarda ara" placeholder="Ayar ara… (ör. tema)" autocomplete="off">
+          <span class="kv-muted kv-hint" data-field="settings-search-count" aria-live="polite"></span>
+        </div>
+        <button type="button" class="kv-settings__chip" data-settings-jump="connection">Bağlantı</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="server">Sunucu</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="remote">Telefon</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="appearance">Görünüm</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="system">Sistem</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="local">Bu bilgisayar</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="roster">Kadro</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="skills">Beceriler</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="permissions">İzinler</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="votion-grants">Votion yetkileri</button>
+        <button type="button" class="kv-settings__chip" data-settings-jump="diagnostics">Tanılama</button>
+      </nav>
+      <div class="kv-settings kv-settings--dense">
+        <p class="kv-empty" data-field="settings-search-empty" hidden>Eşleşen ayar yok — aramayı temizlemek için <kbd>Esc</kbd>.</p>
+        <div class="kv-settings__grid">
+          <div class="kv-settings__card" data-settings-section="connection">
+            <h3>Bağlantı</h3>
+            <div class="kv-field">
+              <label for="srv-url">Sunucu adresi</label>
+              <input class="kv-input kv-mono" id="srv-url" data-field="server-url" placeholder="http://127.0.0.1:51764">
+            </div>
+            <div class="kv-field">
+              <label for="srv-key">Sunucu parolası</label>
+              <input class="kv-input" id="srv-key" type="password" data-field="password" placeholder="••••••••" autocomplete="off">
+              <p class="kv-muted" data-secret-state="missing">Parola kayıtlı değil.</p>
+              <p class="kv-muted kv-hint">Windows DPAPI ile şifrelenir (<code>secrets.bin</code>); diske düz metin yazılmaz, bir daha gösterilmez.</p>
+            </div>
+            <div class="kv-field">
+              <label for="proj-dir">Proje dizini</label>
+              <input class="kv-input kv-mono" id="proj-dir" data-field="project-dir" placeholder="Ev klasörünüzdeki Keyvotion">
+            </div>
+            <div class="kv-row">
+              <button class="kv-button kv-button--sm" type="button" data-action="settings-save">Kaydet</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="settings-test">Test et</button>
+              <span class="kv-muted" data-field="settings-result"></span>
+            </div>
+          </div>
+
+          <div class="kv-settings__card" data-settings-section="server">
+            <h3>Yerel sunucu</h3>
+            <div class="kv-server" data-server-card>
+              <div class="kv-server__row">
+                <i class="kv-dot" data-server-dot data-state="offline"></i>
+                <b data-field="server-state">Ölçülüyor…</b>
+                <span class="kv-muted kv-mono" data-field="server-latency">—</span>
+              </div>
+              <p class="kv-muted" data-field="server-hint">Sunucu durumu port ve <code>/api/info</code> ile ölçülür.</p>
+            </div>
+            <div class="kv-row">
+              <button class="kv-button kv-button--sm" type="button" data-action="server-start">Başlat</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="server-stop">Durdur</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="server-refresh">Yenile</button>
+            </div>
+            <p class="kv-muted kv-hint">Konsol yalnız <em>kendi başlattığı</em> süreci durdurur; başka bir penceredeki sunucuya dokunmaz.</p>
+          </div>
+
+          <div class="kv-settings__card" data-settings-section="remote">
+            <h3>Telefon (uzaktan erişim)</h3>
+            <div class="kv-row">
+              <i class="kv-dot" data-remote-dot data-state="offline"></i>
+              <b data-field="set-remote-state">kapalı</b>
+              <span class="kv-muted kv-mono" data-field="set-remote-port">—</span>
+            </div>
+            <div class="kv-field">
+              <label>Eşleşme adresi</label>
+              <p class="kv-mono kv-break" data-field="set-remote-url">Kapalı — açınca eşleşme adresi burada görünür</p>
+              <p class="kv-muted kv-hint" data-field="set-remote-note">İlk kurulumda kapalı: istenmeden ağa kapı açılmaz.</p>
+              <p class="kv-muted kv-hint">Telefon aynı Wi-Fi ağında olmalı. Adresi açtığınızda eşleşme kodu bağlantının içinde gelir; elle yazmanız gerekmez.</p>
+            </div>
+            <div class="kv-row">
+              <button class="kv-button kv-button--sm" type="button" data-action="set-remote-start">Aç</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="set-remote-stop">Kapat</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="set-remote-rotate">Kodu yenile</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="set-remote-copy">Adresi kopyala</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="set-remote-open">Ekranı aç</button>
+            </div>
+          </div>
+
+          <div class="kv-settings__card" data-settings-section="appearance">
+            <h3>Görünüm</h3>
+            <div class="kv-field">
+              <label>Tasarım dili</label>
+              <div class="kv-segmented kv-segmented--sm" data-field="design-select" role="group">
+                <button type="button" data-design-set="classic" aria-pressed="true">Klasik</button>
+                <button type="button" data-design-set="volt" aria-pressed="false">Volt</button>
+                <button type="button" data-design-set="prototip" aria-pressed="false">Prototip</button>
+              </div>
+              <p class="kv-muted kv-hint">Volt: tamamen yeni palet, fırlatıcı raylı gezinme ve editoryal tipografi. Klasik görünüm değişmez; geçiş anında.</p>
+            </div>
+            <div class="kv-field">
+              <label>Tema</label>
+              <div class="kv-theme-grid kv-theme-grid--dense" data-field="theme-select" role="group">
+                <button type="button" class="kv-theme-card" data-theme-set="dark" aria-pressed="true">
+                  <i class="kv-theme-swatch" data-swatch="dark"></i><span>Gece</span>
+                </button>
+                <button type="button" class="kv-theme-card" data-theme-set="light" aria-pressed="false">
+                  <i class="kv-theme-swatch" data-swatch="light"></i><span>Gündüz</span>
+                </button>
+                <button type="button" class="kv-theme-card" data-theme-set="midnight" aria-pressed="false">
+                  <i class="kv-theme-swatch" data-swatch="midnight"></i><span>Gece Yarısı</span>
+                </button>
+                <button type="button" class="kv-theme-card" data-theme-set="forest" aria-pressed="false">
+                  <i class="kv-theme-swatch" data-swatch="forest"></i><span>Orman</span>
+                </button>
+                <button type="button" class="kv-theme-card" data-theme-set="sunset" aria-pressed="false">
+                  <i class="kv-theme-swatch" data-swatch="sunset"></i><span>Gün Batımı</span>
+                </button>
+                <button type="button" class="kv-theme-card" data-theme-set="mono" aria-pressed="false">
+                  <i class="kv-theme-swatch" data-swatch="mono"></i><span>Kontrast</span>
+                </button>
+              </div>
+            </div>
+            <div class="kv-field">
+              <label for="set-font">Yazı tipi</label>
+              <select class="kv-input" id="set-font" data-field="font-family">
+                <option value="sistem">Sistem (Segoe UI)</option>
+                <option value="okunakli">Okunaklı geniş (Verdana)</option>
+                <option value="serif">Kitap (Georgia)</option>
+                <option value="mono">Eş aralıklı (Cascadia)</option>
+              </select>
+            </div>
+            <div class="kv-field">
+              <label>Yazı boyutu</label>
+              <div class="kv-segmented kv-segmented--sm" data-field="font-size" role="group">
+                <button type="button" data-size-set="kucuk" aria-pressed="false">Küçük</button>
+                <button type="button" data-size-set="normal" aria-pressed="true">Normal</button>
+                <button type="button" data-size-set="buyuk" aria-pressed="false">Büyük</button>
+                <button type="button" data-size-set="cok-buyuk" aria-pressed="false">Çok büyük</button>
+              </div>
+            </div>
+            <div class="kv-field">
+              <label>Köşe yuvarlaklığı</label>
+              <div class="kv-segmented kv-segmented--sm" data-field="radius" role="group">
+                <button type="button" data-radius-set="keskin" aria-pressed="false">Keskin</button>
+                <button type="button" data-radius-set="normal" aria-pressed="true">Normal</button>
+                <button type="button" data-radius-set="yuvarlak" aria-pressed="false">Yuvarlak</button>
+              </div>
+            </div>
+            <div class="kv-field">
+              <label>Hareket</label>
+              <div class="kv-segmented kv-segmented--sm" data-field="motion-select" role="group">
+                <button type="button" data-motion-set="normal" aria-pressed="true">Normal</button>
+                <button type="button" data-motion-set="azalt" aria-pressed="false">Azalt</button>
+              </div>
+              <p class="kv-muted kv-hint">Azalt: geçişler ve animasyonlar kapanır. Düşük donanımda daha akıcı, hareket hassasiyetinde daha rahat.</p>
+            </div>
+            <div class="kv-field">
+              <label>Yoğunluk</label>
+              <div class="kv-segmented kv-segmented--sm" data-field="density-select" role="group">
+                <button type="button" data-density-set="comfortable" aria-pressed="true">Rahat</button>
+                <button type="button" data-density-set="compact" aria-pressed="false">Kompakt</button>
+              </div>
+            </div>
+            <div class="kv-field">
+              <label>Görünüm rolü</label>
+              <div class="kv-segmented kv-segmented--sm" data-field="role-select" role="group">
+                <button type="button" data-role-set="admin" aria-pressed="true">Yönetici</button>
+                <button type="button" data-role-set="teacher" aria-pressed="false">Eğitmen</button>
+                <button type="button" data-role-set="student" aria-pressed="false">Öğrenci</button>
+              </div>
+              <p class="kv-muted kv-hint">Rol yalnızca görünümü sadeleştirir; yazma izinlerini değiştirmez.</p>
+            </div>
+          </div>
+
+          <div class="kv-settings__card" data-settings-section="system">
+            <h3>Sistem</h3>
+            <div class="kv-field">
+              <label>Bildirimler</label>
+              <label class="kv-check"><input type="checkbox" data-field="notify-reports" aria-label="Rapor bildirimleri" checked> Rapor geldiğinde bildir</label>
+              <label class="kv-check"><input type="checkbox" data-field="notify-errors" aria-label="Hata bildirimleri" checked> Seans hata verdiğinde bildir</label>
+            </div>
+            <div class="kv-field">
+              <label>Votion</label>
+              <label class="kv-check"><input type="checkbox" data-field="votion-speak" aria-label="Votion sesli yanıt" checked> Yanıtları sesli oku (Türkçe)</label>
+              <p class="kv-muted kv-hint" data-field="votion-support">Ses desteği ölçülüyor…</p>
+            </div>
+            <div class="kv-field">
+              <label>Rehber</label>
+              <p class="kv-muted kv-hint">Kurulum adımlarını yeniden görmek isterseniz rehberi sıfırlayın.</p>
+              <div class="kv-row">
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="guide-restart">Rehberi yeniden başlat</button>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="guide-open">Rehbere git</button>
+              </div>
+            </div>
+            <div class="kv-field">
+              <label>Görünüm ayarları</label>
+              <p class="kv-muted kv-hint">Tema, tasarım dili, yazı tipi/boyutu, yoğunluk, hareket ve görünüm rolünü ilk haline döndürür. Sunucu adresi, parola ve proje dizini <b>silinmez</b>.</p>
+              <div class="kv-row">
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="prefs-reset">Görünümü sıfırla</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="kv-settings__card" data-settings-section="local">
+            <h3>Bu bilgisayar</h3>
+            <p class="kv-muted" data-field="local-state">İzin istenmedi — Dosyalar ekranı yalnız proje klasörünü gösterir.</p>
+            <div class="kv-field">
+              <label class="kv-check">
+                <input type="checkbox" data-field="local-access" aria-label="Bu bilgisayara yerel erişim izni">
+                Yerel erişim izni (dosyaları bilgisayarın her yerinden okuma)
+              </label>
+              <p class="kv-muted kv-hint">Açıkken Dosyalar ekranı sürücüleri ve ev klasörünü gezdirir; ajan bağlama eklemek için dosya okuyabilir. Parola, anahtar ve <code>.env</code> dosyaları her durumda okunmaz. İzni dilediğin an kapatabilirsin.</p>
+            </div>
+            <div class="kv-row">
+              <button class="kv-button kv-button--sm" type="button" data-action="local-ask">İzin sor</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="local-revoke">İzni kaldır</button>
+              <span class="kv-muted kv-mono" data-field="local-at">—</span>
+            </div>
+          </div>
+
+          <div class="kv-settings__card" data-settings-section="diagnostics">
+            <h3>Tanılama</h3>
+            <p class="kv-muted" data-field="diag-verdict" data-tone="idle">Henüz çalıştırılmadı — altı ölçümü tek tuşla yapar.</p>
+            <div class="kv-row">
+              <button class="kv-button kv-button--sm" type="button" data-action="diag-run">Tanılamayı çalıştır</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="diag-fix">Sunucuyu başlat</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="diag-copy">Raporu kopyala</button>
+            </div>
+            <div class="kv-diag-wrap">
+              <table class="kv-table kv-table--diag" data-diag-table>
+                <thead><tr><th>Ölçüm</th><th>Sonuç</th><th>Durum</th></tr></thead>
+                <tbody data-diag-body><tr><td class="kv-empty" colspan="3">—</td></tr></tbody>
+              </table>
+            </div>
+            <p class="kv-muted kv-hint">Rapor yalnız ölçümleri taşır: parola, jeton ve anahtar değerleri yazılmaz.</p>
+          </div>
+        </div>
+
+        <div class="kv-panel kv-panel--wide" data-settings-section="roster">
+          <div class="kv-panel__header">
+            <span>Kadro (roster.md)</span>
+            <div class="kv-row">
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="roster-reload">↻</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="team-add">＋ Ajan</button>
+            </div>
+          </div>
+          <div class="kv-panel__body kv-panel__body--flush">
+            <table class="kv-table" data-roster-table>
+              <thead><tr><th>Rol</th><th>Kod</th><th>Model</th><th>Seans</th><th></th></tr></thead>
+              <tbody data-roster-body><tr><td colspan="5" class="kv-empty">Yükleniyor…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Beceriler (skills) -->
+        <div class="kv-panel kv-panel--wide" data-settings-section="skills">
+          <div class="kv-panel__header">
+            <span>Beceriler</span>
+            <div class="kv-row">
+              <span class="kv-muted" data-field="skill-count">0</span>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="skill-add">＋ Beceri ekle</button>
+            </div>
+          </div>
+          <div class="kv-panel__body kv-panel__body--flush">
+            <table class="kv-table" data-skill-table>
+              <thead><tr><th>Beceri</th><th>Açıklama</th><th>Kapsam</th><th>Durum</th><th></th></tr></thead>
+              <tbody data-skill-body><tr><td colspan="5" class="kv-empty">Yükleniyor…</td></tr></tbody>
+            </table>
+          </div>
+          <p class="kv-muted kv-panel__hint">Beceriler ajanların bağlamına eklenir. Etkin olanlar her görevde uygulanır.</p>
+        </div>
+
+        <!-- İzin matrisi -->
+        <div class="kv-panel kv-panel--wide" data-settings-section="permissions">
+          <div class="kv-panel__header">
+            <span>İzin matrisi</span>
+            <div class="kv-row">
+              <span class="kv-muted" data-field="permission-state">varsayılan</span>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="permission-reset">↺ Varsayılan</button>
+            </div>
+          </div>
+          <div class="kv-panel__body kv-panel__body--flush">
+            <table class="kv-table kv-table--matrix" data-permission-table>
+              <thead data-permission-head></thead>
+              <tbody data-permission-body><tr><td class="kv-empty">Yükleniyor…</td></tr></tbody>
+            </table>
+          </div>
+          <p class="kv-muted kv-panel__hint">
+            Her hücre bir yetkidir: rol bu işlemi yapabilir mi? Değişiklik anında kaydedilir.
+          </p>
+        </div>
+
+        <!-- T-198: Votion oturum yetkileri — uygulama kapanınca sıfırlanır -->
+        <div class="kv-panel kv-panel--wide" data-settings-section="votion-grants">
+          <div class="kv-panel__header">
+            <span>Votion yetkileri (oturum)</span>
+            <div class="kv-row">
+              <span class="kv-muted" data-field="votion-grants-state">kapalı</span>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="votion-grants-revoke-all">Hepsini kaldır</button>
+            </div>
+          </div>
+          <div class="kv-panel__body" data-votion-grants>
+            <p class="kv-empty">Yetkiler yükleniyor…</p>
+          </div>
+          <p class="kv-muted kv-panel__hint">
+            Oturum onayı: bir kez onayladığın yetenek uygulama kapanana kadar geçerli, diskte kalmaz.
+            Votion komut çalıştırırken yalnız beyaz listedeki araçları kullanır ve proje dizininden çıkamaz;
+            dosya yazmadan önce yedek alınır. Her kullanım denetim kaydına yazılır.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- SOHBET (T5-2: doğrudan model) ---------- -->
+    <section data-screen="chat" aria-labelledby="screen-title" hidden>
+      <div class="kv-chat-shell">
+        <aside class="kv-chat-rail">
+          <div class="kv-chat-rail__head">
+            <span>Konuşmalar</span>
+            <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="chat-new" title="Yeni konuşma">＋</button>
+          </div>
+          <div class="kv-chat-rail__search">
+            <input class="kv-input kv-input--sm" type="search" placeholder="Konuşma ara…" data-field="chat-search" aria-label="Konuşma ara">
+            <select class="kv-input kv-input--sm kv-chat-rail__sort" data-field="chat-sort" aria-label="Konuşmaları sırala">
+              <option value="recent">Son konuşulan</option>
+              <option value="oldest">En eski</option>
+              <option value="name">Ada göre</option>
+              <option value="count">Mesaj sayısı</option>
+            </select>
+          </div>
+          <div class="kv-chat-rail__list" data-chat-list>
+            <p class="kv-empty">Konuşma yok.</p>
+          </div>
+          <div class="kv-chat-rail__foot">
+            <button class="kv-button kv-button--ghost kv-button--sm kv-button--block" type="button" data-action="chat-preview">
+              Bağlamı gör
+            </button>
+          </div>
+        </aside>
+
+        <div class="kv-chat-main">
+          <header class="kv-chat-head">
+            <div class="kv-chat-head__id">
+              <span class="kv-chat-head__title" data-field="chat-title">Konuşma seçin</span>
+              <span class="kv-chat-head__meta" data-field="chat-meta">—</span>
+            </div>
+            <div class="kv-chat-head__actions">
+              <label class="kv-chat-head__pick">
+                <span>Rol</span>
+                <select class="kv-input kv-input--sm" data-field="chat-role" aria-label="Konuşma rolü">
+                  <option value="LDR">LDR · Lider</option>
+                  <option value="YM">YM · Proje Yöneticisi</option>
+                  <option value="ARC">ARC · Mimar</option>
+                  <option value="DEV">DEV · Yazılımcı</option>
+                  <option value="DSN">DSN · Tasarımcı</option>
+                  <option value="QA">QA · Test</option>
+                  <option value="OPS">OPS · DevOps</option>
+                </select>
+              </label>
+              <label class="kv-chat-head__pick kv-chat-head__pick--wide">
+                <span>Model</span>
+                <select class="kv-input kv-input--sm kv-mono" data-field="chat-model" aria-label="Konuşma modeli"></select>
+              </label>
+              <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="chat-rename" title="Yeniden adlandır">✎</button>
+              <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="chat-copy-md" title="Konuşmayı Markdown olarak kopyala">⧉</button>
+              <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="chat-delete" title="Konuşmayı sil">🗑</button>
+            </div>
+          </header>
+
+          <div class="kv-chat" data-chat-thread>
+            <div class="kv-chat__empty">
+              <div class="kv-chat__empty-art" aria-hidden="true">✦</div>
+              <p><strong>Doğrudan modele yazın.</strong><br>
+                Hafıza, beceriler ve izin matrisi her mesaja otomatik eklenir.
+                Anahtar tükenirse sıradaki anahtara geçilir.</p>
+              <button class="kv-button" type="button" data-action="chat-new">Yeni konuşma başlat</button>
+            </div>
+          </div>
+
+          <button class="kv-chat-jump" type="button" data-action="chat-jump-bottom"
+                  aria-label="En alta in" title="En alta in" hidden>↓ En alta in</button>
+
+          <footer class="kv-composer">
+            <div class="kv-composer__box">
+              <textarea class="kv-composer__input" rows="1" data-field="chat-text"
+                        aria-label="Mesaj yaz"
+                        placeholder="Mesaj yazın…  (Enter = gönder · Shift+Enter = yeni satır)"></textarea>
+              <button class="kv-composer__send" type="button" data-action="chat-send" title="Gönder (Enter)">
+                <span data-field="chat-send-icon">➤</span>
+              </button>
+            </div>
+            <div class="kv-composer__meta">
+              <span class="kv-muted kv-mono" data-field="chat-counter">0 / 8000</span>
+              <span class="kv-muted" data-field="chat-draft-note" hidden>Taslak kaydedildi</span>
+              <span class="kv-muted" data-field="chat-context-hint">hafıza: —</span>
+              <span class="kv-muted" data-field="chat-status" role="status" aria-live="polite" aria-atomic="true"></span>
+              <!-- T-191: hata gibi acil durumlar ayrı bir canlı bölgeden duyurulur. -->
+              <span class="kv-sr-only" data-field="chat-alert" role="alert" aria-live="assertive"></span>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- HAFIZA (T4-3) ---------- -->
+    <section data-screen="memory" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <div class="kv-segmented" data-field="memory-scope" role="group" aria-label="Kapsam">
+            <button type="button" data-memory-scope="" aria-pressed="true">Tümü</button>
+            <button type="button" data-memory-scope="user" aria-pressed="false">Kullanıcı</button>
+            <button type="button" data-memory-scope="team" aria-pressed="false">Ekip</button>
+            <button type="button" data-memory-scope="project" aria-pressed="false">Proje</button>
+          </div>
+          <input class="kv-input kv-input--search" type="search" placeholder="Hafızada ara…" data-field="memory-filter" aria-label="Hafızada ara">
+        </div>
+        <div class="kv-toolbar__group">
+          <span class="kv-muted kv-mono" data-field="memory-auto-state">otomatik kayıt açık</span>
+          <button class="kv-button kv-button--ghost" type="button" data-action="memory-refresh">↻ Yenile</button>
+          <button class="kv-button" type="button" data-action="memory-add">＋ Hatırlanacak ekle</button>
+        </div>
+      </div>
+
+      <!-- zihin haritası: her nokta bir çıkarım, üzerine gelince özet -->
+      <div class="kv-panel kv-panel--wide">
+        <div class="kv-panel__header">
+          <span>Zihin haritası</span>
+          <span class="kv-muted" data-field="memory-total">0 kayıt</span>
+        </div>
+        <div class="kv-panel__body kv-panel__body--flush">
+          <div class="kv-mind" data-memory-graph aria-label="Hafıza zihin haritası">
+            <p class="kv-empty">Zihin haritası yükleniyor…</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- akış şeması: topla → damıt → sakla → geri çağır → enjekte et -->
+      <div class="kv-panel kv-panel--wide kv-flow-panel">
+        <div class="kv-panel__header">
+          <span>Bağlamlı ajan hafıza akışı</span>
+          <span class="kv-muted" data-field="memory-flow-total">0 kayıt</span>
+        </div>
+        <div class="kv-panel__body">
+          <ol class="kv-flow" data-memory-flow></ol>
+          <p class="kv-muted kv-flow__note">
+            Her ajan aynı hafızayı görür. Kullanıcı tercihleri (<code>scope=user</code>) her zaman önce gelir;
+            bu yüzden bir kez söylediğiniz tercih sonraki işlerde tekrar hatırlatılmaz, uygulanır.
+            İş bitince çıkarımlar kendiliğinden yazılır — hiçbir şey söylemeniz gerekmez.
+          </p>
+        </div>
+      </div>
+
+      <div class="kv-split">
+        <aside class="kv-panel kv-split__aside">
+          <div class="kv-panel__header"><span>Kayıtlar</span><span class="kv-muted" data-field="memory-count">0</span></div>
+          <div class="kv-panel__body kv-list" data-memory-list>
+            <p class="kv-empty">Hafıza boş.</p>
+          </div>
+        </aside>
+        <div class="kv-split__main">
+          <div class="kv-panel kv-panel--fill">
+            <div class="kv-panel__header">
+              <span data-field="memory-detail-title">Kayıt seçin</span>
+              <span class="kv-muted kv-mono" data-field="memory-path">—</span>
+            </div>
+            <div class="kv-panel__body kv-report" data-memory-detail>
+              <p class="kv-empty">Soldan bir kayıt seçin.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- PROJELER (T4-2) ---------- -->
+    <section data-screen="projects" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-button" type="button" data-action="project-new">＋ Yeni proje</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="project-refresh">↻ Yenile</button>
+        </div>
+        <span class="kv-muted" data-field="project-active">—</span>
+      </div>
+      <div class="kv-grid kv-grid--projects" data-project-grid></div>
+    </section>
+
+    <!-- ---------- SAĞLAYICILAR (T4-6) ---------- -->
+    <section data-screen="providers" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-button" type="button" data-action="provider-new">＋ Sağlayıcı ekle</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="provider-refresh">↻ Yenile</button>
+        </div>
+        <span class="kv-muted" data-field="provider-note">Anahtarlar DPAPI ile şifreli saklanır; değer asla geri gösterilmez.</span>
+      </div>
+      <div class="kv-alert" data-tone="info">
+        <strong>Otomatik geçiş:</strong> bir anahtar <code>429</code> / kota / <code>401</code> / <code>5xx</code>
+        döndürürse sıradaki sağlıklı anahtara geçilir ve istek bir kez tekrar edilir.
+      </div>
+      <div class="kv-grid kv-grid--providers" data-provider-grid></div>
+      <div class="kv-panel kv-panel--wide kv-failover-panel">
+        <div class="kv-panel__header">
+          <span>Geçiş denemesi</span>
+          <span class="kv-muted kv-mono" data-field="failover-summary">henüz denenmedi</span>
+        </div>
+        <div class="kv-panel__body kv-panel__body--flush">
+          <table class="kv-table" data-failover-table>
+            <thead><tr><th>Sıra</th><th>Anahtar</th><th>Durum</th><th>Neden</th><th>Gecikme</th><th>Sonuç</th></tr></thead>
+            <tbody data-failover-body><tr><td colspan="6" class="kv-empty">Sağlayıcı kartından “Test et” çalıştırın.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- UYGULAMA İÇİ TARAYICI (T4-5 / T5-1) ---------- -->
+    <section data-screen="browser" aria-labelledby="screen-title" hidden>
+      <div class="kv-browser__chrome">
+        <div class="kv-browser__nav">
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="browser-back" data-nav-state="back" title="Geri">‹</button>
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="browser-forward" data-nav-state="forward" title="İleri">›</button>
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="browser-reload" title="Yenile">↻</button>
+        </div>
+
+        <form class="kv-browser__field" data-browser-form>
+          <span class="kv-browser__scheme" data-field="browser-scheme" aria-hidden="true">🔒</span>
+          <input class="kv-browser__input" type="text" data-field="browser-url" spellcheck="false" aria-label="Tarayıcı adresi"
+                 autocomplete="off" placeholder="Adres yazın ya da arayın…">
+          <button class="kv-browser__go" type="submit" title="Git">➤</button>
+        </form>
+
+        <div class="kv-browser__tools">
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="browser-zoom-out" title="Uzaklaştır">−</button>
+          <span class="kv-mono kv-browser__zoom" data-field="browser-zoom">100%</span>
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="browser-zoom-in" title="Yakınlaştır">+</button>
+          <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="browser-extract" title="Sayfa metnini ajana ver">⤓ Oku</button>
+          <button class="kv-button kv-button--sm" type="button" data-action="browser-summarize" title="Bu sekmeyi özetle">Özetle</button>
+          <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="browser-close">✕</button>
+        </div>
+      </div>
+
+      <div class="kv-browser__progress" data-browser-progress hidden><i></i></div>
+
+      <div class="kv-browser" data-browser-stage>
+        <div class="kv-browser__placeholder" data-browser-placeholder>
+          <div class="kv-browser__start">
+            <div class="kv-browser__start-art" aria-hidden="true">🌐</div>
+            <h2>Uygulama içi tarayıcı</h2>
+            <p class="kv-muted">Sayfa, uygulamanın içinde ayrı bir görünümde açılır. Ajanlar da
+              <strong>Oku</strong> ile sayfa metnini bağlamına alabilir.</p>
+            <div class="kv-browser__quick">
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-browse-quick="example">example.com</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-browse-quick="search">DuckDuckGo</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-browse-quick="code">GitHub</button>
+            </div>
+          </div>
+        </div>
+        <div class="kv-browser__error" data-browser-error hidden></div>
+      </div>
+
+      <div class="kv-browser__statusbar">
+        <span class="kv-mono" data-field="browser-status">kapalı</span>
+        <span class="kv-muted" data-field="browser-title"></span>
+      </div>
+
+      <!-- ---------- SAYFA ÖZETİ (T6-3): sezgisel her zaman, model anahtar varsa ---------- -->
+      <section class="kv-summary kv-summary--panel" data-summary-panel hidden aria-live="polite">
+        <div class="kv-summary__head">
+          <h3 data-field="summary-title">Sayfa özeti</h3>
+          <div class="kv-row">
+            <span class="kv-summary__engine" data-field="summary-engine">hazır</span>
+            <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="summary-close" title="Kapat">✕</button>
+          </div>
+        </div>
+        <p class="kv-summary__lead" data-field="summary-lead"></p>
+        <ul class="kv-summary__points" data-summary-points></ul>
+        <div class="kv-summary__kw" data-summary-keywords></div>
+        <div class="kv-row kv-summary__actions">
+          <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="summary-copy">Kopyala</button>
+          <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="summary-to-memory">Hafızaya yaz</button>
+          <span class="kv-muted kv-mono" data-field="summary-meta"></span>
+        </div>
+      </section>
+    </section>
+
+    <!-- ---------- UZAKTAN ERİŞİM (T5-4) ---------- -->
+    <section data-screen="remote" aria-labelledby="screen-title" hidden>
+      <div class="kv-remote">
+        <div class="kv-remote__hero kv-panel">
+          <div class="kv-panel__header">
+            <span>Telefondan kontrol</span>
+            <span class="kv-badge" data-field="remote-badge" data-tone="info">kapalı</span>
+          </div>
+          <div class="kv-panel__body">
+            <p class="kv-muted kv-remote__lead">
+              Telefon aynı Wi-Fi ağındaysa tarayıcıdan bağlanıp ekibe mesaj yazabilir,
+              hafızayı ve ekip durumunu okuyabilir. Dosya erişimi yoktur; yalnız sohbet uçları açılır.
+            </p>
+
+            <div class="kv-remote__pair" data-field="remote-pair" hidden>
+              <div class="kv-remote__code">
+                <span class="kv-remote__code-label">Eşleşme kodu</span>
+                <strong class="kv-mono" data-field="remote-token">—</strong>
+                <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="remote-copy-token" title="Kopyala">⧉</button>
+              </div>
+              <div class="kv-remote__url">
+                <span class="kv-remote__code-label">Telefonda aç</span>
+                <code data-field="remote-url">—</code>
+                <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="remote-copy-url" title="Bağlantıyı kopyala">⧉</button>
+              </div>
+            </div>
+
+            <div class="kv-row kv-remote__actions">
+              <button class="kv-button" type="button" data-action="remote-start">▶ Başlat</button>
+              <button class="kv-button kv-button--ghost" type="button" data-action="remote-stop">■ Durdur</button>
+              <button class="kv-button kv-button--ghost" type="button" data-action="remote-rotate">↻ Kodu yenile</button>
+              <span class="kv-muted" data-field="remote-note"></span>
+            </div>
+
+            <div class="kv-remote__stats">
+              <div class="kv-stat"><span class="kv-stat__k">Durum</span><span class="kv-stat__v" data-field="remote-running">kapalı</span></div>
+              <div class="kv-stat"><span class="kv-stat__k">Port</span><span class="kv-stat__v kv-mono" data-field="remote-port">—</span></div>
+              <div class="kv-stat"><span class="kv-stat__k">Bağlı istemci</span><span class="kv-stat__v" data-field="remote-clients">0</span></div>
+              <div class="kv-stat"><span class="kv-stat__k">İstek</span><span class="kv-stat__v" data-field="remote-requests">0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="kv-panel">
+          <div class="kv-panel__header"><span>Ağ adresleri</span></div>
+          <div class="kv-panel__body kv-list" data-field="remote-addresses">
+            <p class="kv-empty">Sunucu başlatılınca adresler görünür.</p>
+          </div>
+          <p class="kv-muted kv-panel__hint">
+            Yalnız özel ağ adresleri (192.168.x.x gibi) kabul edilir; dış ağdan gelen istekler reddedilir.
+          </p>
+        </div>
+
+        <div class="kv-panel kv-panel--wide">
+          <div class="kv-panel__header"><span>Güvenlik</span></div>
+          <div class="kv-panel__body">
+            <ul class="kv-remote__rules">
+              <li>Eşleşme kodu olmadan hiçbir uç nokta yanıt vermez (<code>401</code>).</li>
+              <li>Kod yalnız bu bilgisayarda, kullanıcı profilinizde saklanır.</li>
+              <li>Kod yenilendiğinde eski bağlantılar anında düşer.</li>
+              <li>Telefon yalnız sohbet/hafıza/ekip görünümüne erişir; dosya sistemi yoktur.</li>
+              <li>Sunucu uygulama kapanınca kendiliğinden kapanır.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- REHBER (T6-1): Votion'un anlattığı, atlanabilir kurulum ---------- -->
+    <section data-screen="guide" aria-labelledby="screen-title" hidden>
+      <div class="kv-guide">
+        <div class="kv-guide__progress" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" data-guide-progress>
+          <i data-guide-bar></i>
+        </div>
+
+        <div class="kv-guide__stage">
+          <div class="kv-guide__art" data-guide-art aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>
+          </div>
+
+          <div class="kv-guide__body">
+            <div class="kv-guide__step" data-guide-step>
+              <h2 data-field="guide-title">Keyvotion Console’a hoş geldin</h2>
+              <p data-field="guide-body">Ben Votion. Bu konsol, Keyvotion ekibini tek pencerede çalıştırır.</p>
+              <div data-field="guide-extra"></div>
+            </div>
+            <div class="kv-guide__nav">
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="guide-prev">Geri</button>
+              <button class="kv-button" type="button" data-action="guide-next">Devam</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="guide-speak" title="Votion bu adımı sesli anlatsın">Sesli dinle</button>
+              <span data-field="guide-counter">1 / 6</span>
+              <button class="kv-guide__skip" type="button" data-action="guide-skip">Atla, kendim keşfederim</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="kv-panel">
+          <div class="kv-panel__header"><span>Bu rehber ne işe yarar?</span></div>
+          <div class="kv-panel__body">
+            <ul class="kv-guide__checklist">
+              <li>DPAPI parolasının nerede saklandığını ve nasıl girileceğini gösterir.</li>
+              <li>Yerel sunucuyu başlatıp “çevrim dışı” durumunu nasıl düzelteceğini anlatır.</li>
+              <li>Telefondan eşleşme koduyla nasıl bağlanacağını adım adım söyler.</li>
+              <li>Hafıza, zihin haritası ve Votion’un nasıl kullanıldığını açıklar.</li>
+            </ul>
+            <p class="kv-muted kv-hint">İstediğin an atlayabilirsin; Ayarlar → Sistem → “Rehberi yeniden başlat” ile geri dönebilirsin.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- T-153: ? düğmesiyle gelen ekrana özel yardım bölümü -->
+      <div class="kv-panel" data-guide-help hidden>
+        <div class="kv-panel__header">
+          <span data-field="guide-help-title">Ekran yardımı</span>
+          <span class="kv-muted kv-mono" data-field="guide-help-screen"></span>
+        </div>
+        <div class="kv-panel__body">
+          <p data-field="guide-help-body"></p>
+          <div class="kv-row" data-guide-help-actions></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- EKİPLER (T8-5): çoklu ekip · ayrı lider · ayrı bütçe ---------- -->
+    <section data-screen="teams" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-button" type="button" data-action="team-new">＋ Yeni ekip</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="teams-refresh">↻ Yenile</button>
+        </div>
+        <span class="kv-muted kv-mono">
+          <span data-field="teams-count">0</span> ekip ·
+          toplam <span data-field="teams-spent">0</span> token
+        </span>
+      </div>
+      <div class="kv-split kv-split--teams">
+        <div class="kv-split__main" data-teams-list>
+          <p class="kv-empty">Yükleniyor…</p>
+        </div>
+        <aside class="kv-split__aside kv-panel" data-teams-detail>
+          <p class="kv-empty">Ayrıntı için bir ekip seçin.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ---------- PLANLAR (T8-6): plan · not · zamanlanmış görev ---------- -->
+    <section data-screen="plans" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-button" type="button" data-action="plan-new">＋ Plan</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="note-new">＋ Not</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="schedule-new">⏱ Zamanla</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="plan-refresh">↻ Yenile</button>
+        </div>
+        <span class="kv-muted kv-mono">
+          <span data-field="plans-count">0</span> plan ·
+          <span data-field="plans-open-tasks">0</span> açık görev ·
+          sıradaki <span data-field="plans-next">—</span>
+        </span>
+      </div>
+      <div class="kv-segmented kv-plans__tabs">
+        <button type="button" data-plan-tab="plans" aria-pressed="true">Planlar</button>
+        <button type="button" data-plan-tab="notes" aria-pressed="false">Notlar</button>
+        <button type="button" data-plan-tab="schedules" aria-pressed="false">Zamanlamalar</button>
+        <button type="button" data-plan-tab="tasks" aria-pressed="false">Görevler</button>
+      </div>
+      <div class="kv-split kv-split--plans">
+        <div class="kv-split__main kv-stack" data-plans-list>
+          <p class="kv-empty">Yükleniyor…</p>
+        </div>
+        <aside class="kv-split__aside kv-panel" data-plans-detail>
+          <p class="kv-empty">Bir plan seçin ya da yeni plan yazın.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ---------- DOSYALAR (T8-7): salt okuma · proje köküne kilitli ---------- -->
+    <section data-screen="files" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="files-up" title="Üst klasör">↑</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="files-refresh">↻ Yenile</button>
+        </div>
+        <span class="kv-muted kv-mono">
+          <span data-field="files-path">proje kökü</span> ·
+          <span data-field="files-count">0</span> kayıt ·
+          <span data-field="files-picked">0</span> bağlamda
+        </span>
+      </div>
+      <div class="kv-split kv-split--files">
+        <div class="kv-split__main kv-stack kv-stack--tight" data-files-list>
+          <p class="kv-empty">Yükleniyor…</p>
+        </div>
+        <aside class="kv-split__aside kv-panel" data-files-preview>
+          <p class="kv-empty">Bir dosyaya tıklayınca içerik burada açılır.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ---------- BAĞLAMLAR (T8-7): seçili dosyalar + hafıza → tek paket ---------- -->
+    <section data-screen="contexts" aria-labelledby="screen-title" hidden>
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-button" type="button" data-action="context-build">Bağlam oluştur</button>
+          <button class="kv-button kv-button--ghost" type="button" data-action="files-refresh">Dosyalara git</button>
+        </div>
+        <input class="kv-input kv-input--sm kv-toolbar__search" type="search" placeholder="Konu / soru (isteğe bağlı)…" data-field="context-query" aria-label="Bağlam sorgusu">
+      </div>
+      <div class="kv-split kv-split--contexts">
+        <div class="kv-split__main kv-panel">
+          <div class="kv-panel__header"><span>Bağlama seçilenler</span></div>
+          <div class="kv-panel__body" data-context-picks>
+            <p class="kv-empty">Dosyalar ekranından dosya işaretleyin.</p>
+          </div>
+        </div>
+        <div class="kv-split__aside kv-panel">
+          <div class="kv-panel__header"><span>Bağlam paketi</span></div>
+          <div class="kv-panel__body" data-context-out>
+            <p class="kv-empty">Dosya seçip “Bağlam oluştur”a basın.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- YÖNETİM MERKEZİ (v2.9 / §14): ekip · model · sağlık · disk · sürüm · denetim · tehlikeli ---------- -->
+    <section data-screen="admin" aria-labelledby="screen-title" hidden aria-hidden="true">
+      <div class="kv-toolbar">
+        <div class="kv-toolbar__group">
+          <button class="kv-button kv-button--ghost" type="button" data-action="admin-refresh">↻ Yenile</button>
+        </div>
+        <span class="kv-muted kv-mono kv-tabular">
+          <span data-field="admin-agent-count">0</span> ajan ·
+          <span data-field="admin-model-ready">0</span>/<span data-field="admin-model-total">0</span> model hazır ·
+          <span data-field="admin-model-active">0</span> etkin iş
+        </span>
+      </div>
+
+      <div class="kv-col-side">
+        <div class="kv-admin-grid">
+          <!-- B1: ekip ve ajan durumu -->
+          <div class="kv-col-side">
+            <div class="kv-panel kv-glass-panel" data-admin-block="b1">
+              <div class="kv-panel-title">
+                <span>Ekip ve ajan durumu</span>
+                <span class="kv-muted kv-mono" data-field="admin-agent-count">0</span>
+              </div>
+              <div class="kv-agent-table">
+                <div class="kv-agent-row"><span>Kod</span><span>Rol</span><span>Durum</span><span>Model</span><span>Token</span><span>Eylem</span></div>
+              </div>
+              <div class="kv-agent-table" data-admin-agents>
+                <p class="kv-empty">Kadro yükleniyor…</p>
+              </div>
+              <div class="kv-row">
+                <button class="kv-button kv-button--sm" type="button" data-action="admin-team-add">＋ Ajan ekle</button>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-send">Komut gönder</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- B2 + B4: yerel modeller · disk -->
+          <div class="kv-col-side">
+            <div class="kv-panel kv-glass-panel" data-admin-block="b2">
+              <div class="kv-panel-title">
+                <span>Yerel model durumları</span>
+                <span class="kv-muted kv-mono kv-tabular" data-field="admin-model-total">0</span>
+              </div>
+              <div class="kv-model-stack" data-admin-models>
+                <p class="kv-empty">Yerel envanter yükleniyor…</p>
+              </div>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-model-dir">Klasör seç ve kur</button>
+            </div>
+            <div class="kv-panel kv-glass-panel" data-admin-block="b4">
+              <div class="kv-panel-title"><span>Disk ve kurulum</span></div>
+              <div data-admin-disk>
+                <p class="kv-empty">Disk ölçümü bekleniyor…</p>
+              </div>
+              <div class="kv-row">
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-disk-pick">Hedef kök seç</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- B3 + B5 + B6: kanal sağlığı · sürüm · denetim -->
+          <div class="kv-col-side">
+            <div class="kv-panel kv-glass-panel" data-admin-block="b3">
+              <div class="kv-panel-title"><span>Kanal ve sağlayıcı sağlığı</span></div>
+              <div class="kv-health-grid" data-admin-health>
+                <div class="kv-metric-box"><span class="kv-metric-val kv-tabular" data-field="admin-channel-count">—</span><span class="kv-metric-lbl">Kanal</span></div>
+                <div class="kv-metric-box"><span class="kv-metric-val kv-tabular" data-field="admin-write-count">—</span><span class="kv-metric-lbl">Yazma kapısı</span></div>
+                <div class="kv-metric-box"><span class="kv-metric-val kv-tabular" data-field="admin-api-version">—</span><span class="kv-metric-lbl">API sürümü</span></div>
+                <div class="kv-metric-box"><span class="kv-metric-val kv-tabular" data-field="admin-server-state">—</span><span class="kv-metric-lbl">Sunucu</span></div>
+              </div>
+              <div class="kv-row">
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-provider-test">Sağlayıcı testi</button>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-provider-failover">Failover zinciri</button>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-server-start">Sunucuyu başlat</button>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-server-stop">Sunucuyu durdur</button>
+              </div>
+            </div>
+            <div class="kv-panel kv-glass-panel" data-admin-block="b5">
+              <div class="kv-panel-title"><span>Oturum ve sürüm</span></div>
+              <div class="kv-version-grid" data-admin-about>
+                <div class="kv-version-item"><span>Uygulama</span><span class="kv-tabular" data-field="admin-app-version">—</span></div>
+                <div class="kv-version-item"><span>Şema</span><span class="kv-tabular" data-field="admin-schema-version">—</span></div>
+                <div class="kv-version-item"><span>Sözleşme</span><span class="kv-tabular" data-field="admin-contract-version">—</span></div>
+                <div class="kv-version-item"><span>Ekran</span><span class="kv-tabular" data-field="admin-screen-count">—</span></div>
+                <div class="kv-version-item"><span>Stylesheet</span><span class="kv-tabular" data-field="admin-style-count">—</span></div>
+              </div>
+            </div>
+            <div class="kv-panel kv-glass-panel" data-admin-block="b6">
+              <div class="kv-panel-title">
+                <span>Denetim özeti</span>
+                <span class="kv-muted kv-mono kv-tabular" data-field="admin-audit-count">0</span>
+              </div>
+              <div data-admin-audit-summary>
+                <p class="kv-empty">Denetim özeti yükleniyor…</p>
+              </div>
+              <div class="kv-row">
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="open-screen" data-target="audit">Denetim ekranını aç</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B7 + B8: tehlikeli eylemler · yedek durumu -->
+        <div class="kv-col-side">
+          <div class="kv-panel kv-glass-panel" data-admin-block="b7">
+            <div class="kv-panel-title"><span>Tehlikeli eylemler</span></div>
+            <div class="kv-danger-stack" data-admin-danger>
+              <div class="kv-danger-card">
+                <span class="kv-danger-card__title">İndirmeyi iptal et</span>
+                <p class="kv-danger-card__desc">Geri alınabilir: yarım kalan indirme duraklatılır, .part dosyası korunur.</p>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-danger-cancel">İptal et</button>
+              </div>
+              <div class="kv-danger-card">
+                <span class="kv-danger-card__title">Yerel modeli kaldır</span>
+                <p class="kv-danger-card__desc">Geri alınamaz: model dosyası diskten silinir, kazanılan bayt geri gelmez.</p>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-danger-remove">Kaldır</button>
+              </div>
+              <div class="kv-danger-card">
+                <span class="kv-danger-card__title">Yerel sunucuyu durdur</span>
+                <p class="kv-danger-card__desc">Dış etkili: bağlı tüm istemciler ve uzak oturumlar kapanır.</p>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="admin-danger-stop">Durdur</button>
+              </div>
+            </div>
+          </div>
+          <div class="kv-panel kv-glass-panel" data-admin-block="b8">
+            <div class="kv-panel-title">
+              <span>Yedek durumu</span>
+              <span class="kv-muted kv-mono" data-field="admin-backup-age">—</span>
+            </div>
+            <div class="kv-backup-bar">
+              <span class="kv-muted kv-mono" data-field="admin-backup-last">—</span>
+              <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="admin-backup-refresh" title="Yedekleri yenile">↻</button>
+            </div>
+            <div class="kv-audit-table" data-admin-backups>
+              <p class="kv-empty">Yedek listesi yükleniyor…</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ENTEGRASYONLAR (T-120/T-122, UI §15.1) ============ -->
+    <section data-screen="integrations" aria-labelledby="screen-title" hidden aria-hidden="true">
+      <div class="kv-integrations">
+        <!-- T-196: detay şeridi — karta tıklayınca buraya GİRİLİR, geri düğmesi listeye döner -->
+        <div class="kv-detail-head" data-integration-detail hidden>
+          <button class="kv-button kv-button--ghost kv-button--sm kv-detail-head__back" type="button" data-action="integration-back">← Tüm entegrasyonlar</button>
+          <h2 class="kv-detail-head__title" data-field="integration-detail-title">—</h2>
+          <span class="kv-badge" data-field="integration-detail-badge" data-tone="info" data-state="idle" data-conn-state="untested">—</span>
+          <p class="kv-muted kv-detail-head__sub" data-field="integration-detail-sub">—</p>
+        </div>
+        <div class="kv-col-side">
+          <!-- B1: katalog -->
+          <div class="kv-panel kv-glass-panel" data-integrations-block="b1">
+            <div class="kv-panel-title">
+              <span>Katalog</span>
+              <span class="kv-muted kv-mono kv-tabular" data-field="integration-catalog-count">0</span>
+            </div>
+            <div class="kv-row kv-integration-tabs" role="tablist" aria-label="Kategori"></div>
+            <div class="kv-card-grid" data-integration-catalog>
+              <p class="kv-empty">Katalog yükleniyor…</p>
+            </div>
+          </div>
+
+          <!-- B2: hesap listesi -->
+          <div class="kv-panel kv-glass-panel" data-integrations-block="b2">
+            <div class="kv-panel-title">
+              <span>Bağlı hesaplar</span>
+              <span class="kv-badge" data-field="integration-account-state" data-tone="idle" data-state="offline" data-conn-state="untested">—</span>
+            </div>
+            <div data-integration-accounts>
+              <p class="kv-empty">Hesaplar yükleniyor…</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="kv-col-side">
+          <!-- B3: bağlantı formu -->
+          <div class="kv-panel kv-glass-panel" data-integrations-block="b3">
+            <div class="kv-panel-title"><span>Bağlantı formu</span></div>
+            <form data-integration-form>
+              <div class="kv-field">
+                <label for="integration-provider-select">Sağlayıcı</label>
+                <select class="kv-input" id="integration-provider-select" data-field="integration-provider"></select>
+              </div>
+              <div class="kv-field">
+                <label for="integration-label-input">Etiket</label>
+                <input class="kv-input" id="integration-label-input" type="text" data-field="integration-label" placeholder="Hesap etiketi" autocomplete="off">
+              </div>
+              <div class="kv-field">
+                <label for="integration-token-input">Token</label>
+                <input class="kv-input" id="integration-token-input" type="password" data-field="integration-token" placeholder="Gizli token" autocomplete="off" spellcheck="false">
+              </div>
+              <p class="kv-muted kv-hint">Kapsamlar: <span class="kv-mono" data-field="integration-scopes">—</span></p>
+              <div class="kv-row">
+                <button class="kv-button kv-button--sm" type="button" data-action="integration-save">Kaydet</button>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="integration-test">Test et</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- B4: yetenek listesi -->
+          <div class="kv-panel kv-glass-panel" data-integrations-block="b4">
+            <div class="kv-panel-title">
+              <span>Yetenekler</span>
+              <span class="kv-muted kv-mono" data-field="integration-capability-summary">—</span>
+            </div>
+            <div data-integration-capabilities>
+              <p class="kv-empty">Yetenekler yükleniyor…</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- B5: etkinlik akışı -->
+        <div class="kv-panel kv-glass-panel" data-integrations-block="b5">
+          <div class="kv-panel-title">
+            <span>Etkinlik akışı</span>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="integration-activity-clear">Temizle</button>
+          </div>
+          <div class="kv-log" data-integration-activity aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MCP SUNUCULARI (T-119/T-122, UI §15.2) ============ -->
+    <section data-screen="mcps" aria-labelledby="screen-title" hidden aria-hidden="true">
+      <div class="kv-mcps">
+        <div class="kv-col-side">
+          <!-- B1: sunucu listesi -->
+          <div class="kv-panel kv-glass-panel" data-mcp-block="b1">
+            <div class="kv-panel-title"><span>MCP sunucuları</span></div>
+            <div data-mcp-servers>
+              <p class="kv-empty">Sunucular yükleniyor…</p>
+            </div>
+          </div>
+
+          <!-- B2: ekleme formu -->
+          <div class="kv-panel kv-glass-panel" data-mcp-block="b2">
+            <div class="kv-panel-title"><span>Sunucu ekle</span></div>
+            <form data-mcp-form>
+              <div class="kv-field">
+                <label for="mcp-id-input">Kimlik</label>
+                <input class="kv-input kv-mono" id="mcp-id-input" type="text" data-field="mcp-id" placeholder="sunucu-kimligi" autocomplete="off" spellcheck="false">
+              </div>
+              <div class="kv-field">
+                <label for="mcp-name-input">Ad</label>
+                <input class="kv-input" id="mcp-name-input" type="text" data-field="mcp-name" placeholder="Sunucu adı" autocomplete="off">
+              </div>
+              <div class="kv-field">
+                <label for="mcp-transport-select">Taşıma</label>
+                <select class="kv-input" id="mcp-transport-select" data-field="mcp-transport">
+                  <option value="stdio">stdio</option>
+                  <option value="http">http</option>
+                </select>
+              </div>
+              <div class="kv-field">
+                <label for="mcp-command-input">Komut</label>
+                <input class="kv-input kv-mono" id="mcp-command-input" type="text" data-field="mcp-command" placeholder="node sunucu.js" autocomplete="off" spellcheck="false">
+              </div>
+              <div class="kv-field">
+                <label for="mcp-args-input">Argümanlar</label>
+                <textarea class="kv-input kv-mono" id="mcp-args-input" data-field="mcp-args" rows="2" placeholder="--bayrak değer" spellcheck="false"></textarea>
+              </div>
+              <div class="kv-field">
+                <label for="mcp-url-input">URL</label>
+                <input class="kv-input kv-mono" id="mcp-url-input" type="url" data-field="mcp-url" placeholder="https://…" autocomplete="off" spellcheck="false">
+              </div>
+              <div class="kv-row">
+                <button class="kv-button kv-button--sm" type="button" data-action="mcp-add">Ekle</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- B3: araç listesi -->
+        <div class="kv-col-side">
+          <div class="kv-panel kv-glass-panel" data-mcp-block="b3">
+            <div class="kv-panel-title"><span>Araçlar</span></div>
+            <div data-mcp-tools>
+              <p class="kv-empty">Araç listesi yükleniyor…</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- B4: araç çağırma -->
+        <div class="kv-col-side">
+          <div class="kv-panel kv-glass-panel" data-mcp-block="b4">
+            <div class="kv-panel-title"><span>Araç çağırma</span></div>
+            <div data-mcp-call>
+              <div class="kv-field">
+                <label for="mcp-call-args-input">JSON argümanlar</label>
+                <textarea class="kv-input kv-mono" id="mcp-call-args-input" data-field="mcp-call-args" rows="4" spellcheck="false">{}</textarea>
+              </div>
+              <div class="kv-row">
+                <button class="kv-button kv-button--sm" type="button" data-action="mcp-call">Çalıştır</button>
+              </div>
+              <pre class="kv-mono" data-field="mcp-call-result">—</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- B5: günlük kuyruğu -->
+        <div class="kv-panel kv-glass-panel" data-mcp-block="b5">
+          <div class="kv-panel-title">
+            <span>Günlük</span>
+            <span class="kv-muted kv-mono kv-tabular" data-field="mcp-log-count">0</span>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="mcp-log-clear">Temizle</button>
+          </div>
+          <ul data-mcp-log aria-live="polite"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ KATALOG (T-140, UI §15.5) ============ -->
+    <section data-screen="catalog" aria-labelledby="screen-title" hidden aria-hidden="true">
+      <div class="kv-catalog">
+        <!-- B1: arama ve filtre -->
+        <div class="kv-panel kv-glass-panel" data-catalog-block="b1">
+          <div class="kv-panel-title"><span>Arama ve filtre</span></div>
+          <div class="kv-row">
+            <input class="kv-input kv-input--sm" type="search" data-catalog-search aria-label="Katalogda ara" placeholder="En az 2 karakter" autocomplete="off">
+            <select class="kv-input kv-input--sm" data-catalog-category aria-label="Kategori">
+              <option value="all">Tüm kategoriler</option>
+            </select>
+            <label class="kv-check"><input type="checkbox" data-field="catalog-installed-only"> Kurulu</label>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="catalog-reset">Temizle</button>
+          </div>
+          <div class="kv-row kv-catalog-kind" role="group" aria-label="Kaynak türü">
+            <button class="kv-button kv-button--sm" type="button" data-catalog-kind="all" aria-pressed="true">Hepsi</button>
+            <button class="kv-button kv-button--sm" type="button" data-catalog-kind="integration" aria-pressed="false">Entegrasyon</button>
+            <button class="kv-button kv-button--sm" type="button" data-catalog-kind="mcp" aria-pressed="false">MCP</button>
+          </div>
+        </div>
+
+        <!-- B2: sonuç ızgarası -->
+        <div class="kv-panel kv-glass-panel" data-catalog-block="b2">
+          <div class="kv-panel-title">
+            <span>Sonuçlar</span>
+            <span class="kv-muted kv-mono kv-tabular" data-catalog-count aria-live="polite">0 sonuç</span>
+          </div>
+          <div class="kv-card-grid" data-catalog-grid role="list">
+            <p class="kv-empty">Katalog yükleniyor…</p>
+            <div class="kv-card" data-catalog-item role="listitem" data-catalog-id="" data-catalog-kind="mcp" data-catalog-installed="false" data-conn-state="untested" hidden aria-hidden="true">
+              <span class="kv-card__title">—</span>
+            </div>
+          </div>
+          <div data-catalog-empty hidden>
+            <p class="kv-empty">Eşleşen kayıt yok.</p>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="catalog-reset">Filtreleri temizle</button>
+          </div>
+        </div>
+
+        <!-- B3: ayrıntı -->
+        <div class="kv-panel kv-glass-panel" data-catalog-block="b3">
+          <div class="kv-panel-title"><span>Ayrıntı</span></div>
+          <div data-catalog-detail hidden>
+            <div class="kv-field"><span class="kv-muted">Sağlayıcı</span><span data-field="catalog-detail-vendor">—</span></div>
+            <div class="kv-field"><span class="kv-muted">Kategori / tür</span><span data-field="catalog-detail-kind">—</span></div>
+            <div class="kv-field"><span class="kv-muted">Ne yapar</span><span data-field="catalog-detail-hint">—</span></div>
+            <div class="kv-field"><span class="kv-muted">Ortam anahtarları</span><span class="kv-mono" data-field="catalog-detail-env">—</span></div>
+            <div class="kv-field"><span class="kv-muted">Belgeler</span><a class="kv-link" data-field="catalog-detail-docs" href="#" target="_blank" rel="noopener noreferrer">—</a></div>
+          </div>
+        </div>
+
+        <!-- B4: kurulum -->
+        <div class="kv-panel kv-glass-panel" data-catalog-block="b4">
+          <div class="kv-panel-title"><span>Kurulum</span></div>
+          <div data-catalog-install-panel hidden>
+            <p class="kv-muted kv-hint">Kart seçin.</p>
+            <div class="kv-field">
+              <label for="catalog-install-id">Sunucu kimliği</label>
+              <input class="kv-input kv-mono" id="catalog-install-id" type="text" data-field="catalog-install-id" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="kv-field">
+              <label for="catalog-install-env">Ortam (KEY=değer, satır başına)</label>
+              <textarea class="kv-input kv-mono" id="catalog-install-env" data-field="catalog-install-env" rows="3" spellcheck="false"></textarea>
+            </div>
+            <div class="kv-row">
+              <span class="kv-badge" data-conn-state="untested" data-state="offline" data-tone="info">untested</span>
+              <button class="kv-button kv-button--sm" type="button" data-catalog-install data-action="catalog-install">Kur</button>
+              <button class="kv-button kv-button--sm" type="button" data-action="catalog-oauth">Bağlan</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="catalog-open">Formda aç</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-oauth-reconnect data-action="oauth-reconnect" hidden>Yeniden bağlan</button>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-oauth-revoke data-action="oauth-revoke" hidden>Bağlantıyı kes</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- B5: kurulum akışı · adım göstergesi --kv-oauth-step -->
+        <div class="kv-panel kv-glass-panel" data-catalog-block="b5">
+          <div class="kv-panel-title">
+            <span>Kurulum akışı</span>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="catalog-flow-clear">Temizle</button>
+          </div>
+          <div class="kv-log" data-catalog-flow aria-live="polite">
+            <p class="kv-empty" data-field="catalog-flow-step">Akış yok.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DENETIM (T-140, UI §15.6) ============ -->
+    <section data-screen="audit" aria-labelledby="screen-title" hidden aria-hidden="true">
+      <div class="kv-audit">
+        <!-- B1: filtre çubuğu -->
+        <div class="kv-panel kv-glass-panel" data-audit-block="b1">
+          <div class="kv-panel-title"><span>Filtreler</span></div>
+          <div class="kv-row">
+            <input class="kv-input kv-input--sm" type="search" data-audit-filter-op aria-label="İşlem filtresi" placeholder="op (model.install…)" autocomplete="off">
+            <input class="kv-input kv-input--sm" type="search" data-audit-filter-code aria-label="Kod filtresi" placeholder="kod (OK…)" autocomplete="off">
+            <input class="kv-input kv-input--sm" type="date" data-audit-filter-since aria-label="Başlangıç tarihi">
+            <label class="kv-field">
+              <span>Limit</span>
+              <select class="kv-input kv-input--sm" data-audit-limit aria-label="Kayıt limiti">
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200" selected>200</option>
+                <option value="500">500</option>
+              </select>
+            </label>
+            <button class="kv-button kv-button--sm" type="button" data-action="audit-refresh">Yenile</button>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="audit-reset">Temizle</button>
+          </div>
+        </div>
+
+        <!-- B2: kayıt tablosu · satır yüksekliği --kv-audit-row-h -->
+        <div class="kv-panel kv-glass-panel" data-audit-block="b2">
+          <div class="kv-panel-title"><span>Denetim kayıtları</span></div>
+          <div class="kv-table" data-audit-list>
+            <p class="kv-empty">Denetim kaydı yükleniyor…</p>
+            <div class="kv-audit-row" data-audit-row data-audit-id="" tabindex="0" role="button" data-action="audit-row-pick" hidden>
+              <span>—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- B3: satır ayrıntısı -->
+        <div class="kv-panel kv-glass-panel" data-audit-block="b3">
+          <div class="kv-panel-title"><span>Satır ayrıntısı</span></div>
+          <div data-audit-detail hidden>
+            <div class="kv-field"><span class="kv-muted">İşlem</span><span class="kv-mono" data-field="audit-detail-op">—</span></div>
+            <div class="kv-field"><span class="kv-muted">Kod</span><span class="kv-mono" data-field="audit-detail-code">—</span></div>
+            <div class="kv-field"><span class="kv-muted">Hedef</span><span class="kv-mono" data-field="audit-detail-target">—</span></div>
+            <div class="kv-field"><span class="kv-muted">Durum</span><span class="kv-mono" data-field="audit-detail-status">—</span></div>
+            <div class="kv-field"><span class="kv-muted">İdempotans anahtarı</span><span class="kv-mono" data-field="audit-detail-idem">—</span></div>
+          </div>
+        </div>
+
+        <!-- B4: sayaç ve durum -->
+        <div class="kv-panel kv-glass-panel" data-audit-block="b4">
+          <div class="kv-panel-title">
+            <span>Durum</span>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="audit-refresh">Yenile</button>
+          </div>
+          <p class="kv-muted" data-audit-count aria-live="polite">0 kayıt</p>
+          <p class="kv-hint" data-audit-truncated hidden>Kayıt listesi kırpıldı; daha eski kayıtlar gösterilmiyor.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HAZIR BAĞLANTILAR (T-147, UI §15.9) ============ -->
+    <section data-screen="connect" aria-labelledby="screen-title" hidden aria-hidden="true">
+      <div class="kv-preset">
+        <!-- B1: arama, tür ve kategori -->
+        <div class="kv-panel kv-glass-panel" data-preset-block="b1">
+          <div class="kv-panel-title">
+            <span>Hazır Bağlantılar</span>
+            <span class="kv-muted kv-mono kv-tabular" data-preset-count aria-live="polite">0 bağlantı</span>
+          </div>
+          <div class="kv-row">
+            <input class="kv-input kv-input--sm" type="search" data-preset-search aria-label="Hazır bağlantılarda ara" placeholder="En az 2 karakter" autocomplete="off">
+            <select class="kv-input kv-input--sm" data-preset-category aria-label="Kategori">
+              <option value="all">Tüm kategoriler</option>
+            </select>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="preset-reset">Temizle</button>
+          </div>
+          <div class="kv-row" role="group" aria-label="Bağlantı türü">
+            <button class="kv-button kv-button--sm" type="button" data-preset-kind="all" aria-pressed="true">Tümü</button>
+            <button class="kv-button kv-button--sm" type="button" data-preset-kind="integration" aria-pressed="false">Entegrasyon</button>
+            <button class="kv-button kv-button--sm" type="button" data-preset-kind="mcp" aria-pressed="false">MCP</button>
+          </div>
+        </div>
+
+        <!-- B2: preset galerisi (124 kart) -->
+        <div class="kv-panel kv-glass-panel" data-preset-block="b2">
+          <div class="kv-panel-title"><span>Bağlantı galerisi</span></div>
+          <div class="kv-preset__grid" data-preset-grid role="list">
+            <p class="kv-empty">Bağlantılar yükleniyor…</p>
+            <div class="kv-preset__card" data-preset-item role="listitem" data-preset-id="" data-preset-kind="integration" data-preset-ready="ready" tabindex="0" data-action="preset-pick" hidden aria-hidden="true">
+              <span class="kv-preset__logo" aria-hidden="true">—</span>
+              <span class="kv-card__title">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- B3: seçili preset ayrıntısı + her zaman görünür "nasıl alınır" -->
+        <div class="kv-panel kv-glass-panel" data-preset-block="b3">
+          <div class="kv-panel-title"><span>Ayrıntı ve kurulum adımları</span></div>
+          <div class="kv-preset__detail" data-preset-detail hidden>
+            <div class="kv-row">
+              <span class="kv-preset__logo" aria-hidden="true" data-field="preset-detail-logo">—</span>
+              <div>
+                <h3 data-field="preset-detail-name">—</h3>
+                <p class="kv-muted kv-mono" data-field="preset-detail-meta">—</p>
+              </div>
+            </div>
+            <p class="kv-muted" data-field="preset-detail-summary">—</p>
+            <div class="kv-field">
+              <span class="kv-muted">Nasıl alınır</span>
+              <div class="kv-preset__howto" data-preset-howto role="list"></div>
+            </div>
+            <div class="kv-field">
+              <span class="kv-muted">Belgeler</span>
+              <a class="kv-link" data-field="preset-detail-docs" href="#" target="_blank" rel="noopener noreferrer">—</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- B4: alan formu + Votion anahtarı -->
+        <div class="kv-panel kv-glass-panel" data-preset-block="b4">
+          <div class="kv-panel-title"><span>Bağlan</span></div>
+          <div class="kv-preset__form" data-preset-form>
+            <p class="kv-muted kv-hint" data-field="preset-form-hint">Kart seçin.</p>
+            <div data-field="preset-fields">
+              <div class="kv-preset__field" data-preset-field data-preset-field-key="" hidden>
+                <label for="preset-field-template">Alan</label>
+                <input class="kv-input" id="preset-field-template" type="text" autocomplete="off">
+                <span class="kv-preset__hint" data-preset-field-hint></span>
+              </div>
+            </div>
+            <div data-field="preset-votion-slot">
+              <label class="kv-check"><input type="checkbox" data-field="preset-votion-access"> Votion bu bağlantıyı kullanabilir</label>
+            </div>
+            <p class="kv-muted kv-hint" data-field="preset-votion-line">Votion: —</p>
+            <div class="kv-preset__actions">
+              <button class="kv-button" type="button" data-preset-connect data-action="preset-connect">Bağlan</button>
+              <button class="kv-button kv-button--ghost" type="button" data-preset-test disabled title="Bu bağlantı için test yeteneği tanımlı değil">Test et</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- B5: sonuç / akış -->
+        <div class="kv-panel kv-glass-panel" data-preset-block="b5">
+          <div class="kv-panel-title"><span>Sonuç</span></div>
+          <div class="kv-log">
+            <p class="kv-empty" data-preset-empty hidden>Eşleşen bağlantı yok.</p>
+            <p class="kv-muted" data-preset-result aria-live="polite">Kart seçin.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ DURUM ÇUBUĞU ============ -->
+  <footer class="kv-statusbar" data-statusbar>
+    <span class="kv-row"><i class="kv-dot" data-status-dot></i><span data-field="status-connection">bağlanıyor</span></span>
+    <span class="kv-mono" data-field="status-sessions">0 seans</span>
+    <span class="kv-mono" data-field="status-events">olay: 0</span>
+    <span class="kv-mono" data-field="status-version">v3.4.0</span>
+  </footer>
+
+  <!-- ============ KOMUT PALETİ ============ -->
+  <div class="kv-palette" data-palette hidden>
+    <div class="kv-palette__box" role="dialog" aria-modal="true" aria-label="Komut paleti">
+      <input class="kv-input kv-palette__input" type="text" placeholder="Komut veya ekran ara… ESC kapat" data-field="palette-input" aria-label="Komut veya ekran ara">
+      <div class="kv-palette__list" data-palette-list></div>
+    </div>
+  </div>
+
+  <!-- ============ VOTION: Türkçe sesli asistan (T6-8) ============ -->
+  <div class="kv-votion" data-votion-root>
+    <section class="kv-votion__panel" data-votion-panel hidden aria-label="Votion paneli">
+      <div class="kv-panel__header kv-votion__head">
+        <div class="kv-row kv-votion__id">
+          <span class="kv-votion__orb" data-votion-wave aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="kv-votion__name"><b>Votion</b><em>sesli asistan</em></span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-votion__state kv-mono" data-field="votion-state">hazır</span>
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="votion-speak-toggle" aria-pressed="true" title="Sesli yanıtı aç/kapat" aria-label="Sesli yanıtı aç/kapat">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></svg>
+          </button>
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="votion-stop" title="Durdur" aria-label="Durdur">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1.5"/></svg>
+          </button>
+          <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="votion-close" title="Kapat" aria-label="Kapat">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="kv-votion__log" data-votion-log aria-live="polite">
+        <div class="kv-votion__row" data-who="votion">
+          <p class="kv-votion__text">Merhaba, ben Votion. Mikrofona basıp konuşabilir, yazabilir ya da “not defterini aç”, “ekran görüntüsü al”, “pano durumu” diyebilirsin.</p>
+        </div>
+      </div>
+      <div class="kv-votion__actions" data-votion-actions>
+        <button type="button" class="kv-votion__chip" data-votion-act="screen">Ekranı gör</button>
+        <button type="button" class="kv-votion__chip" data-votion-act="summary">Sayfayı özetle</button>
+        <button type="button" class="kv-votion__chip" data-votion-act="apps">Uygulama aç</button>
+        <button type="button" class="kv-votion__chip" data-votion-act="files">Dosyalar</button>
+        <button type="button" class="kv-votion__chip" data-votion-act="tour">Beni gezdir</button>
+      </div>
+      <form class="kv-votion__composer" data-votion-form>
+        <button class="kv-votion__mic" type="button" data-action="votion-mic" aria-pressed="false" aria-label="Mikrofonla konuş" title="Konuşmak için bas">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+        </button>
+        <input class="kv-input" type="text" data-field="votion-text" placeholder="Votion’a yaz ya da mikrofona bas…" autocomplete="off" aria-label="Votion sorusu">
+        <button class="kv-button kv-button--sm" type="submit" data-action="votion-send">Gönder</button>
+      </form>
+      <p class="kv-muted kv-hint kv-votion__hint" data-field="votion-support">Ses desteği ölçülüyor…</p>
+    </section>
+
+    <button class="kv-votion__fab" type="button" data-votion-fab aria-label="Votion — sesli asistan" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10v4M8 7v10M12 4.5v15M16 8v8M20 10.5v3"/></svg>
+    </button>
+  </div>
+
+  <!-- ============ CANLI TUR (T8-1): ekranda gerçekten gezen vurgu katmanı ============ -->
+  <div class="kv-tour" data-tour hidden aria-live="polite">
+    <div class="kv-tour__scrim" data-tour-scrim></div>
+    <div class="kv-tour__spot" data-tour-spot aria-hidden="true"></div>
+    <section class="kv-tour__card" data-tour-card role="dialog" aria-modal="false" aria-label="Canlı tur">
+      <header class="kv-tour__head">
+        <span class="kv-tour__step" data-field="tour-step">1 / 1</span>
+        <span class="kv-tour__target kv-mono" data-field="tour-target">—</span>
+        <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="tour-exit" title="Turu bitir" aria-label="Turu bitir">✕</button>
+      </header>
+      <h3 data-field="tour-title">Tur</h3>
+      <p data-field="tour-body"></p>
+      <div class="kv-tour__actions">
+        <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="tour-prev">Geri</button>
+        <button class="kv-button kv-button--sm" type="button" data-action="tour-next">İleri</button>
+        <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="tour-skip">Atla</button>
+        <span class="kv-muted kv-mono" data-field="tour-hint"></span>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ SAĞ TIK MENÜSÜ (T8-3) ============ -->
+  <div class="kv-menu" data-context-menu hidden role="menu" aria-label="Bağlam menüsü"></div>
+
+  <!-- ============ İLK KURULUM (T-153): karşılama paneli ============ -->
+  <div class="kv-modal" data-onboard hidden role="dialog" aria-modal="true" aria-label="İlk kurulum">
+    <div class="kv-modal__dialog">
+      <h2 class="kv-modal__title" data-field="onboard-title">Keyvotion Console'a hoş geldin — 3 adım</h2>
+      <p class="kv-modal__sub" data-field="onboard-sub">Kurulumu üç adımda tamamla; anahtarın şifrelenir, asla geri gösterilmez.</p>
+      <div data-onboard-body></div>
+      <p class="kv-alert" data-field="onboard-status" role="status" aria-live="polite" hidden></p>
+      <div class="kv-modal__actions" data-onboard-actions></div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL KÖKÜ ============ -->
+  <div data-modal-root></div>
+  <div data-crash-root hidden></div>
+  <div data-toast-root aria-live="polite"></div>
+
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

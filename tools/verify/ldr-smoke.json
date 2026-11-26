@@ -1,0 +1,21 @@
+{
+  "app": {
+    "title": "Keyvotion Console",
+    "nav": 23,
+    "screens": 23,
+    "empty": [],
+    "blank": [],
+    "visited": 23,
+    "shell": false
+  },
+  "connect": {
+    "cards": 124,
+    "count": "124 bağlantı",
+    "kinds": {
+      "all": 127
+    }
+  },
+  "exc": [],
+  "errs": [],
+  "ok": true
+}

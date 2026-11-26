@@ -1,0 +1,3368 @@
+[
+  {
+    "id": "int-github",
+    "kind": "integration",
+    "refId": "github",
+    "name": "GitHub",
+    "vendor": "GitHub",
+    "category": "code",
+    "authMode": "oauth2",
+    "logoHint": "GH",
+    "summary": "Depo, sorun ve çekme isteklerini API üzerinden yönetir",
+    "fields": [],
+    "scopes": [
+      "repo",
+      "read:user"
+    ],
+    "docsUrl": "https://docs.github.com/rest",
+    "testCapability": "listRepos"
+  },
+  {
+    "id": "int-gitlab",
+    "kind": "integration",
+    "refId": "gitlab",
+    "name": "GitLab",
+    "vendor": "GitLab",
+    "category": "code",
+    "authMode": "token",
+    "logoHint": "GL",
+    "summary": "Proje, sorun ve birleştirme isteklerini API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "glpat-…",
+        "hint": "GitLab REST API isteklerinde PRIVATE-TOKEN başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://gitlab.com/-/user_settings/personal_access_tokens adresini aç  2) User Settings → Access Tokens → Add new token (read_api)  3) glpat-… biçimindeki değeri kopyala",
+        "url": "https://gitlab.com/-/user_settings/personal_access_tokens"
+      }
+    ],
+    "scopes": [
+      "read_api"
+    ],
+    "docsUrl": "https://docs.gitlab.com/ee/api/rest/",
+    "testCapability": "listProjects"
+  },
+  {
+    "id": "int-slack",
+    "kind": "integration",
+    "refId": "slack",
+    "name": "Slack",
+    "vendor": "Salesforce",
+    "category": "communication",
+    "authMode": "token",
+    "logoHint": "SL",
+    "summary": "Kanal, mesaj ve kullanıcı işlemlerini API üzerinden yapar",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "xoxb-…",
+        "hint": "Slack Web API çağrılarında Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://api.slack.com/apps adresini aç  2) api.slack.com/apps → OAuth & Permissions → Install App  3) xoxb-… biçimindeki değeri kopyala",
+        "url": "https://api.slack.com/apps"
+      }
+    ],
+    "scopes": [
+      "conversations:read",
+      "users:read"
+    ],
+    "docsUrl": "https://api.slack.com/web",
+    "testCapability": "listChannels"
+  },
+  {
+    "id": "int-discord",
+    "kind": "integration",
+    "refId": "discord",
+    "name": "Discord",
+    "vendor": "Discord",
+    "category": "communication",
+    "authMode": "token",
+    "logoHint": "DC",
+    "summary": "Sunucu, kanal ve kullanıcı bilgilerini API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "MTI…",
+        "hint": "Discord API isteklerinde Authorization başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://discord.com/developers/applications adresini aç  2) Developer Portal → Bot → Reset Token  3) MTI… biçimindeki değeri kopyala",
+        "url": "https://discord.com/developers/applications"
+      }
+    ],
+    "scopes": [
+      "identify",
+      "guilds"
+    ],
+    "docsUrl": "https://discord.com/developers/docs/reference",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-notion",
+    "kind": "integration",
+    "refId": "notion",
+    "name": "Notion",
+    "vendor": "Notion Labs",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "NT",
+    "summary": "Sayfa ve veritabanlarını Notion API ile okur/yazar",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "ntn_…",
+        "hint": "Notion API çağrılarında Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://www.notion.so/profile/integrations adresini aç  2) Integrations → New integration → Secret’ı kopyala  3) ntn_… biçimindeki değeri kopyala",
+        "url": "https://www.notion.so/profile/integrations"
+      }
+    ],
+    "scopes": [
+      "read_content"
+    ],
+    "docsUrl": "https://developers.notion.com/reference/intro",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-linear",
+    "kind": "integration",
+    "refId": "linear",
+    "name": "Linear",
+    "vendor": "Linear",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "LM",
+    "summary": "Sorun, proje ve ekip işlerini API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "lin_api_…",
+        "hint": "Linear GraphQL API kimlik doğrulamasında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://linear.app/settings/api adresini aç  2) Settings → API → Personal API keys → Create key  3) lin_api_… biçimindeki değeri kopyala",
+        "url": "https://linear.app/settings/api"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://developers.linear.app/docs/graphql/working-with-the-graphql-api",
+    "testCapability": "getViewer"
+  },
+  {
+    "id": "int-jira",
+    "kind": "integration",
+    "refId": "jira",
+    "name": "Jira (Atlassian)",
+    "vendor": "Atlassian",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "JR",
+    "summary": "Jira sorunlarını ve projelerini API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "ATATT…",
+        "hint": "Jira Cloud REST API’de Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://id.atlassian.com/manage-profile/security/api-tokens adresini aç  2) Security → API tokens → Create API token  3) ATATT… biçimindeki değeri kopyala",
+        "url": "https://id.atlassian.com/manage-profile/security/api-tokens"
+      },
+      {
+        "key": "site",
+        "label": "Cloud ID / site",
+        "placeholder": "sirket.atlassian.net",
+        "hint": "Jira Cloud site adresi; API yolunda kullanılır",
+        "secret": false,
+        "required": true,
+        "howToGet": "1) https://id.atlassian.com/manage-profile/security/api-tokens adresini aç  2) cloud id / site değerini bul  3) buraya yapıştır",
+        "url": "https://id.atlassian.com/manage-profile/security/api-tokens"
+      }
+    ],
+    "scopes": [
+      "read:jira-work"
+    ],
+    "docsUrl": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+    "testCapability": "getMyself"
+  },
+  {
+    "id": "int-figma",
+    "kind": "integration",
+    "refId": "figma",
+    "name": "Figma",
+    "vendor": "Figma",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "FG",
+    "summary": "Dosya, bileşen ve yorumları Figma API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "figd_…",
+        "hint": "Figma REST API isteklerinde X-Figma-Token başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://www.figma.com/settings adresini aç  2) Settings → Security → Personal access tokens → Create new token  3) figd_… biçimindeki değeri kopyala",
+        "url": "https://www.figma.com/settings"
+      }
+    ],
+    "scopes": [
+      "files:read"
+    ],
+    "docsUrl": "https://www.figma.com/developers/api",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-telegram",
+    "kind": "integration",
+    "refId": "telegram",
+    "name": "Telegram",
+    "vendor": "Telegram",
+    "category": "communication",
+    "authMode": "token",
+    "logoHint": "TG",
+    "summary": "Telegram botu üzerinden mesaj ve güncellemeleri yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "123456:AA…",
+        "hint": "Bot API URL’sinde <token> yerine geçer",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://t.me/BotFather adresini aç  2) BotFather ile /newbot → HTTP API token’ını kopyala  3) 123456:AA… biçimindeki değeri kopyala",
+        "url": "https://t.me/BotFather"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://core.telegram.org/bots/api",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-openai",
+    "kind": "integration",
+    "refId": "openai",
+    "name": "OpenAI",
+    "vendor": "OpenAI",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "OI",
+    "summary": "Modelleri listeler ve metin üretimi için API sunar",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "sk-…",
+        "hint": "OpenAI API isteklerinde Bearer anahtar olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://platform.openai.com/api-keys adresini aç  2) API keys → Create new secret key  3) sk-… biçimindeki değeri kopyala",
+        "url": "https://platform.openai.com/api-keys"
+      }
+    ],
+    "scopes": [
+      "models:read"
+    ],
+    "docsUrl": "https://platform.openai.com/docs/api-reference",
+    "testCapability": "listModels"
+  },
+  {
+    "id": "int-anthropic",
+    "kind": "integration",
+    "refId": "anthropic",
+    "name": "Anthropic",
+    "vendor": "Anthropic",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "AN",
+    "summary": "Claude modelleriyle mesajlaşma API’si sunar",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "sk-ant-…",
+        "hint": "Anthropic Messages API kimlik doğrulamasında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://console.anthropic.com/settings/keys adresini aç  2) Settings → API Keys → Create Key  3) sk-ant-… biçimindeki değeri kopyala",
+        "url": "https://console.anthropic.com/settings/keys"
+      }
+    ],
+    "scopes": [
+      "models:read"
+    ],
+    "docsUrl": "https://docs.anthropic.com/en/api/overview",
+    "testCapability": "listModels"
+  },
+  {
+    "id": "int-ollama",
+    "kind": "integration",
+    "refId": "ollama",
+    "name": "Ollama (yerel)",
+    "vendor": "Ollama",
+    "category": "ai",
+    "authMode": "none",
+    "logoHint": "OL",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/ollama/ollama/blob/main/docs/api.md",
+    "testCapability": "listModels"
+  },
+  {
+    "id": "int-supabase",
+    "kind": "integration",
+    "refId": "supabase",
+    "name": "Supabase",
+    "vendor": "Supabase",
+    "category": "cloud",
+    "authMode": "token",
+    "logoHint": "SB",
+    "summary": "Proje, tablo ve veritabanı işlemlerini API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "sb_secret_…",
+        "hint": "Supabase Management API’de Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://supabase.com/dashboard/account/tokens adresini aç  2) Account → Access Tokens → Generate token  3) sb_secret_… biçimindeki değeri kopyala",
+        "url": "https://supabase.com/dashboard/account/tokens"
+      }
+    ],
+    "scopes": [
+      "projects.read"
+    ],
+    "docsUrl": "https://supabase.com/docs/reference/api",
+    "testCapability": "listProjects"
+  },
+  {
+    "id": "int-firebase",
+    "kind": "integration",
+    "refId": "firebase",
+    "name": "Firebase",
+    "vendor": "Google",
+    "category": "cloud",
+    "authMode": "token",
+    "logoHint": "FB",
+    "summary": "Firebase projelerini ve yapılandırmasını API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "AIza…",
+        "hint": "Firebase Project Management API kimlik doğrulamasında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://console.cloud.google.com/apis/credentials adresini aç  2) APIs & Services → Credentials → Create API key  3) AIza… biçimindeki değeri kopyala",
+        "url": "https://console.cloud.google.com/apis/credentials"
+      }
+    ],
+    "scopes": [
+      "firebase.projects.get"
+    ],
+    "docsUrl": "https://firebase.google.com/docs/projects/api/reference/rest",
+    "testCapability": "listProjects"
+  },
+  {
+    "id": "int-vercel",
+    "kind": "integration",
+    "refId": "vercel",
+    "name": "Vercel",
+    "vendor": "Vercel",
+    "category": "cloud",
+    "authMode": "token",
+    "logoHint": "VC",
+    "summary": "Dağıtım, proje ve alan adlarını API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "vcp_…",
+        "hint": "Vercel REST API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://vercel.com/account/tokens adresini aç  2) Account tokens → Create Token  3) vcp_… biçimindeki değeri kopyala",
+        "url": "https://vercel.com/account/tokens"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://vercel.com/docs/rest-api",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-netlify",
+    "kind": "integration",
+    "refId": "netlify",
+    "name": "Netlify",
+    "vendor": "Netlify",
+    "category": "cloud",
+    "authMode": "token",
+    "logoHint": "NL",
+    "summary": "Site ve dağıtım işlemlerini Netlify API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Netlify API isteklerinde Authorization başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.netlify.com/user/applications adresini aç  2) Applications → Personal access tokens → New access token  3) … biçimindeki değeri kopyala",
+        "url": "https://app.netlify.com/user/applications"
+      }
+    ],
+    "scopes": [
+      "read:site"
+    ],
+    "docsUrl": "https://docs.netlify.com/api/get-started/",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-cloudflare",
+    "kind": "integration",
+    "refId": "cloudflare",
+    "name": "Cloudflare",
+    "vendor": "Cloudflare",
+    "category": "cloud",
+    "authMode": "token",
+    "logoHint": "CF",
+    "summary": "Zone, DNS ve hesap ayarlarını API ile okur/yazar",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Cloudflare API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://dash.cloudflare.com/profile/api-tokens adresini aç  2) Profile → API Tokens → Create Token  3) … biçimindeki değeri kopyala",
+        "url": "https://dash.cloudflare.com/profile/api-tokens"
+      }
+    ],
+    "scopes": [
+      "Zone:Read"
+    ],
+    "docsUrl": "https://developers.cloudflare.com/api/",
+    "testCapability": "verifyToken"
+  },
+  {
+    "id": "int-planetscale",
+    "kind": "integration",
+    "refId": "planetscale",
+    "name": "PlanetScale",
+    "vendor": "PlanetScale",
+    "category": "cloud",
+    "authMode": "token",
+    "logoHint": "PS",
+    "summary": "Veritabanı, dal ve şema işlemlerini API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "pscale_…",
+        "hint": "PlanetScale API kimlik doğrulamasında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.planetscale.com/settings/tokens adresini aç  2) Settings → Tokens → New token  3) pscale_… biçimindeki değeri kopyala",
+        "url": "https://app.planetscale.com/settings/tokens"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://api-docs.planetscale.com/",
+    "testCapability": "listOrganizations"
+  },
+  {
+    "id": "int-digitalocean",
+    "kind": "integration",
+    "refId": "digitalocean",
+    "name": "DigitalOcean",
+    "vendor": "DigitalOcean",
+    "category": "cloud",
+    "authMode": "token",
+    "logoHint": "DO",
+    "summary": "Droplet, proje ve hesap kaynaklarını API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "dop_v1_…",
+        "hint": "DigitalOcean API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://cloud.digitalocean.com/account/api/tokens adresini aç  2) API → Tokens → Generate New Token  3) dop_v1_… biçimindeki değeri kopyala",
+        "url": "https://cloud.digitalocean.com/account/api/tokens"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://docs.digitalocean.com/reference/api/api-reference/",
+    "testCapability": "getAccount"
+  },
+  {
+    "id": "int-heroku",
+    "kind": "integration",
+    "refId": "heroku",
+    "name": "Heroku",
+    "vendor": "Heroku",
+    "category": "cloud",
+    "authMode": "token",
+    "logoHint": "HR",
+    "summary": "Uygulama, dyno ve eklenti işlemlerini API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Heroku Platform API kimlik doğrulamasında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://dashboard.heroku.com/account adresini aç  2) Account → API Key → Reveal  3) … biçimindeki değeri kopyala",
+        "url": "https://dashboard.heroku.com/account"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://devcenter.heroku.com/articles/platform-api-reference",
+    "testCapability": "getAccount"
+  },
+  {
+    "id": "int-sentry",
+    "kind": "integration",
+    "refId": "sentry",
+    "name": "Sentry",
+    "vendor": "Sentry",
+    "category": "observability",
+    "authMode": "token",
+    "logoHint": "ST",
+    "summary": "Hata olaylarını ve projeleri Sentry API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "sntrys_…",
+        "hint": "Sentry API isteklerinde Authorization başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://sentry.io/settings/account/api/auth-tokens/ adresini aç  2) Auth Tokens → Create New Token  3) sntrys_… biçimindeki değeri kopyala",
+        "url": "https://sentry.io/settings/account/api/auth-tokens/"
+      }
+    ],
+    "scopes": [
+      "project:read"
+    ],
+    "docsUrl": "https://docs.sentry.io/api/",
+    "testCapability": "listOrganizations"
+  },
+  {
+    "id": "int-datadog",
+    "kind": "integration",
+    "refId": "datadog",
+    "name": "Datadog",
+    "vendor": "Datadog",
+    "category": "observability",
+    "authMode": "token",
+    "logoHint": "DD",
+    "summary": "Metrik, olay ve izleme verilerini API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Datadog API isteklerinde API anahtarı olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.datadoghq.com/organization-settings/api-keys adresini aç  2) Organization Settings → API Keys → Create API Key  3) … biçimindeki değeri kopyala",
+        "url": "https://app.datadoghq.com/organization-settings/api-keys"
+      }
+    ],
+    "scopes": [
+      "metrics.read"
+    ],
+    "docsUrl": "https://docs.datadoghq.com/api/",
+    "testCapability": "validateKey"
+  },
+  {
+    "id": "int-grafana",
+    "kind": "integration",
+    "refId": "grafana",
+    "name": "Grafana Cloud",
+    "vendor": "Grafana Labs",
+    "category": "observability",
+    "authMode": "token",
+    "logoHint": "GF",
+    "summary": "Pano, veri kaynağı ve uyarıları Grafana API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "glsa_…",
+        "hint": "Grafana HTTP API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://grafana.com/docs/grafana/latest/administration/api-keys/ adresini aç  2) Administration → API Keys → Add API key  3) glsa_… biçimindeki değeri kopyala",
+        "url": "https://grafana.com/docs/grafana/latest/administration/api-keys/"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://grafana.com/docs/grafana/latest/developers/http_api/",
+    "testCapability": "getHealth"
+  },
+  {
+    "id": "int-pagerduty",
+    "kind": "integration",
+    "refId": "pagerduty",
+    "name": "PagerDuty",
+    "vendor": "PagerDuty",
+    "category": "observability",
+    "authMode": "token",
+    "logoHint": "PD",
+    "summary": "Olay, servis ve kullanıcıları API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "PagerDuty API isteklerinde Token başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://support.pagerduty.com/docs/api-access-keys adresini aç  2) API Access Keys → Create New API Key  3) … biçimindeki değeri kopyala",
+        "url": "https://support.pagerduty.com/docs/api-access-keys"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://developer.pagerduty.com/api-reference/",
+    "testCapability": "listUsers"
+  },
+  {
+    "id": "int-gmail",
+    "kind": "integration",
+    "refId": "gmail",
+    "name": "Gmail",
+    "vendor": "Google",
+    "category": "productivity",
+    "authMode": "oauth2",
+    "logoHint": "GM",
+    "summary": "Tarayıcıda Google onayı — anahtar yazmazsın",
+    "fields": [],
+    "scopes": [
+      "gmail.readonly"
+    ],
+    "docsUrl": "https://developers.google.com/gmail/api/reference/rest",
+    "testCapability": "getProfile"
+  },
+  {
+    "id": "int-google-drive",
+    "kind": "integration",
+    "refId": "google-drive",
+    "name": "Google Drive",
+    "vendor": "Google",
+    "category": "productivity",
+    "authMode": "oauth2",
+    "logoHint": "GD",
+    "summary": "Tarayıcıda Google onayı — anahtar yazmazsın",
+    "fields": [],
+    "scopes": [
+      "drive.readonly"
+    ],
+    "docsUrl": "https://developers.google.com/drive/api/reference/rest/v3",
+    "testCapability": "getAbout"
+  },
+  {
+    "id": "int-google-calendar",
+    "kind": "integration",
+    "refId": "google-calendar",
+    "name": "Google Calendar",
+    "vendor": "Google",
+    "category": "productivity",
+    "authMode": "oauth2",
+    "logoHint": "GC",
+    "summary": "Tarayıcıda Google onayı — anahtar yazmazsın",
+    "fields": [],
+    "scopes": [
+      "calendar.readonly"
+    ],
+    "docsUrl": "https://developers.google.com/calendar/api/v3/reference",
+    "testCapability": "getCalendar"
+  },
+  {
+    "id": "int-google-sheets",
+    "kind": "integration",
+    "refId": "google-sheets",
+    "name": "Google Sheets",
+    "vendor": "Google",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "GS",
+    "summary": "E-tablo hücrelerini okur ve günceller",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "ya29.…",
+        "hint": "Google Sheets API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://console.cloud.google.com/apis/credentials adresini aç  2) Credentials → OAuth istemcisiyle erişim belirteci al  3) ya29.… biçimindeki değeri kopyala",
+        "url": "https://console.cloud.google.com/apis/credentials"
+      },
+      {
+        "key": "spreadsheetId",
+        "label": "E-tablo kimliği",
+        "placeholder": "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms",
+        "hint": "E-tablo URL’sindeki /d/ sonrası kimlik; hangi tablonun okunacağını belirler",
+        "secret": false,
+        "required": true,
+        "howToGet": "1) https://console.cloud.google.com/apis/credentials adresini aç  2) e-tablo kimliği değerini bul  3) buraya yapıştır",
+        "url": "https://console.cloud.google.com/apis/credentials"
+      }
+    ],
+    "scopes": [
+      "spreadsheets.readonly"
+    ],
+    "docsUrl": "https://developers.google.com/sheets/api/reference/rest",
+    "testCapability": "getSpreadsheet"
+  },
+  {
+    "id": "int-box",
+    "kind": "integration",
+    "refId": "box",
+    "name": "Box",
+    "vendor": "Box",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "BX",
+    "summary": "Dosya ve klasörleri Box API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Box API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.box.com/developers/console adresini aç  2) Developer Console → Generate Developer Token  3) … biçimindeki değeri kopyala",
+        "url": "https://app.box.com/developers/console"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://developer.box.com/reference/",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-onedrive",
+    "kind": "integration",
+    "refId": "onedrive",
+    "name": "OneDrive",
+    "vendor": "Microsoft",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "OD",
+    "summary": "OneDrive dosyalarını Microsoft Graph ile okur/yazar",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "Ew…",
+        "hint": "Microsoft Graph API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade adresini aç  2) App registrations → Certificates & secrets → New client secret  3) Ew… biçimindeki değeri kopyala",
+        "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
+      }
+    ],
+    "scopes": [
+      "Files.Read"
+    ],
+    "docsUrl": "https://learn.microsoft.com/en-us/graph/api/resources/onedrive",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-airtable",
+    "kind": "integration",
+    "refId": "airtable",
+    "name": "Airtable",
+    "vendor": "Airtable",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "AT",
+    "summary": "Tablo, alan ve kayıtları Airtable API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "pat…",
+        "hint": "Airtable API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://airtable.com/create/tokens adresini aç  2) Developer hub → Create personal access token  3) pat… biçimindeki değeri kopyala",
+        "url": "https://airtable.com/create/tokens"
+      }
+    ],
+    "scopes": [
+      "schema.bases:read"
+    ],
+    "docsUrl": "https://airtable.com/developers/web/api/introduction",
+    "testCapability": "listBases"
+  },
+  {
+    "id": "int-asana",
+    "kind": "integration",
+    "refId": "asana",
+    "name": "Asana",
+    "vendor": "Asana",
+    "category": "productivity",
+    "authMode": "token",
+    "logoHint": "AS",
+    "summary": "Görev, proje ve kullanıcıları Asana API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Asana API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.asana.com/0/my-account adresini aç  2) My account → Developer apps → Personal access token  3) … biçimindeki değeri kopyala",
+        "url": "https://app.asana.com/0/my-account"
+      }
+    ],
+    "scopes": [
+      "default"
+    ],
+    "docsUrl": "https://developers.asana.com/reference",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-hubspot",
+    "kind": "integration",
+    "refId": "hubspot",
+    "name": "HubSpot",
+    "vendor": "HubSpot",
+    "category": "crm",
+    "authMode": "token",
+    "logoHint": "HS",
+    "summary": "Kişi, şirket ve anlaşmaları HubSpot API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "pat-…",
+        "hint": "HubSpot API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.hubspot.com/settings/integrations/private-apps adresini aç  2) Settings → Private Apps → Create private app  3) pat-… biçimindeki değeri kopyala",
+        "url": "https://app.hubspot.com/settings/integrations/private-apps"
+      }
+    ],
+    "scopes": [
+      "crm.objects.contacts.read"
+    ],
+    "docsUrl": "https://developers.hubspot.com/docs/api/overview",
+    "testCapability": "listContacts"
+  },
+  {
+    "id": "int-pipedrive",
+    "kind": "integration",
+    "refId": "pipedrive",
+    "name": "Pipedrive",
+    "vendor": "Pipedrive",
+    "category": "crm",
+    "authMode": "token",
+    "logoHint": "PI",
+    "summary": "Kişi, fırsat ve boru hattını API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Pipedrive API isteklerinde token sorgu parametresinde kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.pipedrive.com/settings/api adresini aç  2) Settings → Personal API token → Generate new token  3) … biçimindeki değeri kopyala",
+        "url": "https://app.pipedrive.com/settings/api"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://developers.pipedrive.com/docs/api/v1",
+    "testCapability": "listPersons"
+  },
+  {
+    "id": "int-zoom",
+    "kind": "integration",
+    "refId": "zoom",
+    "name": "Zoom",
+    "vendor": "Zoom",
+    "category": "communication",
+    "authMode": "token",
+    "logoHint": "ZM",
+    "summary": "Toplantı, kullanıcı ve kayıtları Zoom API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Zoom API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://marketplace.zoom.us/develop/create adresini aç  2) Develop → Create app → OAuth token al  3) … biçimindeki değeri kopyala",
+        "url": "https://marketplace.zoom.us/develop/create"
+      }
+    ],
+    "scopes": [
+      "user:read"
+    ],
+    "docsUrl": "https://developers.zoom.us/docs/api/rest/",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-microsoft-teams",
+    "kind": "integration",
+    "refId": "microsoft-teams",
+    "name": "Microsoft Teams",
+    "vendor": "Microsoft",
+    "category": "communication",
+    "authMode": "token",
+    "logoHint": "MT",
+    "summary": "Takım, kanal ve mesajları Microsoft Graph ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "Ew…",
+        "hint": "Microsoft Graph API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade adresini aç  2) App registrations → API permissions → Grant admin consent  3) Ew… biçimindeki değeri kopyala",
+        "url": "https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
+      }
+    ],
+    "scopes": [
+      "Team.ReadBasic.All"
+    ],
+    "docsUrl": "https://learn.microsoft.com/en-us/graph/api/resources/teams-api-overview",
+    "testCapability": "listTeams"
+  },
+  {
+    "id": "int-twilio",
+    "kind": "integration",
+    "refId": "twilio",
+    "name": "Twilio",
+    "vendor": "Twilio",
+    "category": "communication",
+    "authMode": "basic",
+    "logoHint": "TW",
+    "summary": "SMS, arama ve hesap işlemlerini Twilio API ile yönetir",
+    "fields": [
+      {
+        "key": "username",
+        "label": "Hesap SID (Account SID)",
+        "placeholder": "AC…",
+        "hint": "Twilio Console → Account SID; API isteklerinin kullanıcı kimliğini belirler",
+        "secret": false,
+        "required": true,
+        "howToGet": "1) https://console.twilio.com/us1/account/keys-credentials/api-keys adresini aç  2) API keys & tokens → Create API key  3) … biçimindeki değeri kopyala",
+        "url": "https://console.twilio.com/us1/account/keys-credentials/api-keys"
+      },
+      {
+        "key": "password",
+        "label": "API anahtarı / parola",
+        "placeholder": "…",
+        "hint": "Twilio REST API’de HTTP Basic parolası olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://console.twilio.com/us1/account/keys-credentials/api-keys adresini aç  2) API keys & tokens → Create API key  3) … biçimindeki değeri kopyala",
+        "url": "https://console.twilio.com/us1/account/keys-credentials/api-keys"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://www.twilio.com/docs/usage/api",
+    "testCapability": "getAccount"
+  },
+  {
+    "id": "int-sendgrid",
+    "kind": "integration",
+    "refId": "sendgrid",
+    "name": "SendGrid",
+    "vendor": "Twilio SendGrid",
+    "category": "communication",
+    "authMode": "token",
+    "logoHint": "SG",
+    "summary": "E-posta gönderimi ve şablonları API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "SG.…",
+        "hint": "SendGrid API isteklerinde Authorization başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.sendgrid.com/settings/api_keys adresini aç  2) API Keys → Create API Key  3) SG.… biçimindeki değeri kopyala",
+        "url": "https://app.sendgrid.com/settings/api_keys"
+      }
+    ],
+    "scopes": [
+      "profile.read"
+    ],
+    "docsUrl": "https://docs.sendgrid.com/api-reference",
+    "testCapability": "getProfile"
+  },
+  {
+    "id": "int-mailgun",
+    "kind": "integration",
+    "refId": "mailgun",
+    "name": "Mailgun",
+    "vendor": "Mailgun",
+    "category": "communication",
+    "authMode": "basic",
+    "logoHint": "MG",
+    "summary": "E-posta gönderimi ve alan adlarını API ile yönetir",
+    "fields": [
+      {
+        "key": "username",
+        "label": "API kullanıcı adı (api)",
+        "placeholder": "api",
+        "hint": "Mailgun API ayarlarındaki sabit kullanıcı; gönderim alanıyla birlikte kullanılır",
+        "secret": false,
+        "required": true,
+        "howToGet": "1) https://app.mailgun.com/app/account/security/api_keys adresini aç  2) API settings → API keys → Add new key  3) … biçimindeki değeri kopyala",
+        "url": "https://app.mailgun.com/app/account/security/api_keys"
+      },
+      {
+        "key": "password",
+        "label": "API anahtarı / parola",
+        "placeholder": "…",
+        "hint": "Mailgun API isteklerinde HTTP Basic parolası olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.mailgun.com/app/account/security/api_keys adresini aç  2) API settings → API keys → Add new key  3) … biçimindeki değeri kopyala",
+        "url": "https://app.mailgun.com/app/account/security/api_keys"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://documentation.mailgun.com/docs/mailgun/api-reference/",
+    "testCapability": "listDomains"
+  },
+  {
+    "id": "int-mailchimp",
+    "kind": "integration",
+    "refId": "mailchimp",
+    "name": "Mailchimp",
+    "vendor": "Mailchimp",
+    "category": "communication",
+    "authMode": "basic",
+    "logoHint": "MC",
+    "summary": "Posta listeleri ve kampanyaları API ile okur",
+    "fields": [
+      {
+        "key": "username",
+        "label": "Kullanıcı adı (anystring)",
+        "placeholder": "anystring",
+        "hint": "Mailchimp Basic Auth kullanıcısı; parola alanına API anahtarı yazılır",
+        "secret": false,
+        "required": true,
+        "howToGet": "1) https://admin.mailchimp.com/account/api/ adresini aç  2) API keys → Create A Key  3) … biçimindeki değeri kopyala",
+        "url": "https://admin.mailchimp.com/account/api/"
+      },
+      {
+        "key": "password",
+        "label": "API anahtarı / parola",
+        "placeholder": "…",
+        "hint": "Mailchimp API isteklerinde HTTP Basic parolası olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://admin.mailchimp.com/account/api/ adresini aç  2) API keys → Create A Key  3) … biçimindeki değeri kopyala",
+        "url": "https://admin.mailchimp.com/account/api/"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://mailchimp.com/developer/marketing/api/",
+    "testCapability": "listLists"
+  },
+  {
+    "id": "int-intercom",
+    "kind": "integration",
+    "refId": "intercom",
+    "name": "Intercom",
+    "vendor": "Intercom",
+    "category": "communication",
+    "authMode": "token",
+    "logoHint": "IN",
+    "summary": "Kullanıcı, konuşma ve makaleleri API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Intercom API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.intercom.com/a/apps/_/settings/developer-hub adresini aç  2) Developer Hub → Personal access tokens  3) … biçimindeki değeri kopyala",
+        "url": "https://app.intercom.com/a/apps/_/settings/developer-hub"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://developers.intercom.com/docs/references/rest-api",
+    "testCapability": "listContacts"
+  },
+  {
+    "id": "int-zendesk",
+    "kind": "integration",
+    "refId": "zendesk",
+    "name": "Zendesk",
+    "vendor": "Zendesk",
+    "category": "communication",
+    "authMode": "basic",
+    "logoHint": "ZD",
+    "summary": "Talep, kullanıcı ve bilgi tabanını API ile yönetir",
+    "fields": [
+      {
+        "key": "username",
+        "label": "E-posta / api kullanıcısı",
+        "placeholder": "sizin@eposta.com",
+        "hint": "Zendesk API kullanıcısı; parola alanına API token yazılır",
+        "secret": false,
+        "required": true,
+        "howToGet": "1) https://admin.zendesk.com/admin/apps-integrations/apis/zendesk-api/settings adresini aç  2) APIs → Zendesk API → Add API token  3) … biçimindeki değeri kopyala",
+        "url": "https://admin.zendesk.com/admin/apps-integrations/apis/zendesk-api/settings"
+      },
+      {
+        "key": "password",
+        "label": "API anahtarı / parola",
+        "placeholder": "…",
+        "hint": "Zendesk API isteklerinde HTTP Basic parolası olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://admin.zendesk.com/admin/apps-integrations/apis/zendesk-api/settings adresini aç  2) APIs → Zendesk API → Add API token  3) … biçimindeki değeri kopyala",
+        "url": "https://admin.zendesk.com/admin/apps-integrations/apis/zendesk-api/settings"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://developer.zendesk.com/api-reference/",
+    "testCapability": "listTickets"
+  },
+  {
+    "id": "int-youtube",
+    "kind": "integration",
+    "refId": "youtube",
+    "name": "YouTube",
+    "vendor": "Google",
+    "category": "media",
+    "authMode": "token",
+    "logoHint": "YT",
+    "summary": "Kanal, video ve oynatma listelerini API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "ya29.…",
+        "hint": "YouTube Data API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://console.cloud.google.com/apis/credentials adresini aç  2) Credentials → OAuth istemcisiyle erişim belirteci al  3) ya29.… biçimindeki değeri kopyala",
+        "url": "https://console.cloud.google.com/apis/credentials"
+      }
+    ],
+    "scopes": [
+      "youtube.readonly"
+    ],
+    "docsUrl": "https://developers.google.com/youtube/v3/docs",
+    "testCapability": "getMyChannel"
+  },
+  {
+    "id": "int-spotify",
+    "kind": "integration",
+    "refId": "spotify",
+    "name": "Spotify",
+    "vendor": "Spotify",
+    "category": "media",
+    "authMode": "token",
+    "logoHint": "SP",
+    "summary": "Çalma listesi, parça ve sanatçıları API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "BQ…",
+        "hint": "Spotify Web API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://developer.spotify.com/dashboard adresini aç  2) Dashboard → Create app → Get access token  3) BQ… biçimindeki değeri kopyala",
+        "url": "https://developer.spotify.com/dashboard"
+      }
+    ],
+    "scopes": [
+      "user-read-private"
+    ],
+    "docsUrl": "https://developer.spotify.com/documentation/web-api",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-reddit",
+    "kind": "integration",
+    "refId": "reddit",
+    "name": "Reddit",
+    "vendor": "Reddit",
+    "category": "media",
+    "authMode": "token",
+    "logoHint": "RD",
+    "summary": "Gönderi, yorum ve toplulukları API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Reddit API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://www.reddit.com/prefs/apps adresini aç  2) Apps → Create app → access token al  3) … biçimindeki değeri kopyala",
+        "url": "https://www.reddit.com/prefs/apps"
+      }
+    ],
+    "scopes": [
+      "identity"
+    ],
+    "docsUrl": "https://www.reddit.com/dev/api/oauth",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-twitch",
+    "kind": "integration",
+    "refId": "twitch",
+    "name": "Twitch",
+    "vendor": "Twitch",
+    "category": "media",
+    "authMode": "token",
+    "logoHint": "TQ",
+    "summary": "Kanal, yayın ve kullanıcıları Twitch API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Twitch Helix API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://dev.twitch.tv/console/apps adresini aç  2) Console → Register app → Get OAuth token  3) … biçimindeki değeri kopyala",
+        "url": "https://dev.twitch.tv/console/apps"
+      }
+    ],
+    "scopes": [
+      "user:read:email"
+    ],
+    "docsUrl": "https://dev.twitch.tv/docs/api/reference",
+    "testCapability": "getUsers"
+  },
+  {
+    "id": "int-mastodon",
+    "kind": "integration",
+    "refId": "mastodon",
+    "name": "Mastodon",
+    "vendor": "Mastodon",
+    "category": "media",
+    "authMode": "token",
+    "logoHint": "MB",
+    "summary": "Zaman çizelgesi ve durumları Mastodon API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Mastodon REST API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://docs.joinmastodon.org/methods/apps/ adresini aç  2) Preferences → Development → New application → token  3) … biçimindeki değeri kopyala",
+        "url": "https://docs.joinmastodon.org/methods/apps/"
+      }
+    ],
+    "scopes": [
+      "read:accounts"
+    ],
+    "docsUrl": "https://docs.joinmastodon.org/methods/",
+    "testCapability": "verifyCredentials"
+  },
+  {
+    "id": "int-bluesky",
+    "kind": "integration",
+    "refId": "bluesky",
+    "name": "Bluesky",
+    "vendor": "Bluesky",
+    "category": "media",
+    "authMode": "token",
+    "logoHint": "BS",
+    "summary": "Akış, profil ve gönderileri AT Protocol ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Bluesky AT Protocol oturumunda erişim belirteci olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://bsky.app/settings/app-passwords adresini aç  2) Settings → App passwords → Add app password  3) … biçimindeki değeri kopyala",
+        "url": "https://bsky.app/settings/app-passwords"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://docs.bsky.app/docs/api",
+    "testCapability": "getProfile"
+  },
+  {
+    "id": "int-x",
+    "kind": "integration",
+    "refId": "x",
+    "name": "X",
+    "vendor": "X Corp.",
+    "category": "media",
+    "authMode": "token",
+    "logoHint": "XL",
+    "summary": "Tweet ve kullanıcıları X API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "X API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://developer.x.com/en/portal/dashboard adresini aç  2) Projects & Apps → Keys and tokens → Generate  3) … biçimindeki değeri kopyala",
+        "url": "https://developer.x.com/en/portal/dashboard"
+      }
+    ],
+    "scopes": [
+      "tweet.read",
+      "users.read"
+    ],
+    "docsUrl": "https://developer.x.com/en/docs/x-api",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "int-linkedin",
+    "kind": "integration",
+    "refId": "linkedin",
+    "name": "LinkedIn",
+    "vendor": "Microsoft LinkedIn",
+    "category": "media",
+    "authMode": "token",
+    "logoHint": "LI",
+    "summary": "Profil, şirket ve iş ilanlarını API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "AQ…",
+        "hint": "LinkedIn API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://www.linkedin.com/developers/apps adresini aç  2) Developers → Uygulama → OAuth 2.0 token al  3) AQ… biçimindeki değeri kopyala",
+        "url": "https://www.linkedin.com/developers/apps"
+      }
+    ],
+    "scopes": [
+      "r_liteprofile"
+    ],
+    "docsUrl": "https://learn.microsoft.com/en-us/linkedin/",
+    "testCapability": "getProfile"
+  },
+  {
+    "id": "int-pinecone",
+    "kind": "integration",
+    "refId": "pinecone",
+    "name": "Pinecone",
+    "vendor": "Pinecone",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "PC",
+    "summary": "Vektör dizinlerini ve sorguları API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "pcsk_…",
+        "hint": "Pinecone API isteklerinde Api-Key başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.pinecone.io/organizations/-/keys adresini aç  2) API Keys → Create API Key  3) pcsk_… biçimindeki değeri kopyala",
+        "url": "https://app.pinecone.io/organizations/-/keys"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://docs.pinecone.io/reference/api",
+    "testCapability": "listIndexes"
+  },
+  {
+    "id": "int-qdrant",
+    "kind": "integration",
+    "refId": "qdrant",
+    "name": "Qdrant Cloud",
+    "vendor": "Qdrant",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "QD",
+    "summary": "Vektör koleksiyonlarını ve aramayı API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Qdrant Cloud API isteklerinde api-key başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://cloud.qdrant.io/ adresini aç  2) Cluster → API Keys → Create  3) … biçimindeki değeri kopyala",
+        "url": "https://cloud.qdrant.io/"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://qdrant.tech/documentation/cloud/",
+    "testCapability": "listClusters"
+  },
+  {
+    "id": "int-weaviate",
+    "kind": "integration",
+    "refId": "weaviate",
+    "name": "Weaviate",
+    "vendor": "Weaviate",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "WV",
+    "summary": "Vektör şeması ve nesneleri API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Weaviate Cloud API isteklerinde Authorization başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://console.weaviate.cloud/ adresini aç  2) Console → Cluster → API key oluştur  3) … biçimindeki değeri kopyala",
+        "url": "https://console.weaviate.cloud/"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://weaviate.io/developers/weaviate/api/rest",
+    "testCapability": "listClasses"
+  },
+  {
+    "id": "int-huggingface",
+    "kind": "integration",
+    "refId": "huggingface",
+    "name": "Hugging Face",
+    "vendor": "Hugging Face",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "HF",
+    "summary": "Model ve veri kümesi bilgilerini API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "hf_…",
+        "hint": "Hugging Face API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://huggingface.co/settings/tokens adresini aç  2) Settings → Tokens → New token (read)  3) hf_… biçimindeki değeri kopyala",
+        "url": "https://huggingface.co/settings/tokens"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://huggingface.co/docs/hub/api",
+    "testCapability": "whoAmI"
+  },
+  {
+    "id": "int-replicate",
+    "kind": "integration",
+    "refId": "replicate",
+    "name": "Replicate",
+    "vendor": "Replicate",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "RP",
+    "summary": "Model çalıştırma ve tahminleri API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "r8_…",
+        "hint": "Replicate API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://replicate.com/account/api-tokens adresini aç  2) Account → API tokens → Create token  3) r8_… biçimindeki değeri kopyala",
+        "url": "https://replicate.com/account/api-tokens"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://replicate.com/docs/reference/http",
+    "testCapability": "listModels"
+  },
+  {
+    "id": "int-groq",
+    "kind": "integration",
+    "refId": "groq",
+    "name": "Groq",
+    "vendor": "Groq",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "GQ",
+    "summary": "Hızlı çıkarım için modelleri API ile listeler/çalıştırır",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "gsk_…",
+        "hint": "Groq API isteklerinde Bearer anahtar olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://console.groq.com/keys adresini aç  2) Console → API Keys → Create API Key  3) gsk_… biçimindeki değeri kopyala",
+        "url": "https://console.groq.com/keys"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://console.groq.com/docs/api",
+    "testCapability": "listModels"
+  },
+  {
+    "id": "int-mistral",
+    "kind": "integration",
+    "refId": "mistral",
+    "name": "Mistral AI",
+    "vendor": "Mistral AI",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "MS",
+    "summary": "Mistral modellerini API ile listeler ve çalıştırır",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Mistral API isteklerinde Bearer anahtar olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://console.mistral.ai/api-keys adresini aç  2) Console → API Keys → Create new key  3) … biçimindeki değeri kopyala",
+        "url": "https://console.mistral.ai/api-keys"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://docs.mistral.ai/api/",
+    "testCapability": "listModels"
+  },
+  {
+    "id": "int-cohere",
+    "kind": "integration",
+    "refId": "cohere",
+    "name": "Cohere",
+    "vendor": "Cohere",
+    "category": "ai",
+    "authMode": "token",
+    "logoHint": "CH",
+    "summary": "Gömme ve metin üretimi API’sini sunar",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Cohere API isteklerinde Bearer anahtar olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://dashboard.cohere.com/api-keys adresini aç  2) Dashboard → API keys → Create API key  3) … biçimindeki değeri kopyala",
+        "url": "https://dashboard.cohere.com/api-keys"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://docs.cohere.com/docs/cohere-api",
+    "testCapability": "listModels"
+  },
+  {
+    "id": "int-stripe",
+    "kind": "integration",
+    "refId": "stripe",
+    "name": "Stripe",
+    "vendor": "Stripe",
+    "category": "commerce",
+    "authMode": "token",
+    "logoHint": "SP",
+    "summary": "Ödeme, müşteri ve abonelikleri API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "sk_live_…",
+        "hint": "Stripe API isteklerinde Bearer anahtar olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://dashboard.stripe.com/apikeys adresini aç  2) API keys → Reveal secret key  3) sk_live_… biçimindeki değeri kopyala",
+        "url": "https://dashboard.stripe.com/apikeys"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://docs.stripe.com/api",
+    "testCapability": "getAccount"
+  },
+  {
+    "id": "int-shopify",
+    "kind": "integration",
+    "refId": "shopify",
+    "name": "Shopify",
+    "vendor": "Shopify",
+    "category": "commerce",
+    "authMode": "token",
+    "logoHint": "SH",
+    "summary": "Ürün, sipariş ve mağaza verilerini API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "shpat_…",
+        "hint": "Shopify Admin API’de X-Shopify-Access-Token başlığında kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://help.shopify.com/en/manual/apps/app-types/custom-apps adresini aç  2) Develop apps → Create app → Admin API token  3) shpat_… biçimindeki değeri kopyala",
+        "url": "https://help.shopify.com/en/manual/apps/app-types/custom-apps"
+      }
+    ],
+    "scopes": [
+      "read_products"
+    ],
+    "docsUrl": "https://shopify.dev/docs/api/admin-rest",
+    "testCapability": "getShop"
+  },
+  {
+    "id": "int-paypal",
+    "kind": "integration",
+    "refId": "paypal",
+    "name": "PayPal",
+    "vendor": "PayPal",
+    "category": "commerce",
+    "authMode": "token",
+    "logoHint": "PP",
+    "summary": "Ödeme ve hesap bilgilerini PayPal API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "PayPal REST API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://developer.paypal.com/dashboard/applications adresini aç  2) Dashboard → Create app → Client ID/Secret  3) … biçimindeki değeri kopyala",
+        "url": "https://developer.paypal.com/dashboard/applications"
+      }
+    ],
+    "scopes": [
+      "openid"
+    ],
+    "docsUrl": "https://developer.paypal.com/api/rest/",
+    "testCapability": "getUserInfo"
+  },
+  {
+    "id": "int-square",
+    "kind": "integration",
+    "refId": "square",
+    "name": "Square",
+    "vendor": "Square",
+    "category": "commerce",
+    "authMode": "token",
+    "logoHint": "SQ",
+    "summary": "Konum, ürün ve ödeme verilerini API ile yönetir",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "sq0atp-…",
+        "hint": "Square API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://developer.squareup.com/apps adresini aç  2) Apps → Uygulama → Credentials → Access token  3) sq0atp-… biçimindeki değeri kopyala",
+        "url": "https://developer.squareup.com/apps"
+      }
+    ],
+    "scopes": [
+      "locations:read"
+    ],
+    "docsUrl": "https://developer.squareup.com/reference/square",
+    "testCapability": "listLocations"
+  },
+  {
+    "id": "int-gumroad",
+    "kind": "integration",
+    "refId": "gumroad",
+    "name": "Gumroad",
+    "vendor": "Gumroad",
+    "category": "commerce",
+    "authMode": "token",
+    "logoHint": "GR",
+    "summary": "Ürün ve satış verilerini Gumroad API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Gumroad API isteklerinde access_token parametresinde kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.gumroad.com/settings/advanced adresini aç  2) Advanced → Applications → Create application → token  3) … biçimindeki değeri kopyala",
+        "url": "https://app.gumroad.com/settings/advanced"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://gumroad.com/api",
+    "testCapability": "getUser"
+  },
+  {
+    "id": "int-lemon-squeezy",
+    "kind": "integration",
+    "refId": "lemon-squeezy",
+    "name": "Lemon Squeezy",
+    "vendor": "Lemon Squeezy",
+    "category": "commerce",
+    "authMode": "token",
+    "logoHint": "LS",
+    "summary": "Ürün, abonelik ve siparişleri API ile okur",
+    "fields": [
+      {
+        "key": "token",
+        "label": "API anahtarı",
+        "placeholder": "…",
+        "hint": "Lemon Squeezy API isteklerinde Bearer token olarak kullanılır",
+        "secret": true,
+        "required": true,
+        "howToGet": "1) https://app.lemonsqueezy.com/settings/api adresini aç  2) Settings → API → Create API key  3) … biçimindeki değeri kopyala",
+        "url": "https://app.lemonsqueezy.com/settings/api"
+      }
+    ],
+    "scopes": [
+      "read"
+    ],
+    "docsUrl": "https://docs.lemonsqueezy.com/api",
+    "testCapability": "getMe"
+  },
+  {
+    "id": "mcp-filesystem",
+    "kind": "mcp",
+    "refId": "filesystem",
+    "name": "Filesystem",
+    "vendor": "Model Context Protocol",
+    "category": "files",
+    "authMode": "install",
+    "logoHint": "FX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem",
+    "mcpTemplate": "filesystem"
+  },
+  {
+    "id": "mcp-git",
+    "kind": "mcp",
+    "refId": "git",
+    "name": "Git",
+    "vendor": "Model Context Protocol",
+    "category": "code",
+    "authMode": "install",
+    "logoHint": "GX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/git",
+    "mcpTemplate": "git"
+  },
+  {
+    "id": "mcp-sqlite",
+    "kind": "mcp",
+    "refId": "sqlite",
+    "name": "SQLite",
+    "vendor": "Model Context Protocol",
+    "category": "data",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/sqlite",
+    "mcpTemplate": "sqlite"
+  },
+  {
+    "id": "mcp-postgres",
+    "kind": "mcp",
+    "refId": "postgres",
+    "name": "PostgreSQL",
+    "vendor": "Model Context Protocol",
+    "category": "data",
+    "authMode": "install",
+    "logoHint": "PX",
+    "summary": "PostgreSQL sorgulama ve şema listeleme",
+    "fields": [
+      {
+        "key": "DATABASE_URL",
+        "label": "veritabanı adresi",
+        "placeholder": "postgresql://kullanici:sifre@localhost:5432/veritabani",
+        "hint": "Bu değer PostgreSQL MCP sunucusu başlatılırken DATABASE_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/postgres sayfasını aç  2) DATABASE_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres",
+    "mcpTemplate": "postgres"
+  },
+  {
+    "id": "mcp-github",
+    "kind": "mcp",
+    "refId": "github",
+    "name": "GitHub",
+    "vendor": "GitHub",
+    "category": "code",
+    "authMode": "install",
+    "logoHint": "GX",
+    "summary": "Depo, sorun ve çekme isteği araçları",
+    "fields": [
+      {
+        "key": "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "label": "GitHub kişisel erişim belirteci",
+        "placeholder": "ghp_…",
+        "hint": "Bu değer GitHub MCP sunucusu başlatılırken GITHUB_PERSONAL_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://docs.github.com/en/copilot/concepts/agents/about-copilot-coding-agent sayfasını aç  2) GITHUB_PERSONAL_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://docs.github.com/en/copilot/concepts/agents/about-copilot-coding-agent"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://docs.github.com/en/copilot/concepts/agents/about-copilot-coding-agent",
+    "mcpTemplate": "github"
+  },
+  {
+    "id": "mcp-gitlab",
+    "kind": "mcp",
+    "refId": "gitlab",
+    "name": "GitLab",
+    "vendor": "GitLab",
+    "category": "code",
+    "authMode": "install",
+    "logoHint": "GX",
+    "summary": "Proje, sorun ve birleştirme isteği araçları",
+    "fields": [
+      {
+        "key": "GITLAB_PERSONAL_ACCESS_TOKEN",
+        "label": "GitLab kişisel erişim belirteci",
+        "placeholder": "glpat-…",
+        "hint": "Bu değer GitLab MCP sunucusu başlatılırken GITLAB_PERSONAL_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://docs.gitlab.com/user/gitlab_duo/ sayfasını aç  2) GITLAB_PERSONAL_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://docs.gitlab.com/user/gitlab_duo/"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://docs.gitlab.com/user/gitlab_duo/",
+    "mcpTemplate": "gitlab"
+  },
+  {
+    "id": "mcp-slack",
+    "kind": "mcp",
+    "refId": "slack",
+    "name": "Slack",
+    "vendor": "Salesforce",
+    "category": "communication",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "Kanal, ileti ve kullanıcı araçları",
+    "fields": [
+      {
+        "key": "SLACK_BOT_TOKEN",
+        "label": "Slack Bot belirteci",
+        "placeholder": "xoxb-…",
+        "hint": "Bu değer Slack MCP sunucusu başlatılırken SLACK_BOT_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://docs.slack.dev/ai-assistant-with-mcp/ sayfasını aç  2) SLACK_BOT_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://docs.slack.dev/ai-assistant-with-mcp/"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://docs.slack.dev/ai-assistant-with-mcp/",
+    "mcpTemplate": "slack"
+  },
+  {
+    "id": "mcp-notion",
+    "kind": "mcp",
+    "refId": "notion",
+    "name": "Notion",
+    "vendor": "Notion Labs",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "NX",
+    "summary": "Sayfa, veritabanı ve arama araçları",
+    "fields": [
+      {
+        "key": "NOTION_TOKEN",
+        "label": "Notion belirteci",
+        "placeholder": "ntn_…",
+        "hint": "Bu değer Notion MCP sunucusu başlatılırken NOTION_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://developers.notion.com/docs/mcp sayfasını aç  2) NOTION_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://developers.notion.com/docs/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://developers.notion.com/docs/mcp",
+    "mcpTemplate": "notion"
+  },
+  {
+    "id": "mcp-linear",
+    "kind": "mcp",
+    "refId": "linear",
+    "name": "Linear",
+    "vendor": "Linear",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "LX",
+    "summary": "Sorun, proje ve döngü araçları",
+    "fields": [
+      {
+        "key": "LINEAR_API_KEY",
+        "label": "Linear API anahtarı",
+        "placeholder": "lin_api_…",
+        "hint": "Bu değer Linear MCP sunucusu başlatılırken LINEAR_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://linear.app/docs/mcp sayfasını aç  2) LINEAR_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://linear.app/docs/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://linear.app/docs/mcp",
+    "mcpTemplate": "linear"
+  },
+  {
+    "id": "mcp-google-maps",
+    "kind": "mcp",
+    "refId": "google-maps",
+    "name": "Google Maps",
+    "vendor": "Google",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "GM",
+    "summary": "Yer arama, rota ve coğrafi kodlama",
+    "fields": [
+      {
+        "key": "GOOGLE_MAPS_API_KEY",
+        "label": "Google Maps API anahtarı",
+        "placeholder": "AIza…",
+        "hint": "Bu değer Google Maps MCP sunucusu başlatılırken GOOGLE_MAPS_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/google-maps sayfasını aç  2) GOOGLE_MAPS_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/google-maps"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/google-maps",
+    "mcpTemplate": "google-maps"
+  },
+  {
+    "id": "mcp-fetch",
+    "kind": "mcp",
+    "refId": "fetch",
+    "name": "Fetch",
+    "vendor": "Model Context Protocol",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "FX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch",
+    "mcpTemplate": "fetch"
+  },
+  {
+    "id": "mcp-puppeteer",
+    "kind": "mcp",
+    "refId": "puppeteer",
+    "name": "Puppeteer",
+    "vendor": "Model Context Protocol",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "PX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer",
+    "mcpTemplate": "puppeteer"
+  },
+  {
+    "id": "mcp-playwright",
+    "kind": "mcp",
+    "refId": "playwright",
+    "name": "Playwright",
+    "vendor": "Microsoft",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "PX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/microsoft/playwright-mcp",
+    "mcpTemplate": "playwright"
+  },
+  {
+    "id": "mcp-memory",
+    "kind": "mcp",
+    "refId": "memory",
+    "name": "Memory",
+    "vendor": "Model Context Protocol",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "MX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory",
+    "mcpTemplate": "memory"
+  },
+  {
+    "id": "mcp-sequential-thinking",
+    "kind": "mcp",
+    "refId": "sequential-thinking",
+    "name": "Sequential Thinking",
+    "vendor": "Model Context Protocol",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "ST",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
+    "mcpTemplate": "sequential-thinking"
+  },
+  {
+    "id": "mcp-time",
+    "kind": "mcp",
+    "refId": "time",
+    "name": "Time",
+    "vendor": "Model Context Protocol",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "TX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/time",
+    "mcpTemplate": "time"
+  },
+  {
+    "id": "mcp-everything",
+    "kind": "mcp",
+    "refId": "everything",
+    "name": "Everything",
+    "vendor": "Model Context Protocol",
+    "category": "code",
+    "authMode": "install",
+    "logoHint": "EX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/everything",
+    "mcpTemplate": "everything"
+  },
+  {
+    "id": "mcp-sentry",
+    "kind": "mcp",
+    "refId": "sentry",
+    "name": "Sentry",
+    "vendor": "Functional Software",
+    "category": "observability",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "Hata, sorun ve proje sorgulama",
+    "fields": [
+      {
+        "key": "SENTRY_AUTH_TOKEN",
+        "label": "Sentry kimlik doğrulama belirteci",
+        "placeholder": "sntrys_…",
+        "hint": "Bu değer Sentry MCP sunucusu başlatılırken SENTRY_AUTH_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://docs.sentry.io/product/sentry-mcp/ sayfasını aç  2) SENTRY_AUTH_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://docs.sentry.io/product/sentry-mcp/"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://docs.sentry.io/product/sentry-mcp/",
+    "mcpTemplate": "sentry"
+  },
+  {
+    "id": "mcp-docker",
+    "kind": "mcp",
+    "refId": "docker",
+    "name": "Docker",
+    "vendor": "Docker",
+    "category": "cloud",
+    "authMode": "install",
+    "logoHint": "DX",
+    "summary": "Anahtar gerekmez, doğrudan çalışır",
+    "fields": [],
+    "scopes": [],
+    "docsUrl": "https://github.com/ckostka/mcp-server-docker",
+    "mcpTemplate": "docker"
+  },
+  {
+    "id": "mcp-kubernetes",
+    "kind": "mcp",
+    "refId": "kubernetes",
+    "name": "Kubernetes",
+    "vendor": "Cloud Native Computing Foundation",
+    "category": "cloud",
+    "authMode": "install",
+    "logoHint": "KX",
+    "summary": "Pod, servis ve dağıtım sorgulama",
+    "fields": [
+      {
+        "key": "KUBECONFIG",
+        "label": "Kubeconfig ",
+        "placeholder": "~/.kube/config",
+        "hint": "Bu değer Kubernetes MCP sunucusu başlatılırken KUBECONFIG ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/Flux159/mcp-server-kubernetes sayfasını aç  2) KUBECONFIG değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/Flux159/mcp-server-kubernetes"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/Flux159/mcp-server-kubernetes",
+    "mcpTemplate": "kubernetes"
+  },
+  {
+    "id": "mcp-aws-s3",
+    "kind": "mcp",
+    "refId": "aws-s3",
+    "name": "AWS S3",
+    "vendor": "Amazon Web Services",
+    "category": "cloud",
+    "authMode": "install",
+    "logoHint": "AS",
+    "summary": "S3 kova ve nesne işlemleri",
+    "fields": [
+      {
+        "key": "AWS_ACCESS_KEY_ID",
+        "label": "AWS erişim anahtarı kimliği",
+        "placeholder": "AKIA…",
+        "hint": "Bu değer AWS S3 MCP sunucusu başlatılırken AWS_ACCESS_KEY_ID ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/aws-s3 sayfasını aç  2) AWS_ACCESS_KEY_ID değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/aws-s3"
+      },
+      {
+        "key": "AWS_SECRET_ACCESS_KEY",
+        "label": "AWS gizli anahtarı erişim anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer AWS S3 MCP sunucusu başlatılırken AWS_SECRET_ACCESS_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/aws-s3 sayfasını aç  2) AWS_SECRET_ACCESS_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/aws-s3"
+      },
+      {
+        "key": "AWS_REGION",
+        "label": "AWS bölge",
+        "placeholder": "us-east-1",
+        "hint": "Bu değer AWS S3 MCP sunucusu başlatılırken AWS_REGION ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/aws-s3 sayfasını aç  2) AWS_REGION değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/aws-s3"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/aws-s3",
+    "mcpTemplate": "aws-s3"
+  },
+  {
+    "id": "mcp-cloudflare",
+    "kind": "mcp",
+    "refId": "cloudflare",
+    "name": "Cloudflare",
+    "vendor": "Cloudflare",
+    "category": "cloud",
+    "authMode": "install",
+    "logoHint": "CX",
+    "summary": "Zone, DNS ve Workers yönetimi",
+    "fields": [
+      {
+        "key": "CLOUDFLARE_API_TOKEN",
+        "label": "Cloudflare API belirteci",
+        "placeholder": "…",
+        "hint": "Bu değer Cloudflare MCP sunucusu başlatılırken CLOUDFLARE_API_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://developers.cloudflare.com/agents/model-context-protocol/ sayfasını aç  2) CLOUDFLARE_API_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://developers.cloudflare.com/agents/model-context-protocol/"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://developers.cloudflare.com/agents/model-context-protocol/",
+    "mcpTemplate": "cloudflare"
+  },
+  {
+    "id": "mcp-vercel",
+    "kind": "mcp",
+    "refId": "vercel",
+    "name": "Vercel",
+    "vendor": "Vercel",
+    "category": "cloud",
+    "authMode": "install",
+    "logoHint": "VX",
+    "summary": "Proje ve dağıtım yönetimi",
+    "fields": [
+      {
+        "key": "VERCEL_TOKEN",
+        "label": "Vercel belirteci",
+        "placeholder": "vcp_…",
+        "hint": "Bu değer Vercel MCP sunucusu başlatılırken VERCEL_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://vercel.com/docs/mcp sayfasını aç  2) VERCEL_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://vercel.com/docs/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://vercel.com/docs/mcp",
+    "mcpTemplate": "vercel"
+  },
+  {
+    "id": "mcp-supabase",
+    "kind": "mcp",
+    "refId": "supabase",
+    "name": "Supabase",
+    "vendor": "Supabase",
+    "category": "cloud",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "Proje, tablo ve sorgu araçları",
+    "fields": [
+      {
+        "key": "SUPABASE_ACCESS_TOKEN",
+        "label": "Supabase erişim belirteci",
+        "placeholder": "sb_secret_…",
+        "hint": "Bu değer Supabase MCP sunucusu başlatılırken SUPABASE_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://supabase.com/docs/guides/getting-started/mcp sayfasını aç  2) SUPABASE_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://supabase.com/docs/guides/getting-started/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://supabase.com/docs/guides/getting-started/mcp",
+    "mcpTemplate": "supabase"
+  },
+  {
+    "id": "mcp-mongodb",
+    "kind": "mcp",
+    "refId": "mongodb",
+    "name": "MongoDB",
+    "vendor": "MongoDB",
+    "category": "data",
+    "authMode": "install",
+    "logoHint": "MX",
+    "summary": "Koleksiyon ve belge sorgulama",
+    "fields": [
+      {
+        "key": "MONGODB_URI",
+        "label": "MongoDB bağlantı dizesi",
+        "placeholder": "mongodb+srv://kullanici:sifre@cluster.mongodb.net",
+        "hint": "Bu değer MongoDB MCP sunucusu başlatılırken MONGODB_URI ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/mongodb/mongodb-mcp-server sayfasını aç  2) MONGODB_URI değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/mongodb/mongodb-mcp-server"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/mongodb/mongodb-mcp-server",
+    "mcpTemplate": "mongodb"
+  },
+  {
+    "id": "mcp-redis",
+    "kind": "mcp",
+    "refId": "redis",
+    "name": "Redis",
+    "vendor": "Redis",
+    "category": "data",
+    "authMode": "install",
+    "logoHint": "RX",
+    "summary": "Anahtar-değer okuma ve yazma",
+    "fields": [
+      {
+        "key": "REDIS_URL",
+        "label": "Redis adresi",
+        "placeholder": "redis://localhost:6379",
+        "hint": "Bu değer Redis MCP sunucusu başlatılırken REDIS_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/g0t4/mcp-server-redis sayfasını aç  2) REDIS_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/g0t4/mcp-server-redis"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/g0t4/mcp-server-redis",
+    "mcpTemplate": "redis"
+  },
+  {
+    "id": "mcp-elasticsearch",
+    "kind": "mcp",
+    "refId": "elasticsearch",
+    "name": "Elasticsearch",
+    "vendor": "Elastic",
+    "category": "data",
+    "authMode": "install",
+    "logoHint": "EX",
+    "summary": "İndeks ve arama sorgulama",
+    "fields": [
+      {
+        "key": "ELASTICSEARCH_URL",
+        "label": "Elasticsearch adresi",
+        "placeholder": "http://localhost:9200",
+        "hint": "Bu değer Elasticsearch MCP sunucusu başlatılırken ELASTICSEARCH_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/elastic/mcp-server-elasticsearch sayfasını aç  2) ELASTICSEARCH_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/elastic/mcp-server-elasticsearch"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/elastic/mcp-server-elasticsearch",
+    "mcpTemplate": "elasticsearch"
+  },
+  {
+    "id": "mcp-brave-search",
+    "kind": "mcp",
+    "refId": "brave-search",
+    "name": "Brave Search",
+    "vendor": "Brave Software",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "BS",
+    "summary": "Web ve yerel arama araçları",
+    "fields": [
+      {
+        "key": "BRAVE_API_KEY",
+        "label": "Brave API anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer Brave Search MCP sunucusu başlatılırken BRAVE_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search sayfasını aç  2) BRAVE_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search",
+    "mcpTemplate": "brave-search"
+  },
+  {
+    "id": "mcp-exa",
+    "kind": "mcp",
+    "refId": "exa",
+    "name": "Exa",
+    "vendor": "Exa Labs",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "EX",
+    "summary": "Sinir ağı destekli web arama",
+    "fields": [
+      {
+        "key": "EXA_API_KEY",
+        "label": "Exa API anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer Exa MCP sunucusu başlatılırken EXA_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/exa-labs/exa-mcp-server sayfasını aç  2) EXA_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/exa-labs/exa-mcp-server"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/exa-labs/exa-mcp-server",
+    "mcpTemplate": "exa"
+  },
+  {
+    "id": "mcp-tavily",
+    "kind": "mcp",
+    "refId": "tavily",
+    "name": "Tavily",
+    "vendor": "Tavily",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "TX",
+    "summary": "Araştırma odaklı web arama",
+    "fields": [
+      {
+        "key": "TAVILY_API_KEY",
+        "label": "Tavily API anahtarı",
+        "placeholder": "tvly-…",
+        "hint": "Bu değer Tavily MCP sunucusu başlatılırken TAVILY_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/tavily-ai/tavily-mcp sayfasını aç  2) TAVILY_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/tavily-ai/tavily-mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/tavily-ai/tavily-mcp",
+    "mcpTemplate": "tavily"
+  },
+  {
+    "id": "mcp-firecrawl",
+    "kind": "mcp",
+    "refId": "firecrawl",
+    "name": "Firecrawl",
+    "vendor": "Mendable",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "FX",
+    "summary": "Web sayfası tarama ve metin çıkarma",
+    "fields": [
+      {
+        "key": "FIRECRAWL_API_KEY",
+        "label": "Firecrawl API anahtarı",
+        "placeholder": "fc-…",
+        "hint": "Bu değer Firecrawl MCP sunucusu başlatılırken FIRECRAWL_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/mendableai/firecrawl-mcp-server sayfasını aç  2) FIRECRAWL_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/mendableai/firecrawl-mcp-server"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/mendableai/firecrawl-mcp-server",
+    "mcpTemplate": "firecrawl"
+  },
+  {
+    "id": "mcp-youtube",
+    "kind": "mcp",
+    "refId": "youtube",
+    "name": "YouTube",
+    "vendor": "Google",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "YX",
+    "summary": "Video arama, kanal ve oynatma listesi",
+    "fields": [
+      {
+        "key": "YOUTUBE_API_KEY",
+        "label": "YouTube API anahtarı",
+        "placeholder": "AIza…",
+        "hint": "Bu değer YouTube MCP sunucusu başlatılırken YOUTUBE_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/JarrodWatts/mcp-youtube sayfasını aç  2) YOUTUBE_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/JarrodWatts/mcp-youtube"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/JarrodWatts/mcp-youtube",
+    "mcpTemplate": "youtube"
+  },
+  {
+    "id": "mcp-spotify",
+    "kind": "mcp",
+    "refId": "spotify",
+    "name": "Spotify",
+    "vendor": "Spotify AB",
+    "category": "web",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "Parça, albüm ve çalma listesi arama",
+    "fields": [
+      {
+        "key": "SPOTIFY_CLIENT_ID",
+        "label": "Spotify istemci kimliği",
+        "placeholder": "…",
+        "hint": "Bu değer Spotify MCP sunucusu başlatılırken SPOTIFY_CLIENT_ID ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/chatbot-mcp/spotify sayfasını aç  2) SPOTIFY_CLIENT_ID değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/chatbot-mcp/spotify"
+      },
+      {
+        "key": "SPOTIFY_CLIENT_SECRET",
+        "label": "Spotify istemci gizli anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer Spotify MCP sunucusu başlatılırken SPOTIFY_CLIENT_SECRET ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/chatbot-mcp/spotify sayfasını aç  2) SPOTIFY_CLIENT_SECRET değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/chatbot-mcp/spotify"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/chatbot-mcp/spotify",
+    "mcpTemplate": "spotify"
+  },
+  {
+    "id": "mcp-gmail",
+    "kind": "mcp",
+    "refId": "gmail",
+    "name": "Gmail",
+    "vendor": "Google",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "GX",
+    "summary": "Posta okuma, arama ve taslak oluşturma",
+    "fields": [
+      {
+        "key": "GOOGLE_ACCESS_TOKEN",
+        "label": "Google erişim belirteci",
+        "placeholder": "ya29.…",
+        "hint": "Bu değer Gmail MCP sunucusu başlatılırken GOOGLE_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/gmail sayfasını aç  2) GOOGLE_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/gmail"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/gmail",
+    "mcpTemplate": "gmail"
+  },
+  {
+    "id": "mcp-google-drive",
+    "kind": "mcp",
+    "refId": "google-drive",
+    "name": "Google Drive",
+    "vendor": "Google",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "GD",
+    "summary": "Dosya arama ve içerik okuma",
+    "fields": [
+      {
+        "key": "GOOGLE_ACCESS_TOKEN",
+        "label": "Google erişim belirteci",
+        "placeholder": "ya29.…",
+        "hint": "Bu değer Google Drive MCP sunucusu başlatılırken GOOGLE_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/jshambley/mcp-google-drive sayfasını aç  2) GOOGLE_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/jshambley/mcp-google-drive"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/jshambley/mcp-google-drive",
+    "mcpTemplate": "google-drive"
+  },
+  {
+    "id": "mcp-google-calendar",
+    "kind": "mcp",
+    "refId": "google-calendar",
+    "name": "Google Calendar",
+    "vendor": "Google",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "GC",
+    "summary": "Etkinlik listeleme ve takvim sorgulama",
+    "fields": [
+      {
+        "key": "GOOGLE_ACCESS_TOKEN",
+        "label": "Google erişim belirteci",
+        "placeholder": "ya29.…",
+        "hint": "Bu değer Google Calendar MCP sunucusu başlatılırken GOOGLE_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/vishnudxb/mcp-server-google-calendar sayfasını aç  2) GOOGLE_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/vishnudxb/mcp-server-google-calendar"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/vishnudxb/mcp-server-google-calendar",
+    "mcpTemplate": "google-calendar"
+  },
+  {
+    "id": "mcp-stripe",
+    "kind": "mcp",
+    "refId": "stripe",
+    "name": "Stripe",
+    "vendor": "Stripe",
+    "category": "commerce",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "Müşteri, ödeme ve fatura sorgulama",
+    "fields": [
+      {
+        "key": "STRIPE_API_KEY",
+        "label": "Stripe API anahtarı",
+        "placeholder": "sk_live_…",
+        "hint": "Bu değer Stripe MCP sunucusu başlatılırken STRIPE_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://docs.stripe.com/stripe-mcp sayfasını aç  2) STRIPE_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://docs.stripe.com/stripe-mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://docs.stripe.com/stripe-mcp",
+    "mcpTemplate": "stripe"
+  },
+  {
+    "id": "mcp-shopify",
+    "kind": "mcp",
+    "refId": "shopify",
+    "name": "Shopify",
+    "vendor": "Shopify",
+    "category": "commerce",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "Ürün, sipariş ve mağaza sorgulama",
+    "fields": [
+      {
+        "key": "SHOPIFY_ACCESS_TOKEN",
+        "label": "Shopify erişim belirteci",
+        "placeholder": "shpat_…",
+        "hint": "Bu değer Shopify MCP sunucusu başlatılırken SHOPIFY_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/Shopify/mcp-server sayfasını aç  2) SHOPIFY_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/Shopify/mcp-server"
+      },
+      {
+        "key": "SHOPIFY_SHOP",
+        "label": "Shopify mağaza",
+        "placeholder": "magaza.myshopify.com",
+        "hint": "Bu değer Shopify MCP sunucusu başlatılırken SHOPIFY_SHOP ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/Shopify/mcp-server sayfasını aç  2) SHOPIFY_SHOP değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/Shopify/mcp-server"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/Shopify/mcp-server",
+    "mcpTemplate": "shopify"
+  },
+  {
+    "id": "mcp-hubspot",
+    "kind": "mcp",
+    "refId": "hubspot",
+    "name": "HubSpot",
+    "vendor": "HubSpot",
+    "category": "commerce",
+    "authMode": "install",
+    "logoHint": "HX",
+    "summary": "Kişi, anlaşma ve şirket araçları",
+    "fields": [
+      {
+        "key": "HUBSPOT_ACCESS_TOKEN",
+        "label": "HubSpot erişim belirteci",
+        "placeholder": "pat-…",
+        "hint": "Bu değer HubSpot MCP sunucusu başlatılırken HUBSPOT_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://developers.hubspot.com/docs/mcp sayfasını aç  2) HUBSPOT_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://developers.hubspot.com/docs/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://developers.hubspot.com/docs/mcp",
+    "mcpTemplate": "hubspot"
+  },
+  {
+    "id": "mcp-salesforce",
+    "kind": "mcp",
+    "refId": "salesforce",
+    "name": "Salesforce",
+    "vendor": "Salesforce",
+    "category": "commerce",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "Kayıt, rapor ve SOQL sorgulama",
+    "fields": [
+      {
+        "key": "SALESFORCE_ACCESS_TOKEN",
+        "label": "Salesforce erişim belirteci",
+        "placeholder": "00D…",
+        "hint": "Bu değer Salesforce MCP sunucusu başlatılırken SALESFORCE_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://developer.salesforce.com/docs/einstein/genai/guide/mcp.html sayfasını aç  2) SALESFORCE_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://developer.salesforce.com/docs/einstein/genai/guide/mcp.html"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://developer.salesforce.com/docs/einstein/genai/guide/mcp.html",
+    "mcpTemplate": "salesforce"
+  },
+  {
+    "id": "mcp-airtable",
+    "kind": "mcp",
+    "refId": "airtable",
+    "name": "Airtable",
+    "vendor": "Airtable",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "AX",
+    "summary": "Taban, tablo ve kayıt araçları",
+    "fields": [
+      {
+        "key": "AIRTABLE_API_KEY",
+        "label": "Airtable API anahtarı",
+        "placeholder": "pat…",
+        "hint": "Bu değer Airtable MCP sunucusu başlatılırken AIRTABLE_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/delorenj/mcp-airtable sayfasını aç  2) AIRTABLE_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/delorenj/mcp-airtable"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/delorenj/mcp-airtable",
+    "mcpTemplate": "airtable"
+  },
+  {
+    "id": "mcp-trello",
+    "kind": "mcp",
+    "refId": "trello",
+    "name": "Trello",
+    "vendor": "Atlassian",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "TX",
+    "summary": "Pano, liste ve kart yönetimi",
+    "fields": [
+      {
+        "key": "TRELLO_API_KEY",
+        "label": "Trello API anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer Trello MCP sunucusu başlatılırken TRELLO_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/trello sayfasını aç  2) TRELLO_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/trello"
+      },
+      {
+        "key": "TRELLO_TOKEN",
+        "label": "Trello belirteci",
+        "placeholder": "…",
+        "hint": "Bu değer Trello MCP sunucusu başlatılırken TRELLO_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/modelcontextprotocol/servers/tree/main/src/trello sayfasını aç  2) TRELLO_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/trello"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/modelcontextprotocol/servers/tree/main/src/trello",
+    "mcpTemplate": "trello"
+  },
+  {
+    "id": "mcp-asana",
+    "kind": "mcp",
+    "refId": "asana",
+    "name": "Asana",
+    "vendor": "Asana",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "AX",
+    "summary": "Görev, proje ve çalışma alanı araçları",
+    "fields": [
+      {
+        "key": "ASANA_ACCESS_TOKEN",
+        "label": "Asana erişim belirteci",
+        "placeholder": "…",
+        "hint": "Bu değer Asana MCP sunucusu başlatılırken ASANA_ACCESS_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/Asana/mcp-asana sayfasını aç  2) ASANA_ACCESS_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/Asana/mcp-asana"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/Asana/mcp-asana",
+    "mcpTemplate": "asana"
+  },
+  {
+    "id": "mcp-jira",
+    "kind": "mcp",
+    "refId": "jira",
+    "name": "Jira",
+    "vendor": "Atlassian",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "JX",
+    "summary": "Sorun, proje ve arama araçları",
+    "fields": [
+      {
+        "key": "JIRA_URL",
+        "label": "Jira adresi",
+        "placeholder": "https://sirket.atlassian.net",
+        "hint": "Bu değer Jira MCP sunucusu başlatılırken JIRA_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/sooperset/mcp-atlassian sayfasını aç  2) JIRA_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/sooperset/mcp-atlassian"
+      },
+      {
+        "key": "JIRA_TOKEN",
+        "label": "Jira belirteci",
+        "placeholder": "ATATT…",
+        "hint": "Bu değer Jira MCP sunucusu başlatılırken JIRA_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/sooperset/mcp-atlassian sayfasını aç  2) JIRA_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/sooperset/mcp-atlassian"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/sooperset/mcp-atlassian",
+    "mcpTemplate": "jira"
+  },
+  {
+    "id": "mcp-confluence",
+    "kind": "mcp",
+    "refId": "confluence",
+    "name": "Confluence",
+    "vendor": "Atlassian",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "CX",
+    "summary": "Sayfa ve alan arama araçları",
+    "fields": [
+      {
+        "key": "CONFLUENCE_URL",
+        "label": "Confluence adresi",
+        "placeholder": "https://sirket.atlassian.net/wiki",
+        "hint": "Bu değer Confluence MCP sunucusu başlatılırken CONFLUENCE_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/sooperset/mcp-atlassian sayfasını aç  2) CONFLUENCE_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/sooperset/mcp-atlassian"
+      },
+      {
+        "key": "CONFLUENCE_TOKEN",
+        "label": "Confluence belirteci",
+        "placeholder": "ATATT…",
+        "hint": "Bu değer Confluence MCP sunucusu başlatılırken CONFLUENCE_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/sooperset/mcp-atlassian sayfasını aç  2) CONFLUENCE_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/sooperset/mcp-atlassian"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/sooperset/mcp-atlassian",
+    "mcpTemplate": "confluence"
+  },
+  {
+    "id": "mcp-figma",
+    "kind": "mcp",
+    "refId": "figma",
+    "name": "Figma",
+    "vendor": "Figma",
+    "category": "productivity",
+    "authMode": "install",
+    "logoHint": "FX",
+    "summary": "Dosya, frame ve tasarım bileşeni okuma",
+    "fields": [
+      {
+        "key": "FIGMA_API_KEY",
+        "label": "Figma API anahtarı",
+        "placeholder": "figd_…",
+        "hint": "Bu değer Figma MCP sunucusu başlatılırken FIGMA_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://www.figma.com/developers/mcp sayfasını aç  2) FIGMA_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://www.figma.com/developers/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://www.figma.com/developers/mcp",
+    "mcpTemplate": "figma"
+  },
+  {
+    "id": "mcp-discord",
+    "kind": "mcp",
+    "refId": "discord",
+    "name": "Discord",
+    "vendor": "Discord",
+    "category": "communication",
+    "authMode": "install",
+    "logoHint": "DX",
+    "summary": "Kanal, ileti ve sunucu araçları",
+    "fields": [
+      {
+        "key": "DISCORD_TOKEN",
+        "label": "Discord belirteci",
+        "placeholder": "MTI…",
+        "hint": "Bu değer Discord MCP sunucusu başlatılırken DISCORD_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/SaseQ/discord-mcp sayfasını aç  2) DISCORD_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/SaseQ/discord-mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/SaseQ/discord-mcp",
+    "mcpTemplate": "discord"
+  },
+  {
+    "id": "mcp-telegram",
+    "kind": "mcp",
+    "refId": "telegram",
+    "name": "Telegram",
+    "vendor": "Telegram FZ-LLC",
+    "category": "communication",
+    "authMode": "install",
+    "logoHint": "TX",
+    "summary": "Mesaj gönderme ve sohbet listeleme",
+    "fields": [
+      {
+        "key": "TELEGRAM_BOT_TOKEN",
+        "label": "Telegram Bot belirteci",
+        "placeholder": "123456:AA…",
+        "hint": "Bu değer Telegram MCP sunucusu başlatılırken TELEGRAM_BOT_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/telegram-bot-mcp/server sayfasını aç  2) TELEGRAM_BOT_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/telegram-bot-mcp/server"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/telegram-bot-mcp/server",
+    "mcpTemplate": "telegram"
+  },
+  {
+    "id": "mcp-twilio",
+    "kind": "mcp",
+    "refId": "twilio",
+    "name": "Twilio",
+    "vendor": "Twilio",
+    "category": "communication",
+    "authMode": "install",
+    "logoHint": "TX",
+    "summary": "Mesaj, arama ve kayıt sorgulama",
+    "fields": [
+      {
+        "key": "TWILIO_ACCOUNT_SID",
+        "label": "Twilio hesap SID",
+        "placeholder": "AC…",
+        "hint": "Bu değer Twilio MCP sunucusu başlatılırken TWILIO_ACCOUNT_SID ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/twilio-labs/mcp sayfasını aç  2) TWILIO_ACCOUNT_SID değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/twilio-labs/mcp"
+      },
+      {
+        "key": "TWILIO_AUTH_TOKEN",
+        "label": "Twilio kimlik doğrulama belirteci",
+        "placeholder": "…",
+        "hint": "Bu değer Twilio MCP sunucusu başlatılırken TWILIO_AUTH_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/twilio-labs/mcp sayfasını aç  2) TWILIO_AUTH_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/twilio-labs/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/twilio-labs/mcp",
+    "mcpTemplate": "twilio"
+  },
+  {
+    "id": "mcp-sendgrid",
+    "kind": "mcp",
+    "refId": "sendgrid",
+    "name": "SendGrid",
+    "vendor": "Twilio",
+    "category": "communication",
+    "authMode": "install",
+    "logoHint": "SX",
+    "summary": "E-posta, şablon ve liste araçları",
+    "fields": [
+      {
+        "key": "SENDGRID_API_KEY",
+        "label": "SendGrid API anahtarı",
+        "placeholder": "SG.…",
+        "hint": "Bu değer SendGrid MCP sunucusu başlatılırken SENDGRID_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/twilio-labs/mcp sayfasını aç  2) SENDGRID_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/twilio-labs/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/twilio-labs/mcp",
+    "mcpTemplate": "sendgrid"
+  },
+  {
+    "id": "mcp-openai",
+    "kind": "mcp",
+    "refId": "openai",
+    "name": "OpenAI",
+    "vendor": "OpenAI",
+    "category": "ai",
+    "authMode": "install",
+    "logoHint": "OX",
+    "summary": "Model listeleme ve tamamlama araçları",
+    "fields": [
+      {
+        "key": "OPENAI_API_KEY",
+        "label": "OpenAI API anahtarı",
+        "placeholder": "sk-…",
+        "hint": "Bu değer OpenAI MCP sunucusu başlatılırken OPENAI_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://platform.openai.com/docs/mcp sayfasını aç  2) OPENAI_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://platform.openai.com/docs/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://platform.openai.com/docs/mcp",
+    "mcpTemplate": "openai"
+  },
+  {
+    "id": "mcp-anthropic",
+    "kind": "mcp",
+    "refId": "anthropic",
+    "name": "Anthropic",
+    "vendor": "Anthropic",
+    "category": "ai",
+    "authMode": "install",
+    "logoHint": "AX",
+    "summary": "Mesaj oluşturma ve model araçları",
+    "fields": [
+      {
+        "key": "ANTHROPIC_API_KEY",
+        "label": "Anthropic API anahtarı",
+        "placeholder": "sk-ant-…",
+        "hint": "Bu değer Anthropic MCP sunucusu başlatılırken ANTHROPIC_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://docs.anthropic.com/en/docs/mcp sayfasını aç  2) ANTHROPIC_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://docs.anthropic.com/en/docs/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://docs.anthropic.com/en/docs/mcp",
+    "mcpTemplate": "anthropic"
+  },
+  {
+    "id": "mcp-huggingface",
+    "kind": "mcp",
+    "refId": "huggingface",
+    "name": "Hugging Face",
+    "vendor": "Hugging Face",
+    "category": "ai",
+    "authMode": "install",
+    "logoHint": "HF",
+    "summary": "Model, veri kümesi ve çıkarım arama",
+    "fields": [
+      {
+        "key": "HUGGINGFACE_API_KEY",
+        "label": "Hugging Face API anahtarı",
+        "placeholder": "hf_…",
+        "hint": "Bu değer Hugging Face MCP sunucusu başlatılırken HUGGINGFACE_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://huggingface.co/docs/hub/mcp sayfasını aç  2) HUGGINGFACE_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://huggingface.co/docs/hub/mcp"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://huggingface.co/docs/hub/mcp",
+    "mcpTemplate": "huggingface"
+  },
+  {
+    "id": "mcp-pinecone",
+    "kind": "mcp",
+    "refId": "pinecone",
+    "name": "Pinecone",
+    "vendor": "Pinecone Systems",
+    "category": "ai",
+    "authMode": "install",
+    "logoHint": "PX",
+    "summary": "İndeks listeleme ve vektör arama",
+    "fields": [
+      {
+        "key": "PINECONE_API_KEY",
+        "label": "Pinecone API anahtarı",
+        "placeholder": "pcsk_…",
+        "hint": "Bu değer Pinecone MCP sunucusu başlatılırken PINECONE_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/pinecone-io/pinecone-mcp-server sayfasını aç  2) PINECONE_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/pinecone-io/pinecone-mcp-server"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/pinecone-io/pinecone-mcp-server",
+    "mcpTemplate": "pinecone"
+  },
+  {
+    "id": "mcp-qdrant",
+    "kind": "mcp",
+    "refId": "qdrant",
+    "name": "Qdrant",
+    "vendor": "Qdrant",
+    "category": "ai",
+    "authMode": "install",
+    "logoHint": "QX",
+    "summary": "Koleksiyon ve vektör arama",
+    "fields": [
+      {
+        "key": "QDRANT_URL",
+        "label": "Qdrant adresi",
+        "placeholder": "https://kume.cloud.qdrant.io:6333",
+        "hint": "Bu değer Qdrant MCP sunucusu başlatılırken QDRANT_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/qdrant/mcp-server-qdrant sayfasını aç  2) QDRANT_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/qdrant/mcp-server-qdrant"
+      },
+      {
+        "key": "QDRANT_API_KEY",
+        "label": "Qdrant API anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer Qdrant MCP sunucusu başlatılırken QDRANT_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/qdrant/mcp-server-qdrant sayfasını aç  2) QDRANT_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/qdrant/mcp-server-qdrant"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/qdrant/mcp-server-qdrant",
+    "mcpTemplate": "qdrant"
+  },
+  {
+    "id": "mcp-weaviate",
+    "kind": "mcp",
+    "refId": "weaviate",
+    "name": "Weaviate",
+    "vendor": "Weaviate",
+    "category": "ai",
+    "authMode": "install",
+    "logoHint": "WX",
+    "summary": "Sınıf listeleme ve anlamsal arama",
+    "fields": [
+      {
+        "key": "WEAVIATE_URL",
+        "label": "Weaviate adresi",
+        "placeholder": "https://kume.weaviate.network",
+        "hint": "Bu değer Weaviate MCP sunucusu başlatılırken WEAVIATE_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/weaviate/mcp-server-weaviate sayfasını aç  2) WEAVIATE_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/weaviate/mcp-server-weaviate"
+      },
+      {
+        "key": "WEAVIATE_API_KEY",
+        "label": "Weaviate API anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer Weaviate MCP sunucusu başlatılırken WEAVIATE_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/weaviate/mcp-server-weaviate sayfasını aç  2) WEAVIATE_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/weaviate/mcp-server-weaviate"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/weaviate/mcp-server-weaviate",
+    "mcpTemplate": "weaviate"
+  },
+  {
+    "id": "mcp-grafana",
+    "kind": "mcp",
+    "refId": "grafana",
+    "name": "Grafana",
+    "vendor": "Grafana Labs",
+    "category": "observability",
+    "authMode": "install",
+    "logoHint": "GX",
+    "summary": "Pano, sorgu ve uyarı araçları",
+    "fields": [
+      {
+        "key": "GRAFANA_URL",
+        "label": "Grafana adresi",
+        "placeholder": "https://grafana.sirket.com",
+        "hint": "Bu değer Grafana MCP sunucusu başlatılırken GRAFANA_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://github.com/grafana/mcp-grafana sayfasını aç  2) GRAFANA_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/grafana/mcp-grafana"
+      },
+      {
+        "key": "GRAFANA_TOKEN",
+        "label": "Grafana belirteci",
+        "placeholder": "glsa_…",
+        "hint": "Bu değer Grafana MCP sunucusu başlatılırken GRAFANA_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/grafana/mcp-grafana sayfasını aç  2) GRAFANA_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/grafana/mcp-grafana"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/grafana/mcp-grafana",
+    "mcpTemplate": "grafana"
+  },
+  {
+    "id": "mcp-datadog",
+    "kind": "mcp",
+    "refId": "datadog",
+    "name": "Datadog",
+    "vendor": "Datadog",
+    "category": "observability",
+    "authMode": "install",
+    "logoHint": "DX",
+    "summary": "Metrik, izleyici ve log sorgulama",
+    "fields": [
+      {
+        "key": "DD_API_KEY",
+        "label": "Datadog API anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer Datadog MCP sunucusu başlatılırken DD_API_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/DataDog/mcp-server-datadog sayfasını aç  2) DD_API_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/DataDog/mcp-server-datadog"
+      },
+      {
+        "key": "DD_APP_KEY",
+        "label": "Datadog uygulama anahtarı",
+        "placeholder": "…",
+        "hint": "Bu değer Datadog MCP sunucusu başlatılırken DD_APP_KEY ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/DataDog/mcp-server-datadog sayfasını aç  2) DD_APP_KEY değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/DataDog/mcp-server-datadog"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/DataDog/mcp-server-datadog",
+    "mcpTemplate": "datadog"
+  },
+  {
+    "id": "mcp-pagerduty",
+    "kind": "mcp",
+    "refId": "pagerduty",
+    "name": "PagerDuty",
+    "vendor": "PagerDuty",
+    "category": "observability",
+    "authMode": "install",
+    "logoHint": "PX",
+    "summary": "Olay, servis ve kullanıcı araçları",
+    "fields": [
+      {
+        "key": "PAGERDUTY_API_TOKEN",
+        "label": "PagerDuty API belirteci",
+        "placeholder": "…",
+        "hint": "Bu değer PagerDuty MCP sunucusu başlatılırken PAGERDUTY_API_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://github.com/PagerDuty/mcp-server-pagerduty sayfasını aç  2) PAGERDUTY_API_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://github.com/PagerDuty/mcp-server-pagerduty"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://github.com/PagerDuty/mcp-server-pagerduty",
+    "mcpTemplate": "pagerduty"
+  },
+  {
+    "id": "mcp-grafana-loki",
+    "kind": "mcp",
+    "refId": "grafana-loki",
+    "name": "Grafana Loki",
+    "vendor": "Grafana Labs",
+    "category": "observability",
+    "authMode": "install",
+    "logoHint": "GL",
+    "summary": "Loki log sorgulama ve etiket keşfi",
+    "fields": [
+      {
+        "key": "GRAFANA_URL",
+        "label": "Grafana adresi",
+        "placeholder": "https://grafana.sirket.com",
+        "hint": "Bu değer Grafana Loki MCP sunucusu başlatılırken GRAFANA_URL ortam değişkeni olarak geçirilir.",
+        "secret": false,
+        "required": false,
+        "howToGet": "1) https://grafana.com/docs/loki/latest/query/ sayfasını aç  2) GRAFANA_URL değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://grafana.com/docs/loki/latest/query/"
+      },
+      {
+        "key": "GRAFANA_TOKEN",
+        "label": "Grafana belirteci",
+        "placeholder": "glsa_…",
+        "hint": "Bu değer Grafana Loki MCP sunucusu başlatılırken GRAFANA_TOKEN ortam değişkeni olarak geçirilir.",
+        "secret": true,
+        "required": false,
+        "howToGet": "1) https://grafana.com/docs/loki/latest/query/ sayfasını aç  2) GRAFANA_TOKEN değerini sağlayıcı panelinden edin  3) değeri buraya kopyala",
+        "url": "https://grafana.com/docs/loki/latest/query/"
+      }
+    ],
+    "scopes": [],
+    "docsUrl": "https://grafana.com/docs/loki/latest/query/",
+    "mcpTemplate": "grafana-loki"
+  }
+]

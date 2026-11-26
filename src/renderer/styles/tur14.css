@@ -1,0 +1,457 @@
+/* keyvotion-console · Tur 14 (Connect Preset Surface)
+   Rule: UI-46 (No raw colors), UI-138 (Accessibility), UI-151-158
+*/
+
+/* --- Connect Presets Surface (.kv-preset) --- */
+.kv-preset {
+  display: grid;
+  gap: var(--kv-grid-gap);
+  width: 100%;
+  max-width: var(--kv-content-max);
+  margin: 0 auto;
+}
+
+@media (min-width: 1181px) {
+  .kv-preset__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--kv-preset-card-w), 1fr));
+    gap: var(--kv-space-4);
+  }
+}
+
+@media (max-width: 1180px) and (min-width: 901px) {
+  .kv-preset__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--kv-space-3);
+  }
+}
+
+@media (max-width: 900px) and (min-width: 641px) {
+  .kv-preset__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--kv-space-3);
+  }
+  .kv-preset__form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .kv-preset__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--kv-space-2);
+  }
+}
+
+/* Preset Card */
+.kv-preset__card {
+  background: var(--kv-bg-elev-1);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  padding: var(--kv-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+  cursor: pointer;
+  transition: border-color var(--kv-dur-fast) var(--kv-ease),
+              box-shadow var(--kv-dur-fast) var(--kv-ease);
+}
+
+.kv-preset__card:hover {
+  border-color: var(--kv-accent);
+  box-shadow: var(--kv-shadow-sm);
+}
+
+.kv-preset__card:focus-visible,
+.kv-preset__logo:focus-visible,
+.kv-preset__detail:focus-visible,
+.kv-preset__form input:focus-visible,
+.kv-preset__form select:focus-visible,
+.kv-preset__actions button:focus-visible {
+  outline: 2px solid var(--kv-focus-ring);
+  outline-offset: 2px;
+}
+
+.kv-preset__logo {
+  width: var(--kv-preset-logo);
+  height: var(--kv-preset-logo);
+  border-radius: var(--kv-radius-sm);
+  background: var(--kv-bg-elev-2);
+  color: var(--kv-fg);
+  display: grid;
+  place-items: center;
+  font-weight: var(--kv-fw-bold);
+  font-size: var(--kv-fs-xs);
+}
+
+.kv-preset__badge {
+  font-size: var(--kv-fs-micro);
+  padding: 2px 6px;
+  border-radius: var(--kv-radius-pill);
+  background: var(--kv-bg-elev-2);
+  color: var(--kv-fg-muted);
+  width: fit-content;
+}
+
+.kv-preset__summary {
+  font-size: var(--kv-fs-sm);
+  color: var(--kv-fg-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Preset State Indicators */
+.kv-preset__state {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg);
+}
+
+.kv-preset__state::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--kv-unlinked);
+}
+
+[data-preset-ready="ready"],
+[data-preset-ready="connected"],
+[data-preset-ready="installed"] {
+  color: var(--kv-fg);
+}
+[data-preset-ready="ready"]::before,
+[data-preset-ready="connected"]::before,
+[data-preset-ready="installed"]::before {
+  background: var(--kv-preset-ready);
+}
+
+[data-preset-ready="needs-fields"] {
+  color: var(--kv-fg);
+}
+[data-preset-ready="needs-fields"]::before {
+  background: var(--kv-preset-missing);
+}
+
+[data-preset-ready="error"] {
+  color: var(--kv-fg);
+}
+[data-preset-ready="error"]::before {
+  background: var(--kv-state-error);
+}
+
+/* Setup Details & How-To */
+.kv-preset__detail {
+  padding: var(--kv-space-4);
+  background: var(--kv-bg-elev-1);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-4);
+}
+
+.kv-preset__detail .kv-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--kv-space-2);
+  text-decoration: none;
+  color: var(--kv-accent);
+}
+
+.kv-preset__howto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-preset-step-gap);
+}
+
+.kv-preset__step {
+  display: flex;
+  gap: var(--kv-space-3);
+  font-size: var(--kv-fs-sm);
+}
+
+.kv-preset__step-num {
+  font-weight: var(--kv-fw-bold);
+  color: var(--kv-accent);
+  min-width: 18px;
+}
+
+/* Setup Form */
+.kv-preset__form {
+  display: grid;
+  gap: var(--kv-space-4);
+  padding: var(--kv-space-4);
+  background: var(--kv-bg-elev-2);
+  border-radius: var(--kv-radius-md);
+}
+
+.kv-preset__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  min-width: var(--kv-preset-field-w);
+}
+
+.kv-preset__field label {
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+}
+
+.kv-preset__field input,
+.kv-preset__field select,
+.kv-preset__field textarea {
+  min-height: 36px !important;
+}
+
+.kv-preset__form .kv-check {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  min-height: 36px;
+  padding-left: 28px;
+  cursor: pointer;
+}
+
+.kv-preset__form .kv-check input[type="checkbox"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.kv-preset__form .kv-check::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--kv-border-strong);
+  border-radius: var(--kv-radius-sm);
+  background: var(--kv-bg-elev-1);
+  box-shadow: 0 0 0 1px var(--kv-border);
+}
+
+.kv-preset__form .kv-check:has(input:checked)::before {
+  background: var(--kv-accent);
+  border-color: var(--kv-accent);
+}
+
+.kv-preset__form .kv-check:has(input:checked)::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  width: 5px;
+  height: 10px;
+  border-right: 2px solid var(--kv-bg);
+  border-bottom: 2px solid var(--kv-bg);
+  transform: translateY(-65%) rotate(45deg);
+}
+
+.kv-preset__form .kv-check:has(input:focus-visible)::before {
+  outline: 2px solid var(--kv-focus-ring);
+  outline-offset: 2px;
+}
+
+.kv-preset__actions button {
+  min-height: 36px;
+}
+
+.kv-preset__hint {
+  font-size: var(--kv-fs-micro);
+  color: var(--kv-fg-subtle);
+}
+
+.kv-preset__error {
+  font-size: var(--kv-fs-micro);
+  color: var(--kv-fg);
+  font-weight: var(--kv-fw-bold);
+  border-left: 2px solid var(--kv-state-error);
+  padding-left: var(--kv-space-2);
+  margin-top: 2px;
+}
+
+.kv-preset__actions {
+  display: flex;
+  gap: var(--kv-space-3);
+  margin-top: var(--kv-space-4);
+}
+
+.kv-preset__actions button:focus-visible {
+  outline: 2px solid var(--kv-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Düşünme göstergesi — "dondu mu?" sorusunu bitiren canlı süre sayacı.
+   Glif döner, süre saniye saniye artar; iş bitince satır kendiliğinden gider.
+   ========================================================================== */
+
+.kv-think {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+}
+
+.kv-think--inline {
+  margin-top: 2px;
+}
+
+.kv-think__glyph {
+  display: inline-block;
+  animation: kv-think-spin 1.6s linear infinite;
+  color: var(--kv-accent);
+  font-size: var(--kv-fs-sm);
+}
+
+.kv-think__time {
+  padding: 0 6px;
+  border-radius: 999px;
+  border: 1px solid var(--kv-border);
+  background: var(--kv-bg-elev-2);
+  color: var(--kv-fg);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes kv-think-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-think__glyph { animation: none; }
+}
+
+/* ==========================================================================
+   Çökme kalkanı — yakalanmayan hata olursa kilitli beyaz ekran yerine
+   okunabilir bir kurtarma kartı. Veri diskte; yenileme güvenli.
+   ========================================================================== */
+
+[data-crash-root]:not([hidden]) {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10vh var(--kv-space-4) var(--kv-space-4);
+  background: color-mix(in srgb, var(--kv-bg) 72%, transparent);
+  overflow: auto;
+}
+
+.kv-crash {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--kv-space-6);
+  background: var(--kv-bg-elev-1);
+  border: 1px solid var(--kv-border-strong);
+  border-top: 3px solid var(--kv-state-error);
+  border-radius: var(--kv-radius-lg);
+  color: var(--kv-fg);
+  box-shadow: var(--kv-shadow-md);
+  overflow: auto;
+}
+
+.kv-crash__title {
+  margin: 0;
+  font-size: var(--kv-fs-lg);
+  color: var(--kv-fg);
+}
+
+.kv-crash__detail {
+  margin: 0;
+  padding: var(--kv-space-3);
+  background: var(--kv-bg-elev-2);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  font-family: var(--kv-font-mono);
+  font-size: var(--kv-fs-xs);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 28vh;
+  overflow: auto;
+}
+
+.kv-crash__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kv-space-3);
+}
+
+.kv-crash__actions button:focus-visible {
+  outline: 2px solid var(--kv-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Pano yedeği (T-173): execCommand için görünmez ama seçilebilir alan. */
+.kv-copy-sink {
+  position: fixed;
+  top: 0;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* T-178: yalnız ekran okuyucunun gördüğü canlı bölge. */
+.kv-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* T-180: "İçeriğe atla" bağlantısı yalnız odaklanınca görünür. */
+.kv-skip {
+  position: fixed;
+  top: -60px;
+  left: var(--kv-space-3);
+  z-index: calc(var(--kv-z-modal) + 1);
+  padding: var(--kv-space-2) var(--kv-space-4);
+  border: 1px solid var(--kv-border-strong);
+  border-radius: var(--kv-radius-md);
+  background: var(--kv-bg-elev-2);
+  color: var(--kv-fg);
+  font-size: var(--kv-fs-sm);
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: var(--kv-shadow-md);
+}
+
+.kv-skip:focus,
+.kv-skip:focus-visible {
+  top: var(--kv-space-3);
+  outline: 2px solid var(--kv-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Atlama hedefi odak aldığında çerçeve çizmesin; ekran başlığı zaten görünür. */
+.kv-main:focus {
+  outline: none;
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+work/
+.openchamber/
+.opencode/
+*.log
+.env
+.env.*
+!.env.example
+
+# Ekip çalışma kaydı yalnız yerelde durur; depoya (ve GitHub'a) girmez.
+# Yalnız kökteki .team/ yok sayılır; tests/fixtures/team/.team/ herkese açık örnektir.
+/.team/
+!tests/fixtures/team/.team/

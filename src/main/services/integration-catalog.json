@@ -1,0 +1,4317 @@
+[
+  {
+    "id": "github",
+    "name": "GitHub",
+    "category": "code",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.github.com"
+    ],
+    "scopes": [
+      "repo",
+      "read:user"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/user",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Personal access token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listRepos",
+        "verb": "GET",
+        "path": "/user/repos?per_page={limit}",
+        "summary": "Kullanıcının depolarını listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getRepo",
+        "verb": "GET",
+        "path": "/repos/{owner}/{repo}",
+        "summary": "Depo bilgisini getir",
+        "params": {
+          "owner": {
+            "type": "string",
+            "required": true
+          },
+          "repo": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listIssues",
+        "verb": "GET",
+        "path": "/repos/{owner}/{repo}/issues?per_page={limit}",
+        "summary": "Depo sorunlarını listele",
+        "params": {
+          "owner": {
+            "type": "string",
+            "required": true
+          },
+          "repo": {
+            "type": "string",
+            "required": true
+          },
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.github.com/rest"
+  },
+  {
+    "id": "gitlab",
+    "name": "GitLab",
+    "category": "code",
+    "auth": {
+      "kind": "bearer",
+      "header": "PRIVATE-TOKEN",
+      "prefix": ""
+    },
+    "hosts": [
+      "gitlab.com"
+    ],
+    "scopes": [
+      "read_api"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/v4/user",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Personal access token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listProjects",
+        "verb": "GET",
+        "path": "/api/v4/projects?per_page={limit}",
+        "summary": "Erişilebilir projeleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getCurrentUser",
+        "verb": "GET",
+        "path": "/api/v4/user",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listIssues",
+        "verb": "GET",
+        "path": "/api/v4/issues?per_page={limit}",
+        "summary": "Sorunları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.gitlab.com/ee/api/rest/"
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "category": "communication",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "slack.com"
+    ],
+    "scopes": [
+      "conversations:read",
+      "users:read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/auth.test",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Bot / user OAuth token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listChannels",
+        "verb": "GET",
+        "path": "/api/conversations.list?limit={limit}",
+        "summary": "Kanalları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 200
+          }
+        }
+      },
+      {
+        "id": "listUsers",
+        "verb": "GET",
+        "path": "/api/users.list?limit={limit}",
+        "summary": "Kullanıcıları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 200
+          }
+        }
+      },
+      {
+        "id": "authTest",
+        "verb": "GET",
+        "path": "/api/auth.test",
+        "summary": "Token doğrulama",
+        "params": {}
+      }
+    ],
+    "docs": "https://api.slack.com/web"
+  },
+  {
+    "id": "discord",
+    "name": "Discord",
+    "category": "communication",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "discord.com"
+    ],
+    "scopes": [
+      "identify",
+      "guilds"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/v10/users/@me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Bot token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/api/v10/users/@me",
+        "summary": "Geçerli kullanıcı/bot",
+        "params": {}
+      },
+      {
+        "id": "listGuilds",
+        "verb": "GET",
+        "path": "/api/v10/users/@me/guilds?limit={limit}",
+        "summary": "Sunucuları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 200
+          }
+        }
+      },
+      {
+        "id": "getChannel",
+        "verb": "GET",
+        "path": "/api/v10/channels/{channelId}",
+        "summary": "Kanal bilgisi",
+        "params": {
+          "channelId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://discord.com/developers/docs/reference"
+  },
+  {
+    "id": "notion",
+    "name": "Notion",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer ",
+      "headers": {
+        "Notion-Version": "2022-06-28"
+      }
+    },
+    "hosts": [
+      "api.notion.com"
+    ],
+    "scopes": [
+      "read_content"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/users/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Integration token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/v1/users/me",
+        "summary": "Entegrasyon kullanıcısı",
+        "params": {}
+      },
+      {
+        "id": "listUsers",
+        "verb": "GET",
+        "path": "/v1/users?page_size={limit}",
+        "summary": "Çalışma alanı kullanıcıları",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getPage",
+        "verb": "GET",
+        "path": "/v1/pages/{pageId}",
+        "summary": "Sayfa bilgisi",
+        "params": {
+          "pageId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.notion.com/reference/intro"
+  },
+  {
+    "id": "linear",
+    "name": "Linear",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.linear.app"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "POST",
+      "path": "/graphql",
+      "body": {
+        "query": "{ viewer { id } }"
+      },
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Personal API key",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getViewer",
+        "verb": "POST",
+        "path": "/graphql",
+        "summary": "Geçerli kullanıcı (GraphQL)",
+        "params": {},
+        "body": {
+          "query": "{ viewer { id name email } }"
+        }
+      },
+      {
+        "id": "listIssues",
+        "verb": "POST",
+        "path": "/graphql",
+        "summary": "Sorunları listele (GraphQL)",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 50
+          }
+        },
+        "body": {
+          "query": "query Issues($n: Int!) { issues(first: $n) { nodes { id title } } }",
+          "variables": {
+            "n": "{limit}"
+          }
+        }
+      },
+      {
+        "id": "listTeamsGet",
+        "verb": "GET",
+        "path": "/graphql?query=%7Bteams%7Bnodes%7Bid%20name%7D%7D%7D",
+        "summary": "Ekipleri listele (GET)",
+        "params": {}
+      },
+      {
+        "id": "listProjectsGet",
+        "verb": "GET",
+        "path": "/graphql?query=%7Bprojects%7Bnodes%7Bid%20name%7D%7D%7D",
+        "summary": "Projeleri listele (GET)",
+        "params": {}
+      },
+      {
+        "id": "listCyclesGet",
+        "verb": "GET",
+        "path": "/graphql?query=%7Bcycles%7Bnodes%7Bid%20name%7D%7D%7D",
+        "summary": "Döngüleri listele (GET)",
+        "params": {}
+      },
+      {
+        "id": "listUsersGet",
+        "verb": "GET",
+        "path": "/graphql?query=%7Busers%7Bnodes%7Bid%20name%7D%7D%7D",
+        "summary": "Kullanıcıları listele (GET)",
+        "params": {}
+      }
+    ],
+    "docs": "https://developers.linear.app/docs/graphql/working-with-the-graphql-api"
+  },
+  {
+    "id": "jira",
+    "name": "Jira (Atlassian)",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.atlassian.com"
+    ],
+    "scopes": [
+      "read:jira-work"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/ex/jira/{site}/rest/api/3/myself",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "OAuth access token",
+        "secret": true,
+        "required": true
+      },
+      {
+        "key": "site",
+        "label": "Cloud ID",
+        "secret": false,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMyself",
+        "verb": "GET",
+        "path": "/ex/jira/{site}/rest/api/3/myself",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "searchIssues",
+        "verb": "GET",
+        "path": "/ex/jira/{site}/rest/api/3/search?maxResults={limit}",
+        "summary": "Sorun ara",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listProjects",
+        "verb": "GET",
+        "path": "/rest/api/3/project",
+        "summary": "Projeleri listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/"
+  },
+  {
+    "id": "figma",
+    "name": "Figma",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "X-Figma-Token",
+      "prefix": ""
+    },
+    "hosts": [
+      "api.figma.com"
+    ],
+    "scopes": [
+      "files:read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Personal access token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/v1/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "getFile",
+        "verb": "GET",
+        "path": "/v1/files/{fileKey}",
+        "summary": "Dosya bilgisi",
+        "params": {
+          "fileKey": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "getFileNodes",
+        "verb": "GET",
+        "path": "/v1/files/{fileKey}/nodes?ids={ids}",
+        "summary": "Dosya düğümleri",
+        "params": {
+          "fileKey": {
+            "type": "string",
+            "required": true
+          },
+          "ids": {
+            "type": "string",
+            "required": true,
+            "max": 500
+          }
+        }
+      }
+    ],
+    "docs": "https://www.figma.com/developers/api"
+  },
+  {
+    "id": "telegram",
+    "name": "Telegram",
+    "category": "communication",
+    "auth": {
+      "kind": "none"
+    },
+    "hosts": [
+      "api.telegram.org"
+    ],
+    "scopes": [],
+    "health": {
+      "verb": "GET",
+      "path": "/bot{token}/getMe",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Bot token (URL içinde)",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/bot{token}/getMe",
+        "summary": "Bot bilgisi",
+        "params": {}
+      },
+      {
+        "id": "getUpdates",
+        "verb": "GET",
+        "path": "/bot{token}/getUpdates?limit={limit}",
+        "summary": "Bekleyen güncellemeler",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "sendMessage",
+        "verb": "POST",
+        "path": "/bot{token}/sendMessage",
+        "summary": "Mesaj gönder",
+        "params": {
+          "chatId": {
+            "type": "string",
+            "required": true
+          },
+          "text": {
+            "type": "string",
+            "required": true,
+            "max": 4096
+          }
+        },
+        "body": {
+          "chat_id": "{chatId}",
+          "text": "{text}"
+        }
+      }
+    ],
+    "docs": "https://core.telegram.org/bots/api"
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.openai.com"
+    ],
+    "scopes": [
+      "models:read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/models",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API key",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listModels",
+        "verb": "GET",
+        "path": "/v1/models",
+        "summary": "Modelleri listele",
+        "params": {}
+      },
+      {
+        "id": "getModel",
+        "verb": "GET",
+        "path": "/v1/models/{model}",
+        "summary": "Model bilgisi",
+        "params": {
+          "model": {
+            "type": "string",
+            "required": true,
+            "max": 200
+          }
+        }
+      },
+      {
+        "id": "listBatches",
+        "verb": "GET",
+        "path": "/v1/batches?limit={limit}",
+        "summary": "Toplu işleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://platform.openai.com/docs/api-reference"
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "x-api-key",
+      "headers": {
+        "anthropic-version": "2023-06-01"
+      },
+      "prefix": ""
+    },
+    "hosts": [
+      "api.anthropic.com"
+    ],
+    "scopes": [
+      "models:read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/models",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API key",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listModels",
+        "verb": "GET",
+        "path": "/v1/models?limit={limit}",
+        "summary": "Modelleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getModel",
+        "verb": "GET",
+        "path": "/v1/models/{modelId}",
+        "summary": "Model bilgisi",
+        "params": {
+          "modelId": {
+            "type": "string",
+            "required": true,
+            "max": 200
+          }
+        }
+      },
+      {
+        "id": "listBatches",
+        "verb": "GET",
+        "path": "/v1/messages/batches?limit={limit}",
+        "summary": "Toplu işleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.anthropic.com/en/api/overview"
+  },
+  {
+    "id": "ollama",
+    "name": "Ollama (yerel)",
+    "category": "ai",
+    "auth": {
+      "kind": "none"
+    },
+    "hosts": [
+      "127.0.0.1"
+    ],
+    "scopes": [],
+    "health": {
+      "verb": "GET",
+      "path": "http://127.0.0.1:11434/api/tags",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "Anahtar gerekmez",
+        "secret": true,
+        "required": false
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listModels",
+        "verb": "GET",
+        "path": "http://127.0.0.1:11434/api/tags",
+        "summary": "Yerel modelleri listele",
+        "params": {}
+      },
+      {
+        "id": "showModel",
+        "verb": "POST",
+        "path": "http://127.0.0.1:11434/api/show",
+        "summary": "Model ayrıntısı",
+        "params": {
+          "model": {
+            "type": "string",
+            "required": true,
+            "max": 200
+          }
+        },
+        "body": {
+          "name": "{model}"
+        }
+      },
+      {
+        "id": "listTags",
+        "verb": "GET",
+        "path": "/api/tags",
+        "summary": "Yerel modelleri listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://github.com/ollama/ollama/blob/main/docs/api.md"
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "category": "cloud",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.supabase.com"
+    ],
+    "scopes": [
+      "projects.read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/projects",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listProjects",
+        "verb": "GET",
+        "path": "/v1/projects",
+        "summary": "Projektleri listele",
+        "params": {}
+      },
+      {
+        "id": "getProject",
+        "verb": "GET",
+        "path": "/v1/projects/{projectRef}",
+        "summary": "Proje bilgisi",
+        "params": {
+          "projectRef": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listOrganizations",
+        "verb": "GET",
+        "path": "/v1/organizations",
+        "summary": "Organizasyonları listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://supabase.com/docs/reference/api"
+  },
+  {
+    "id": "firebase",
+    "name": "Firebase",
+    "category": "cloud",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "firebase.googleapis.com"
+    ],
+    "scopes": [
+      "firebase.projects.get"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1beta1/projects",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listProjects",
+        "verb": "GET",
+        "path": "/v1beta1/projects?pageSize={limit}",
+        "summary": "Projeleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getProject",
+        "verb": "GET",
+        "path": "/v1beta1/projects/{projectId}",
+        "summary": "Proje bilgisi",
+        "params": {
+          "projectId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listAndroidApps",
+        "verb": "GET",
+        "path": "/v1beta1/projects/{projectId}/androidApps",
+        "summary": "Android uygulamalarını listele",
+        "params": {
+          "projectId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://firebase.google.com/docs/projects/api/reference/rest"
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "category": "cloud",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.vercel.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v2/user",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/v2/user",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listProjects",
+        "verb": "GET",
+        "path": "/v9/projects?limit={limit}",
+        "summary": "Projeleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listDeployments",
+        "verb": "GET",
+        "path": "/v6/deployments?limit={limit}",
+        "summary": "Dağıtımları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://vercel.com/docs/rest-api"
+  },
+  {
+    "id": "netlify",
+    "name": "Netlify",
+    "category": "cloud",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.netlify.com"
+    ],
+    "scopes": [
+      "read:site"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/v1/user",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/api/v1/user",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listSites",
+        "verb": "GET",
+        "path": "/api/v1/sites",
+        "summary": "Siteleri listele",
+        "params": {}
+      },
+      {
+        "id": "listDeploys",
+        "verb": "GET",
+        "path": "/api/v1/sites/{siteId}/deploys",
+        "summary": "Dağıtımları listele",
+        "params": {
+          "siteId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.netlify.com/api/get-started/"
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare",
+    "category": "cloud",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.cloudflare.com"
+    ],
+    "scopes": [
+      "Zone:Read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/client/v4/user/tokens/verify",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "verifyToken",
+        "verb": "GET",
+        "path": "/client/v4/user/tokens/verify",
+        "summary": "Token doğrulama",
+        "params": {}
+      },
+      {
+        "id": "listZones",
+        "verb": "GET",
+        "path": "/client/v4/zones?page={page}",
+        "summary": "Bölgeleri listele",
+        "params": {
+          "page": {
+            "type": "number",
+            "default": 1,
+            "min": 1
+          }
+        }
+      },
+      {
+        "id": "listDnsRecords",
+        "verb": "GET",
+        "path": "/client/v4/zones/{zoneId}/dns_records",
+        "summary": "DNS kayıtlarını listele",
+        "params": {
+          "zoneId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.cloudflare.com/api/"
+  },
+  {
+    "id": "planetscale",
+    "name": "PlanetScale",
+    "category": "cloud",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.planetscale.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/organizations",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listOrganizations",
+        "verb": "GET",
+        "path": "/v1/organizations",
+        "summary": "Organizasyonları listele",
+        "params": {}
+      },
+      {
+        "id": "listDatabases",
+        "verb": "GET",
+        "path": "/v1/organizations/{org}/databases",
+        "summary": "Veritabanlarını listele",
+        "params": {
+          "org": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "getDatabase",
+        "verb": "GET",
+        "path": "/v1/organizations/{org}/databases/{database}",
+        "summary": "Veritabanı bilgisi",
+        "params": {
+          "org": {
+            "type": "string",
+            "required": true
+          },
+          "database": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://api-docs.planetscale.com/"
+  },
+  {
+    "id": "digitalocean",
+    "name": "DigitalOcean",
+    "category": "cloud",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.digitalocean.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v2/account",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getAccount",
+        "verb": "GET",
+        "path": "/v2/account",
+        "summary": "Hesap bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listDroplets",
+        "verb": "GET",
+        "path": "/v2/droplets?page={page}",
+        "summary": "Dropletleri listele",
+        "params": {
+          "page": {
+            "type": "number",
+            "default": 1,
+            "min": 1
+          }
+        }
+      },
+      {
+        "id": "listProjects",
+        "verb": "GET",
+        "path": "/v2/projects?page={page}",
+        "summary": "Projeleri listele",
+        "params": {
+          "page": {
+            "type": "number",
+            "default": 1,
+            "min": 1
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.digitalocean.com/reference/api/api-reference/"
+  },
+  {
+    "id": "heroku",
+    "name": "Heroku",
+    "category": "cloud",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.heroku.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/account",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getAccount",
+        "verb": "GET",
+        "path": "/account",
+        "summary": "Hesap bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listApps",
+        "verb": "GET",
+        "path": "/v3/apps",
+        "summary": "Uygulamaları listele",
+        "params": {}
+      },
+      {
+        "id": "listDynos",
+        "verb": "GET",
+        "path": "/v3/apps/{appId}/dynos",
+        "summary": "Dyno liste",
+        "params": {
+          "appId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://devcenter.heroku.com/articles/platform-api-reference"
+  },
+  {
+    "id": "sentry",
+    "name": "Sentry",
+    "category": "observability",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "sentry.io"
+    ],
+    "scopes": [
+      "project:read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/0/organizations/",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listOrganizations",
+        "verb": "GET",
+        "path": "/api/0/organizations/",
+        "summary": "Organizasyonları listele",
+        "params": {}
+      },
+      {
+        "id": "listProjects",
+        "verb": "GET",
+        "path": "/api/0/organizations/{org}/projects/",
+        "summary": "Projeleri listele",
+        "params": {
+          "org": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listIssues",
+        "verb": "GET",
+        "path": "/api/0/projects/{org}/{project}/issues/",
+        "summary": "Sorunları listele",
+        "params": {
+          "org": {
+            "type": "string",
+            "required": true
+          },
+          "project": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.sentry.io/api/"
+  },
+  {
+    "id": "datadog",
+    "name": "Datadog",
+    "category": "observability",
+    "auth": {
+      "kind": "bearer",
+      "header": "DD-API-KEY",
+      "prefix": ""
+    },
+    "hosts": [
+      "api.datadoghq.com"
+    ],
+    "scopes": [
+      "metrics.read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/v1/validate",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "validateKey",
+        "verb": "GET",
+        "path": "/api/v1/validate",
+        "summary": "Anahtar doğrulama",
+        "params": {}
+      },
+      {
+        "id": "listMonitors",
+        "verb": "GET",
+        "path": "/api/v1/monitor",
+        "summary": "İzleyicileri listele",
+        "params": {}
+      },
+      {
+        "id": "listDashboards",
+        "verb": "GET",
+        "path": "/api/v1/dashboard",
+        "summary": "Panol listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://docs.datadoghq.com/api/"
+  },
+  {
+    "id": "grafana",
+    "name": "Grafana Cloud",
+    "category": "observability",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.grafana.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/health",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getHealth",
+        "verb": "GET",
+        "path": "/api/health",
+        "summary": "Sağlık durumu",
+        "params": {}
+      },
+      {
+        "id": "listDashboards",
+        "verb": "GET",
+        "path": "/api/search?limit={limit}",
+        "summary": "Panoları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listDataSources",
+        "verb": "GET",
+        "path": "/api/datasources",
+        "summary": "Veri kaynaklarını listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://grafana.com/docs/grafana/latest/developers/http_api/"
+  },
+  {
+    "id": "pagerduty",
+    "name": "PagerDuty",
+    "category": "observability",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.pagerduty.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/users?limit=1",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listUsers",
+        "verb": "GET",
+        "path": "/users?limit={limit}",
+        "summary": "Kullanıcıları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listServices",
+        "verb": "GET",
+        "path": "/services?limit={limit}",
+        "summary": "Servisleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listIncidents",
+        "verb": "GET",
+        "path": "/incidents?limit={limit}",
+        "summary": "Olayları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://developer.pagerduty.com/api-reference/"
+  },
+  {
+    "id": "gmail",
+    "name": "Gmail",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "gmail.googleapis.com"
+    ],
+    "scopes": [
+      "gmail.readonly"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/gmail/v1/users/me/profile",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getProfile",
+        "verb": "GET",
+        "path": "/gmail/v1/users/me/profile",
+        "summary": "Posta kutusu profili",
+        "params": {}
+      },
+      {
+        "id": "listMessages",
+        "verb": "GET",
+        "path": "/gmail/v1/users/me/messages?maxResults={limit}",
+        "summary": "İletileri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listLabels",
+        "verb": "GET",
+        "path": "/gmail/v1/users/me/labels",
+        "summary": "Etiketleri listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://developers.google.com/gmail/api/reference/rest"
+  },
+  {
+    "id": "google-drive",
+    "name": "Google Drive",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "www.googleapis.com"
+    ],
+    "scopes": [
+      "drive.readonly"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/drive/v3/about?fields=user",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getAbout",
+        "verb": "GET",
+        "path": "/drive/v3/about?fields=user",
+        "summary": "Kullanıcı bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listFiles",
+        "verb": "GET",
+        "path": "/drive/v3/files?pageSize={limit}",
+        "summary": "Dosyaları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getFile",
+        "verb": "GET",
+        "path": "/drive/v3/files/{fileId}",
+        "summary": "Dosya bilgisi",
+        "params": {
+          "fileId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.google.com/drive/api/reference/rest/v3"
+  },
+  {
+    "id": "google-calendar",
+    "name": "Google Calendar",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "www.googleapis.com"
+    ],
+    "scopes": [
+      "calendar.readonly"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/calendar/v3/calendars/primary",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getCalendar",
+        "verb": "GET",
+        "path": "/calendar/v3/calendars/primary",
+        "summary": "Birincil takvim",
+        "params": {}
+      },
+      {
+        "id": "listEvents",
+        "verb": "GET",
+        "path": "/calendar/v3/calendars/primary/events?maxResults={limit}",
+        "summary": "Etkinlikleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listCalendarList",
+        "verb": "GET",
+        "path": "/calendar/v3/users/me/calendarList?maxResults={limit}",
+        "summary": "Takvimleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.google.com/calendar/api/v3/reference"
+  },
+  {
+    "id": "google-sheets",
+    "name": "Google Sheets",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "sheets.googleapis.com"
+    ],
+    "scopes": [
+      "spreadsheets.readonly"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v4/spreadsheets/{spreadsheetId}?fields=properties",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      },
+      {
+        "key": "spreadsheetId",
+        "label": "E-tablo kimliği",
+        "secret": false,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getSpreadsheet",
+        "verb": "GET",
+        "path": "/v4/spreadsheets/{spreadsheetId}?fields=properties",
+        "summary": "E-tablo bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listSheets",
+        "verb": "GET",
+        "path": "/v4/spreadsheets/{spreadsheetId}?fields=sheets.properties",
+        "summary": "Sayfaları listele",
+        "params": {}
+      },
+      {
+        "id": "getValues",
+        "verb": "GET",
+        "path": "/v4/spreadsheets/{spreadsheetId}/values/{range}",
+        "summary": "Hücre değerlerini getir",
+        "params": {
+          "range": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.google.com/sheets/api/reference/rest"
+  },
+  {
+    "id": "box",
+    "name": "Box",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.box.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/2.0/users/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/2.0/users/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listFiles",
+        "verb": "GET",
+        "path": "/2.0/folders/0/items?limit={limit}",
+        "summary": "Kök klasör dosyaları",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getFile",
+        "verb": "GET",
+        "path": "/2.0/files/{fileId}",
+        "summary": "Dosya bilgisi",
+        "params": {
+          "fileId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developer.box.com/reference/"
+  },
+  {
+    "id": "onedrive",
+    "name": "OneDrive",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "graph.microsoft.com"
+    ],
+    "scopes": [
+      "Files.Read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1.0/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/v1.0/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listDriveItems",
+        "verb": "GET",
+        "path": "/v1.0/me/drive/root/children?$top={limit}",
+        "summary": "Sürücü dosyaları",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listDrives",
+        "verb": "GET",
+        "path": "/v1.0/me/drives",
+        "summary": "Sürücüleri listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://learn.microsoft.com/en-us/graph/api/resources/onedrive"
+  },
+  {
+    "id": "airtable",
+    "name": "Airtable",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.airtable.com"
+    ],
+    "scopes": [
+      "schema.bases:read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v0/meta/bases",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listBases",
+        "verb": "GET",
+        "path": "/v0/meta/bases",
+        "summary": "Tabanları listele",
+        "params": {}
+      },
+      {
+        "id": "listTables",
+        "verb": "GET",
+        "path": "/v0/meta/bases/{baseId}/tables",
+        "summary": "Tabloları listele",
+        "params": {
+          "baseId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listRecords",
+        "verb": "GET",
+        "path": "/v0/{baseId}/{tableName}?pageSize={limit}",
+        "summary": "Kayıtları listele",
+        "params": {
+          "baseId": {
+            "type": "string",
+            "required": true
+          },
+          "tableName": {
+            "type": "string",
+            "required": true
+          },
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://airtable.com/developers/web/api/introduction"
+  },
+  {
+    "id": "asana",
+    "name": "Asana",
+    "category": "productivity",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "app.asana.com"
+    ],
+    "scopes": [
+      "default"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/1.0/users/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/api/1.0/users/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listWorkspaces",
+        "verb": "GET",
+        "path": "/api/1.0/workspaces",
+        "summary": "Çalışma alanlarını listele",
+        "params": {}
+      },
+      {
+        "id": "listProjects",
+        "verb": "GET",
+        "path": "/api/1.0/workspaces/{workspaceGid}/projects",
+        "summary": "Projeleri listele",
+        "params": {
+          "workspaceGid": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.asana.com/reference"
+  },
+  {
+    "id": "hubspot",
+    "name": "HubSpot",
+    "category": "crm",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.hubapi.com"
+    ],
+    "scopes": [
+      "crm.objects.contacts.read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/crm/v3/objects/contacts?limit=1",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listContacts",
+        "verb": "GET",
+        "path": "/crm/v3/objects/contacts?limit={limit}",
+        "summary": "Kişileri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listDeals",
+        "verb": "GET",
+        "path": "/crm/v3/objects/deals?limit={limit}",
+        "summary": "Anlaşmaları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listCompanies",
+        "verb": "GET",
+        "path": "/crm/v3/objects/companies?limit={limit}",
+        "summary": "Şirketleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.hubspot.com/docs/api/overview"
+  },
+  {
+    "id": "pipedrive",
+    "name": "Pipedrive",
+    "category": "crm",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.pipedrive.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/persons?limit=1",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listPersons",
+        "verb": "GET",
+        "path": "/v1/persons?limit={limit}",
+        "summary": "Kişileri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listDeals",
+        "verb": "GET",
+        "path": "/v1/deals?limit={limit}",
+        "summary": "Anlaşmaları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listOrganizations",
+        "verb": "GET",
+        "path": "/v1/organizations?limit={limit}",
+        "summary": "Organizasyonları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.pipedrive.com/docs/api/v1"
+  },
+  {
+    "id": "zoom",
+    "name": "Zoom",
+    "category": "communication",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.zoom.us"
+    ],
+    "scopes": [
+      "user:read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v2/users/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/v2/users/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listUsers",
+        "verb": "GET",
+        "path": "/v2/users?page_size={limit}",
+        "summary": "Kullanıcıları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listMeetings",
+        "verb": "GET",
+        "path": "/v2/users/me/meetings?page_size={limit}",
+        "summary": "Toplantıları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.zoom.us/docs/api/rest/"
+  },
+  {
+    "id": "microsoft-teams",
+    "name": "Microsoft Teams",
+    "category": "communication",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "graph.microsoft.com"
+    ],
+    "scopes": [
+      "Team.ReadBasic.All"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1.0/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listTeams",
+        "verb": "GET",
+        "path": "/v1.0/me/joinedTeams",
+        "summary": "Katıldığım ekipler",
+        "params": {}
+      },
+      {
+        "id": "listChannels",
+        "verb": "GET",
+        "path": "/v1.0/teams/{teamId}/channels",
+        "summary": "Kanalları listele",
+        "params": {
+          "teamId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listMessages",
+        "verb": "GET",
+        "path": "/v1.0/teams/{teamId}/channels/{channelId}/messages?$top={limit}",
+        "summary": "İletileri listele",
+        "params": {
+          "teamId": {
+            "type": "string",
+            "required": true
+          },
+          "channelId": {
+            "type": "string",
+            "required": true
+          },
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://learn.microsoft.com/en-us/graph/api/resources/teams-api-overview"
+  },
+  {
+    "id": "twilio",
+    "name": "Twilio",
+    "category": "communication",
+    "auth": {
+      "kind": "basic",
+      "user": ""
+    },
+    "hosts": [
+      "api.twilio.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/2010-04-01/Accounts/{accountSid}.json",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      },
+      {
+        "key": "accountSid",
+        "label": "Hesap SID",
+        "secret": false,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getAccount",
+        "verb": "GET",
+        "path": "/2010-04-01/Accounts/{accountSid}.json",
+        "summary": "Hesap bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listMessages",
+        "verb": "GET",
+        "path": "/2010-04-01/Accounts/{accountSid}/Messages.json?PageSize={limit}",
+        "summary": "Mesajları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listCalls",
+        "verb": "GET",
+        "path": "/2010-04-01/Accounts/{accountSid}/Calls.json?PageSize={limit}",
+        "summary": "Aramaları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://www.twilio.com/docs/usage/api"
+  },
+  {
+    "id": "sendgrid",
+    "name": "SendGrid",
+    "category": "communication",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.sendgrid.com"
+    ],
+    "scopes": [
+      "profile.read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v3/user/profile",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getProfile",
+        "verb": "GET",
+        "path": "/v3/user/profile",
+        "summary": "Kullanıcı profili",
+        "params": {}
+      },
+      {
+        "id": "listTemplates",
+        "verb": "GET",
+        "path": "/v3/templates?limit={limit}",
+        "summary": "Şablonları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listRecipients",
+        "verb": "GET",
+        "path": "/v3/contactdb/recipients?page={page}",
+        "summary": "Alıcıları listele",
+        "params": {
+          "page": {
+            "type": "number",
+            "default": 1,
+            "min": 1
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.sendgrid.com/api-reference"
+  },
+  {
+    "id": "mailgun",
+    "name": "Mailgun",
+    "category": "communication",
+    "auth": {
+      "kind": "basic",
+      "user": "api"
+    },
+    "hosts": [
+      "api.mailgun.net"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v3/domains?limit=1",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      },
+      {
+        "key": "domain",
+        "label": "Gönderim alanı",
+        "secret": false,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listDomains",
+        "verb": "GET",
+        "path": "/v3/domains?limit={limit}",
+        "summary": "Alan adlarını listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getDomain",
+        "verb": "GET",
+        "path": "/v3/domains/{domain}",
+        "summary": "Alan adı bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listEvents",
+        "verb": "GET",
+        "path": "/v3/{domain}/events?limit={limit}",
+        "summary": "Olayları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://documentation.mailgun.com/docs/mailgun/api-reference/"
+  },
+  {
+    "id": "mailchimp",
+    "name": "Mailchimp",
+    "category": "communication",
+    "auth": {
+      "kind": "basic",
+      "user": "anystring"
+    },
+    "hosts": [
+      "api.mailchimp.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/3.0/lists?count=1",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listLists",
+        "verb": "GET",
+        "path": "/3.0/lists?count={limit}",
+        "summary": "Listeleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listCampaigns",
+        "verb": "GET",
+        "path": "/3.0/campaigns?count={limit}",
+        "summary": "Kampanyaları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getList",
+        "verb": "GET",
+        "path": "/3.0/lists/{listId}",
+        "summary": "Liste bilgisi",
+        "params": {
+          "listId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://mailchimp.com/developer/marketing/api/"
+  },
+  {
+    "id": "intercom",
+    "name": "Intercom",
+    "category": "communication",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.intercom.io"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/contacts?per_page=1",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listContacts",
+        "verb": "GET",
+        "path": "/contacts?per_page={limit}",
+        "summary": "Kişileri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listConversations",
+        "verb": "GET",
+        "path": "/conversations?per_page={limit}",
+        "summary": "Konuşmaları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getContact",
+        "verb": "GET",
+        "path": "/contacts/{contactId}",
+        "summary": "Kişi bilgisi",
+        "params": {
+          "contactId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.intercom.com/docs/references/rest-api"
+  },
+  {
+    "id": "zendesk",
+    "name": "Zendesk",
+    "category": "communication",
+    "auth": {
+      "kind": "basic",
+      "user": "api"
+    },
+    "hosts": [
+      "api.zendesk.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/v2/tickets.json?per_page=1",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listTickets",
+        "verb": "GET",
+        "path": "/api/v2/tickets.json?per_page={limit}",
+        "summary": "Biletleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listUsers",
+        "verb": "GET",
+        "path": "/api/v2/users.json?per_page={limit}",
+        "summary": "Kullanıcıları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getTicket",
+        "verb": "GET",
+        "path": "/api/v2/tickets/{ticketId}.json",
+        "summary": "Bilet bilgisi",
+        "params": {
+          "ticketId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developer.zendesk.com/api-reference/"
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "category": "media",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "youtube.googleapis.com"
+    ],
+    "scopes": [
+      "youtube.readonly"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/youtube/v3/channels?part=snippet&mine=true",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMyChannel",
+        "verb": "GET",
+        "path": "/youtube/v3/channels?part=snippet&mine=true",
+        "summary": "Kanalım",
+        "params": {}
+      },
+      {
+        "id": "listSubscriptions",
+        "verb": "GET",
+        "path": "/youtube/v3/subscriptions?part=snippet&mine=true&maxResults={limit}",
+        "summary": "Abonelikleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getVideo",
+        "verb": "GET",
+        "path": "/youtube/v3/videos?part=snippet&id={videoId}",
+        "summary": "Video bilgisi",
+        "params": {
+          "videoId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developers.google.com/youtube/v3/docs"
+  },
+  {
+    "id": "spotify",
+    "name": "Spotify",
+    "category": "media",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.spotify.com"
+    ],
+    "scopes": [
+      "user-read-private"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/v1/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listPlaylists",
+        "verb": "GET",
+        "path": "/v1/me/playlists?limit={limit}",
+        "summary": "Çalma listelerini listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getTrack",
+        "verb": "GET",
+        "path": "/v1/tracks/{trackId}",
+        "summary": "Parça bilgisi",
+        "params": {
+          "trackId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developer.spotify.com/documentation/web-api"
+  },
+  {
+    "id": "reddit",
+    "name": "Reddit",
+    "category": "media",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "oauth.reddit.com"
+    ],
+    "scopes": [
+      "identity"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/v1/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/api/v1/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listFrontPage",
+        "verb": "GET",
+        "path": "/.json?limit={limit}",
+        "summary": "Ana sayfa akışı",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listSubreddit",
+        "verb": "GET",
+        "path": "/r/{subreddit}/new.json?limit={limit}",
+        "summary": "Alt forum akışı",
+        "params": {
+          "subreddit": {
+            "type": "string",
+            "required": true
+          },
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://www.reddit.com/dev/api/oauth"
+  },
+  {
+    "id": "twitch",
+    "name": "Twitch",
+    "category": "media",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.twitch.tv"
+    ],
+    "scopes": [
+      "user:read:email"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/helix/users",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getUsers",
+        "verb": "GET",
+        "path": "/helix/users",
+        "summary": "Geçerli kullanıcılar",
+        "params": {}
+      },
+      {
+        "id": "getStreams",
+        "verb": "GET",
+        "path": "/helix/streams?first={limit}",
+        "summary": "Canlı yayınları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getTopGames",
+        "verb": "GET",
+        "path": "/helix/games/top?first={limit}",
+        "summary": "Popüler oyunları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://dev.twitch.tv/docs/api/reference"
+  },
+  {
+    "id": "mastodon",
+    "name": "Mastodon",
+    "category": "media",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "mastodon.social"
+    ],
+    "scopes": [
+      "read:accounts"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/v1/accounts/verify_credentials",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "verifyCredentials",
+        "verb": "GET",
+        "path": "/api/v1/accounts/verify_credentials",
+        "summary": "Kimlik doğrulama",
+        "params": {}
+      },
+      {
+        "id": "getHomeTimeline",
+        "verb": "GET",
+        "path": "/api/v1/timelines/home?limit={limit}",
+        "summary": "Ev akışı",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getPublicTimeline",
+        "verb": "GET",
+        "path": "/api/v1/timelines/public?limit={limit}",
+        "summary": "Herkese açık akış",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.joinmastodon.org/methods/"
+  },
+  {
+    "id": "bluesky",
+    "name": "Bluesky",
+    "category": "media",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.bsky.app"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/xrpc/app.bsky.actor.getProfile?actor=bsky.app",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getProfile",
+        "verb": "GET",
+        "path": "/xrpc/app.bsky.actor.getProfile?actor={actor}",
+        "summary": "Profil bilgisi",
+        "params": {
+          "actor": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "getAuthorFeed",
+        "verb": "GET",
+        "path": "/xrpc/app.bsky.feed.getAuthorFeed?actor={actor}&limit={limit}",
+        "summary": "Kullanıcı akışı",
+        "params": {
+          "actor": {
+            "type": "string",
+            "required": true
+          },
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getTimeline",
+        "verb": "GET",
+        "path": "/xrpc/app.bsky.feed.getTimeline?limit={limit}",
+        "summary": "Zaman çizelgesi",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.bsky.app/docs/api"
+  },
+  {
+    "id": "x",
+    "name": "X",
+    "category": "media",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.x.com"
+    ],
+    "scopes": [
+      "tweet.read",
+      "users.read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/2/users/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/2/users/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "getTimeline",
+        "verb": "GET",
+        "path": "/2/users/me/timelines/reverse_chronological?max_results={limit}",
+        "summary": "Zaman çizelgesi",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getUser",
+        "verb": "GET",
+        "path": "/2/users/by/username/{username}",
+        "summary": "Kullanıcı bilgisi",
+        "params": {
+          "username": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://developer.x.com/en/docs/x-api"
+  },
+  {
+    "id": "linkedin",
+    "name": "LinkedIn",
+    "category": "media",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.linkedin.com"
+    ],
+    "scopes": [
+      "r_liteprofile"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v2/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getProfile",
+        "verb": "GET",
+        "path": "/v2/me",
+        "summary": "Profil bilgisi",
+        "params": {}
+      },
+      {
+        "id": "getOrganization",
+        "verb": "GET",
+        "path": "/v2/organizations/{orgId}",
+        "summary": "Organizasyon bilgisi",
+        "params": {
+          "orgId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listPosts",
+        "verb": "GET",
+        "path": "/v2/ugcPosts?q=author&author=urn:li:person:{personId}",
+        "summary": "Gönderileri listele",
+        "params": {
+          "personId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://learn.microsoft.com/en-us/linkedin/"
+  },
+  {
+    "id": "pinecone",
+    "name": "Pinecone",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "Api-Key",
+      "prefix": ""
+    },
+    "hosts": [
+      "api.pinecone.io"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/indexes",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listIndexes",
+        "verb": "GET",
+        "path": "/indexes",
+        "summary": "İndeksleri listele",
+        "params": {}
+      },
+      {
+        "id": "describeIndex",
+        "verb": "GET",
+        "path": "/indexes/{indexName}",
+        "summary": "İndeks bilgisi",
+        "params": {
+          "indexName": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listCollections",
+        "verb": "GET",
+        "path": "/collections",
+        "summary": "Koleksiyonları listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://docs.pinecone.io/reference/api"
+  },
+  {
+    "id": "qdrant",
+    "name": "Qdrant Cloud",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "api-key",
+      "prefix": ""
+    },
+    "hosts": [
+      "cloud.qdrant.io"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/clusters",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listClusters",
+        "verb": "GET",
+        "path": "/clusters",
+        "summary": "Kümeleri listele",
+        "params": {}
+      },
+      {
+        "id": "listCollections",
+        "verb": "GET",
+        "path": "/collections",
+        "summary": "Koleksiyonları listele",
+        "params": {}
+      },
+      {
+        "id": "getCollection",
+        "verb": "GET",
+        "path": "/collections/{collectionName}",
+        "summary": "Koleksiyon bilgisi",
+        "params": {
+          "collectionName": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://qdrant.tech/documentation/cloud/"
+  },
+  {
+    "id": "weaviate",
+    "name": "Weaviate",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.weaviate.io"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/schema",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listClasses",
+        "verb": "GET",
+        "path": "/v1/schema",
+        "summary": "Şemaları listele",
+        "params": {}
+      },
+      {
+        "id": "getClass",
+        "verb": "GET",
+        "path": "/v1/schema/{className}",
+        "summary": "Sınıf bilgisi",
+        "params": {
+          "className": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "getMeta",
+        "verb": "GET",
+        "path": "/v1/meta",
+        "summary": "Meta bilgisi",
+        "params": {}
+      }
+    ],
+    "docs": "https://weaviate.io/developers/weaviate/api/rest"
+  },
+  {
+    "id": "huggingface",
+    "name": "Hugging Face",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "huggingface.co"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/api/whoami-v2",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "whoAmI",
+        "verb": "GET",
+        "path": "/api/whoami-v2",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listModels",
+        "verb": "GET",
+        "path": "/api/models?limit={limit}",
+        "summary": "Modelleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getModel",
+        "verb": "GET",
+        "path": "/api/models/{modelId}",
+        "summary": "Model bilgisi",
+        "params": {
+          "modelId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    ],
+    "docs": "https://huggingface.co/docs/hub/api"
+  },
+  {
+    "id": "replicate",
+    "name": "Replicate",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.replicate.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/models",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listModels",
+        "verb": "GET",
+        "path": "/v1/models?limit={limit}",
+        "summary": "Modelleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "getModel",
+        "verb": "GET",
+        "path": "/v1/models/{modelOwner}/{modelName}",
+        "summary": "Model bilgisi",
+        "params": {
+          "modelOwner": {
+            "type": "string",
+            "required": true
+          },
+          "modelName": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listPredictions",
+        "verb": "GET",
+        "path": "/v1/predictions?limit={limit}",
+        "summary": "Tahminleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://replicate.com/docs/reference/http"
+  },
+  {
+    "id": "groq",
+    "name": "Groq",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.groq.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/openai/v1/models",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listModels",
+        "verb": "GET",
+        "path": "/openai/v1/models",
+        "summary": "Modelleri listele",
+        "params": {}
+      },
+      {
+        "id": "getModel",
+        "verb": "GET",
+        "path": "/openai/v1/models/{modelId}",
+        "summary": "Model bilgisi",
+        "params": {
+          "modelId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listBatches",
+        "verb": "GET",
+        "path": "/openai/v1/batches?limit={limit}",
+        "summary": "Toplu işleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://console.groq.com/docs/api"
+  },
+  {
+    "id": "mistral",
+    "name": "Mistral AI",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.mistral.ai"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/models",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listModels",
+        "verb": "GET",
+        "path": "/v1/models",
+        "summary": "Modelleri listele",
+        "params": {}
+      },
+      {
+        "id": "getModel",
+        "verb": "GET",
+        "path": "/v1/models/{modelId}",
+        "summary": "Model bilgisi",
+        "params": {
+          "modelId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listFiles",
+        "verb": "GET",
+        "path": "/v1/files",
+        "summary": "Dosyaları listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://docs.mistral.ai/api/"
+  },
+  {
+    "id": "cohere",
+    "name": "Cohere",
+    "category": "ai",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.cohere.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/models",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listModels",
+        "verb": "GET",
+        "path": "/v1/models",
+        "summary": "Modelleri listele",
+        "params": {}
+      },
+      {
+        "id": "getModel",
+        "verb": "GET",
+        "path": "/v1/models/{modelId}",
+        "summary": "Model bilgisi",
+        "params": {
+          "modelId": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      {
+        "id": "listDatasets",
+        "verb": "GET",
+        "path": "/v1/datasets?limit={limit}",
+        "summary": "Veri kümelerini listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.cohere.com/docs/cohere-api"
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "category": "commerce",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.stripe.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/account",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getAccount",
+        "verb": "GET",
+        "path": "/v1/account",
+        "summary": "Hesap bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listCustomers",
+        "verb": "GET",
+        "path": "/v1/customers?limit={limit}",
+        "summary": "Müşterileri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listCharges",
+        "verb": "GET",
+        "path": "/v1/charges?limit={limit}",
+        "summary": "Tahsilatları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://docs.stripe.com/api"
+  },
+  {
+    "id": "shopify",
+    "name": "Shopify",
+    "category": "commerce",
+    "auth": {
+      "kind": "bearer",
+      "header": "X-Shopify-Access-Token",
+      "prefix": ""
+    },
+    "hosts": [
+      "myshopify.com"
+    ],
+    "scopes": [
+      "read_products"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/admin/api/2024-01/shop.json",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getShop",
+        "verb": "GET",
+        "path": "/admin/api/2024-01/shop.json",
+        "summary": "Mağaza bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listProducts",
+        "verb": "GET",
+        "path": "/admin/api/2024-01/products.json?limit={limit}",
+        "summary": "Ürünleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listOrders",
+        "verb": "GET",
+        "path": "/admin/api/2024-01/orders.json?limit={limit}",
+        "summary": "Siparişleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://shopify.dev/docs/api/admin-rest"
+  },
+  {
+    "id": "paypal",
+    "name": "PayPal",
+    "category": "commerce",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api-m.paypal.com"
+    ],
+    "scopes": [
+      "openid"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/identity/oauth2/userinfo?schema=paypalv1.1",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getUserInfo",
+        "verb": "GET",
+        "path": "/v1/identity/oauth2/userinfo?schema=paypalv1.1",
+        "summary": "Kullanıcı bilgisi",
+        "params": {}
+      },
+      {
+        "id": "listTransactions",
+        "verb": "GET",
+        "path": "/v1/reporting/transactions?page_size={limit}",
+        "summary": "İşlemleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listInvoices",
+        "verb": "GET",
+        "path": "/v1/invoicing/invoices?page_size={limit}",
+        "summary": "Faturaları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://developer.paypal.com/api/rest/"
+  },
+  {
+    "id": "square",
+    "name": "Square",
+    "category": "commerce",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "connect.squareup.com"
+    ],
+    "scopes": [
+      "locations:read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v2/locations",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "listLocations",
+        "verb": "GET",
+        "path": "/v2/locations",
+        "summary": "Konumları listele",
+        "params": {}
+      },
+      {
+        "id": "listOrders",
+        "verb": "GET",
+        "path": "/v2/orders?limit={limit}",
+        "summary": "Siparişleri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": "listCustomers",
+        "verb": "GET",
+        "path": "/v2/customers?limit={limit}",
+        "summary": "Müşterileri listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://developer.squareup.com/reference/square"
+  },
+  {
+    "id": "gumroad",
+    "name": "Gumroad",
+    "category": "commerce",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.gumroad.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v2/user",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getUser",
+        "verb": "GET",
+        "path": "/v2/user",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listProducts",
+        "verb": "GET",
+        "path": "/v2/products",
+        "summary": "Ürünleri listele",
+        "params": {}
+      },
+      {
+        "id": "listSales",
+        "verb": "GET",
+        "path": "/v2/sales?limit={limit}",
+        "summary": "Satışları listele",
+        "params": {
+          "limit": {
+            "type": "number",
+            "default": 10,
+            "max": 100
+          }
+        }
+      }
+    ],
+    "docs": "https://gumroad.com/api"
+  },
+  {
+    "id": "lemon-squeezy",
+    "name": "Lemon Squeezy",
+    "category": "commerce",
+    "auth": {
+      "kind": "bearer",
+      "header": "Authorization",
+      "prefix": "Bearer "
+    },
+    "hosts": [
+      "api.lemonsqueezy.com"
+    ],
+    "scopes": [
+      "read"
+    ],
+    "health": {
+      "verb": "GET",
+      "path": "/v1/users/me",
+      "expect": [
+        200
+      ]
+    },
+    "fields": [
+      {
+        "key": "token",
+        "label": "API token",
+        "secret": true,
+        "required": true
+      }
+    ],
+    "capabilities": [
+      {
+        "id": "getMe",
+        "verb": "GET",
+        "path": "/v1/users/me",
+        "summary": "Geçerli kullanıcı",
+        "params": {}
+      },
+      {
+        "id": "listProducts",
+        "verb": "GET",
+        "path": "/v1/products",
+        "summary": "Ürünleri listele",
+        "params": {}
+      },
+      {
+        "id": "listOrders",
+        "verb": "GET",
+        "path": "/v1/orders",
+        "summary": "Siparişleri listele",
+        "params": {}
+      }
+    ],
+    "docs": "https://docs.lemonsqueezy.com/api"
+  }
+]

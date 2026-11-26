@@ -1,0 +1,37 @@
+/* keyvotion-console · koyu tema (varsayılan)
+   Sahip: DSN · Sadece token override — başka kural yok. */
+
+:root,
+[data-theme="dark"] {
+  --kv-bg: #121212;
+  --kv-bg-elev-1: #1e1e1e;
+  --kv-bg-elev-2: #2a2a2a;
+  --kv-bg-hover: #2f2f2f;
+  --kv-overlay: rgba(0, 0, 0, 0.6);
+
+  --kv-fg: #ffffff;
+  --kv-fg-muted: #a8a8b3;
+  --kv-fg-subtle: #9a9aa6;
+
+  --kv-border: #333333;
+  --kv-border-strong: #4a4a4a;
+
+  --kv-accent: #3b82f6;
+  --kv-accent-hover: #2f6fd8;
+  --kv-on-accent: #ffffff;
+
+  --kv-success: #22c55e;
+  --kv-warning: #f59e0b;
+  --kv-danger: #ef4444;
+  --kv-info: #38bdf8;
+  --kv-focus-ring: #93c5fd;
+
+  --kv-state-idle: #6e6e7a;
+  --kv-state-busy: #3b82f6;
+  --kv-state-error: #ef4444;
+  --kv-state-offline: #6e6e7a;
+  --kv-on-state: #ffffff;
+
+  --kv-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --kv-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.25);
+}

@@ -1,0 +1,1319 @@
+/* ==========================================================================
+   tur8.css — Tur 8 katmanı (LDR)
+   Yüklenme sırası: EN SON (13. dosya). Önceki katmanları inceltir, silmez.
+   Kapsam: sağ panel (rail), canlı tur vurgusu, sağ tık menüsü, Votion eylem
+   çubuğu, ekip/rapor/sohbet yerleşim tazelemesi.
+   Kural: yalnız tokens.css değişkenleri; ham renk YOK, `!important` YOK.
+   ========================================================================== */
+
+/* --- 0. Yerel ölçek -------------------------------------------------------- */
+.kv-app {
+  --kv-sidebar-w: 238px;
+  --t8-rail-w: 308px;
+  --t8-gap: var(--kv-space-3);
+  --t8-hair: 1px solid var(--kv-border);
+  --t8-elev: 0 18px 44px rgba(0, 0, 0, 0.34), 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* --- 1. Kabuk: üçüncü sütun sağ panel ------------------------------------- */
+.kv-app {
+  grid-template-columns: var(--kv-sidebar-w) minmax(0, 1fr) auto;
+  grid-template-areas:
+    "nav topbar rail"
+    "nav main rail"
+    "nav statusbar rail";
+}
+
+.kv-rail {
+  grid-area: rail;
+  display: flex;
+  flex-direction: column;
+  width: var(--rail-w, var(--t8-rail-w));
+  min-width: 0;
+  max-width: 46vw;
+  background: var(--kv-bg-elev-1);
+  border-left: var(--t8-hair);
+  overflow: hidden;
+}
+
+.kv-rail[data-rail-state="closed"] {
+  display: none;
+}
+
+.kv-rail__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-2) var(--kv-space-2) 0;
+}
+
+.kv-rail__tabs {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: var(--kv-radius-sm);
+  background: var(--kv-bg-elev-2);
+  border: var(--t8-hair);
+  min-width: 0;
+}
+
+.kv-rail__tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--kv-fg-muted);
+  font: inherit;
+  font-size: var(--kv-fs-sm);
+  padding: 5px 9px;
+  border-radius: calc(var(--kv-radius-sm) - 2px);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.kv-rail__tab[aria-selected="true"] {
+  background: var(--kv-bg-elev-1);
+  color: var(--kv-fg);
+  box-shadow: inset 0 0 0 1px var(--kv-border);
+}
+
+.kv-rail__tab:hover {
+  color: var(--kv-fg);
+}
+
+.kv-rail__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-2);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.kv-rail__pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.kv-rail__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kv-space-2);
+  font-size: var(--kv-fs-sm);
+}
+
+.kv-rail__stream {
+  flex: 1 1 auto;
+  min-height: 120px;
+  max-height: 42vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-2);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-sm);
+  background: var(--kv-bg);
+  scrollbar-width: thin;
+}
+
+.kv-rail__msg {
+  max-width: 92%;
+  padding: var(--kv-space-2) var(--kv-space-3);
+  border-radius: var(--kv-radius-sm);
+  font-size: var(--kv-fs-sm);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.kv-rail__msg--lider {
+  align-self: flex-start;
+  background: var(--kv-bg-elev-2);
+  border: var(--t8-hair);
+  color: var(--kv-fg);
+}
+
+.kv-rail__msg--user {
+  align-self: flex-end;
+  background: var(--kv-accent);
+  color: var(--kv-on-accent);
+}
+
+.kv-rail__composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+}
+
+.kv-rail__composer-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--kv-space-1);
+}
+
+.kv-rail__section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--kv-space-2);
+  margin-top: var(--kv-space-2);
+  font-size: var(--kv-fs-sm);
+  font-weight: var(--kv-fw-bold);
+  color: var(--kv-fg);
+}
+
+.kv-rail__list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kv-rail__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kv-space-2);
+  width: 100%;
+  padding: 7px var(--kv-space-2);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-sm);
+  background: var(--kv-bg);
+  color: var(--kv-fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.kv-rail__row:hover {
+  background: var(--kv-bg-hover);
+  border-color: var(--kv-border-strong);
+}
+
+.kv-rail__row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.kv-rail__row-main b {
+  font-size: var(--kv-fs-sm);
+  font-family: var(--kv-font-mono);
+  color: var(--kv-fg);
+}
+
+.kv-rail__row-main small {
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kv-rail__project-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-1);
+  padding: var(--kv-space-2);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-sm);
+  background: var(--kv-bg);
+}
+
+.kv-rail__project-card small {
+  color: var(--kv-fg-muted);
+  font-family: var(--kv-font-mono);
+  font-size: var(--kv-fs-xs);
+  overflow-wrap: anywhere;
+}
+
+.kv-rail__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.kv-rail__bar {
+  display: grid;
+  grid-template-columns: 46px 1fr 52px;
+  align-items: center;
+  gap: var(--kv-space-2);
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+}
+
+.kv-rail__bar span {
+  font-family: var(--kv-font-mono);
+  color: var(--kv-fg);
+}
+
+.kv-rail__bar i {
+  display: block;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--kv-bg-elev-2);
+  position: relative;
+  overflow: hidden;
+}
+
+.kv-rail__bar i::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--bar, 0%);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--kv-accent), var(--kv-info));
+}
+
+.kv-rail__bar b {
+  text-align: right;
+  color: var(--kv-fg);
+  font-weight: var(--kv-fw-regular);
+}
+
+.kv-rail__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-2);
+  border-top: var(--t8-hair);
+  font-size: var(--kv-fs-sm);
+}
+
+/* --- 2. Canlı tur: gerçek hedefi kutucukla işaretle ----------------------- */
+.kv-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.kv-tour[hidden] {
+  display: none;
+}
+
+.kv-tour__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--kv-overlay);
+  pointer-events: auto;
+}
+
+.kv-tour__spot {
+  position: absolute;
+  left: var(--tour-x, 0);
+  top: var(--tour-y, 0);
+  width: var(--tour-w, 0);
+  height: var(--tour-h, 0);
+  border-radius: var(--kv-radius-sm);
+  border: 2px solid var(--kv-accent);
+  box-shadow: 0 0 0 9999px var(--kv-overlay), 0 0 0 4px color-mix(in srgb, var(--kv-accent) 22%, transparent);
+  transition: left 180ms ease, top 180ms ease, width 180ms ease, height 180ms ease;
+  pointer-events: none;
+}
+
+.kv-tour__card {
+  position: absolute;
+  left: var(--tour-card-x, 24px);
+  top: var(--tour-card-y, 24px);
+  width: min(340px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-3);
+  border-radius: var(--kv-radius-lg);
+  border: var(--t8-hair);
+  background: var(--kv-bg-elev-1);
+  box-shadow: var(--t8-elev);
+  pointer-events: auto;
+}
+
+.kv-tour__head {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+}
+
+.kv-tour__step {
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: var(--t8-hair);
+  background: var(--kv-bg-elev-2);
+  font-family: var(--kv-font-mono);
+}
+
+.kv-tour__target {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kv-tour__card h3 {
+  margin: 0;
+  font-size: var(--kv-fs-md);
+  color: var(--kv-fg);
+}
+
+.kv-tour__card p {
+  margin: 0;
+  font-size: var(--kv-fs-sm);
+  line-height: 1.55;
+  color: var(--kv-fg-muted);
+}
+
+.kv-tour__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--kv-space-1);
+}
+
+.kv-tour__actions span {
+  margin-left: auto;
+  font-size: var(--kv-fs-xs);
+}
+
+/* --- 3. Sağ tık menüsü ---------------------------------------------------- */
+.kv-menu {
+  position: fixed;
+  left: var(--menu-x, 24px);
+  top: var(--menu-y, 24px);
+  z-index: 95;
+  min-width: 190px;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--kv-space-1);
+  border-radius: var(--kv-radius-lg);
+  border: var(--t8-hair);
+  background: var(--kv-bg-elev-1);
+  box-shadow: var(--t8-elev);
+}
+
+.kv-menu[hidden] {
+  display: none;
+}
+
+.kv-menu__head {
+  padding: 4px var(--kv-space-2) 6px;
+  font-size: var(--kv-fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--kv-fg-subtle);
+}
+
+.kv-menu__item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--kv-fg);
+  font: inherit;
+  font-size: var(--kv-fs-sm);
+  text-align: left;
+  padding: 7px var(--kv-space-2);
+  border-radius: calc(var(--kv-radius-sm) - 1px);
+  cursor: pointer;
+}
+
+.kv-menu__item:hover {
+  background: var(--kv-bg-hover);
+}
+
+.kv-menu__item[data-tone="danger"] {
+  color: var(--kv-danger);
+}
+
+.kv-menu__item[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* --- 4. Votion eylem çubuğu ---------------------------------------------- */
+.kv-votion__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: var(--kv-space-2) var(--kv-space-3) var(--kv-space-3);
+  border-top: var(--t8-hair);
+}
+
+.kv-votion__chip {
+  appearance: none;
+  border: var(--t8-hair);
+  background: var(--kv-bg-elev-2);
+  color: var(--kv-fg);
+  font: inherit;
+  font-size: var(--kv-fs-xs);
+  padding: 5px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.kv-votion__chip:hover {
+  background: var(--kv-bg-hover);
+  border-color: var(--kv-border-strong);
+}
+
+.kv-votion__chip:focus-visible {
+  outline: 2px solid var(--kv-focus-ring);
+  outline-offset: 1px;
+}
+
+/* --- 5. Yerleşim tazelemesi: ekip, pano, raporlar, sohbet ----------------- */
+
+/* Ekip: kart ızgarası nefes alsın, istatistik şeridi tek satır kalsın */
+[data-screen="team"] .kv-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: var(--t8-gap);
+}
+
+[data-screen="team"] .kv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: var(--t8-gap);
+}
+
+[data-screen="team"] .kv-desk {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 300px);
+  gap: var(--t8-gap);
+  align-items: stretch;
+}
+
+@media (max-width: 1180px) {
+  [data-screen="team"] .kv-desk {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Pano: sütunlar eşit yükseklikte, kart başlığı iki satırda kırılır */
+[data-screen="board"] .kv-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(210px, 1fr));
+  gap: var(--t8-gap);
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  [data-screen="board"] .kv-board {
+    grid-template-columns: repeat(2, minmax(210px, 1fr));
+  }
+}
+
+[data-screen="board"] .kv-board__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  min-height: 160px;
+  padding: var(--kv-space-2);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-lg);
+  background: var(--kv-bg-elev-1);
+}
+
+[data-screen="board"] .kv-board__card {
+  overflow-wrap: anywhere;
+}
+
+/* Raporlar: kart ızgarası + daraltılmış ayrıntı sütunu */
+[data-screen="reports"] .kv-reports--pro {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--t8-gap);
+  align-items: start;
+}
+
+/* Sohbet: üç bölgeli düzen (liste · akış · başlık) */
+.kv-chat-shell {
+  display: grid;
+  grid-template-columns: minmax(200px, 264px) minmax(0, 1fr);
+  gap: var(--t8-gap);
+  min-height: 0;
+  height: 100%;
+}
+
+.kv-chat-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  min-height: 0;
+  padding: var(--kv-space-2);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-lg);
+  background: var(--kv-bg-elev-1);
+}
+
+.kv-chat-rail__list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+}
+
+.kv-chat-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  gap: var(--kv-space-2);
+}
+
+/* Ayarlar: bölüm gezinmesi yapışkan, kart ızgarası dengeli */
+[data-screen="settings"] .kv-settings__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: var(--t8-gap);
+  align-items: start;
+}
+
+/* Rehber: kart ve sahne yan yana, küçük ekranda alt alta */
+[data-screen="guide"] .kv-guide {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(240px, 1fr);
+  gap: var(--t8-gap);
+  align-items: start;
+}
+
+@media (max-width: 1080px) {
+  [data-screen="guide"] .kv-guide {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- 6. Dar ekran: panel varsayılan kapalı dursun ------------------------ */
+@media (max-width: 980px) {
+  .kv-rail {
+    max-width: none;
+    width: 280px;
+  }
+
+  .kv-app {
+    grid-template-columns: var(--kv-sidebar-w) minmax(0, 1fr) auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-tour__spot {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   7. Tur 8 ekranları — Ekipler · Planlar · Dosyalar · Bağlamlar
+   Yalnız tokens.css değişkenleri; ham renk ve !important yok.
+   ========================================================================== */
+
+/* --- ortak yerleşim --- */
+.kv-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--t8-gap);
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: var(--kv-space-1);
+}
+
+.kv-stack--tight {
+  gap: var(--kv-space-2);
+}
+
+.kv-split--teams {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.8fr);
+}
+
+.kv-split--plans {
+  grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1fr);
+}
+
+.kv-split--files,
+.kv-split--contexts {
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1fr);
+}
+
+.kv-split__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+  min-height: 0;
+  overflow-y: auto;
+}
+
+@media (max-width: 1180px) {
+  .kv-split--teams,
+  .kv-split--plans,
+  .kv-split--files,
+  .kv-split--contexts {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+.kv-toolbar__search {
+  flex: 1;
+  min-width: 140px;
+  max-width: 320px;
+}
+
+.kv-chat-rail__sort {
+  margin-top: var(--kv-space-1);
+  width: 100%;
+}
+
+.kv-row--gap {
+  gap: var(--kv-space-2);
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.kv-field--inline {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  flex: 0 0 auto;
+}
+
+.kv-field--inline > span {
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+  white-space: nowrap;
+}
+
+.kv-field--inline .kv-input {
+  width: auto;
+  min-width: 92px;
+}
+
+.kv-code {
+  margin: 0;
+  padding: var(--kv-space-3);
+  max-height: 42vh;
+  overflow: auto;
+  font-family: var(--kv-font-mono);
+  font-size: var(--kv-fs-xs);
+  line-height: var(--kv-lh-normal);
+  color: var(--kv-fg);
+  background: var(--kv-bg);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-md);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.kv-chip-row {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-1) 0;
+  border-bottom: var(--t8-hair);
+}
+
+.kv-chip-row:last-child {
+  border-bottom: 0;
+}
+
+/* --- ekipler --- */
+.kv-team {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+  padding: var(--kv-space-4);
+  background: var(--kv-bg-elev-1);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-lg);
+  box-shadow: var(--kv-shadow-sm);
+}
+
+.kv-team[aria-current="true"] {
+  border-color: var(--kv-accent);
+  box-shadow: var(--kv-shadow-focus);
+}
+
+.kv-team__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--kv-space-3);
+}
+
+.kv-team__id {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-1);
+  min-width: 0;
+}
+
+.kv-team__id b {
+  font-size: var(--kv-fs-md);
+  font-weight: var(--kv-fw-bold);
+}
+
+.kv-team__id small {
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+}
+
+.kv-team__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kv-space-2);
+}
+
+.kv-meter {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  flex-wrap: wrap;
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+}
+
+.kv-meter__track {
+  flex: 1;
+  min-width: 90px;
+  height: 6px;
+  overflow: hidden;
+  background: var(--kv-bg-hover);
+  border-radius: var(--kv-radius-pill);
+}
+
+.kv-meter__fill {
+  display: block;
+  width: var(--bar, 0%);
+  height: 100%;
+  background: var(--kv-accent);
+  border-radius: var(--kv-radius-pill);
+  transition: width var(--kv-dur-normal) var(--kv-ease);
+}
+
+/* üye tablosu: gerçek <table> değil, ızgara — .kv-table ile çakışmaz */
+.kv-roster {
+  display: flex;
+  flex-direction: column;
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-md);
+  overflow: hidden;
+}
+
+.kv-roster__head,
+.kv-roster__row {
+  display: grid;
+  grid-template-columns: 64px 92px minmax(0, 1fr) minmax(0, 1.1fr) 34px;
+  align-items: center;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-2) var(--kv-space-3);
+  font-size: var(--kv-fs-xs);
+}
+
+.kv-roster__head {
+  background: var(--kv-bg-elev-2);
+  color: var(--kv-fg-muted);
+  font-weight: var(--kv-fw-medium);
+}
+
+.kv-roster__row {
+  border-top: var(--t8-hair);
+}
+
+.kv-roster__row:hover {
+  background: var(--kv-bg-hover);
+}
+
+/* --- planlar --- */
+.kv-plans__tabs {
+  align-self: flex-start;
+  margin-bottom: var(--kv-space-3);
+}
+
+.kv-note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-3);
+  background: var(--kv-bg-elev-1);
+  border: var(--t8-hair);
+  border-left: 3px solid var(--kv-accent);
+  border-radius: var(--kv-radius-md);
+}
+
+.kv-note p {
+  margin: 0;
+  font-size: var(--kv-fs-sm);
+  line-height: var(--kv-lh-normal);
+  white-space: pre-wrap;
+}
+
+.kv-note footer {
+  justify-content: space-between;
+}
+
+.kv-sched,
+.kv-task {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-3);
+  background: var(--kv-bg-elev-1);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-md);
+}
+
+.kv-sched__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kv-space-2);
+}
+
+.kv-sched p {
+  margin: 0;
+  font-size: var(--kv-fs-xs);
+}
+
+.kv-sched footer {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--kv-space-2);
+}
+
+.kv-task {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kv-space-3);
+}
+
+.kv-task__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-1);
+  min-width: 0;
+}
+
+.kv-task__main b {
+  font-size: var(--kv-fs-sm);
+  font-weight: var(--kv-fw-medium);
+}
+
+.kv-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kv-space-2);
+}
+
+.kv-day {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kv-space-1);
+  padding: var(--kv-space-1) var(--kv-space-2);
+  font-size: var(--kv-fs-xs);
+  background: var(--kv-bg-elev-2);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-pill);
+  cursor: pointer;
+}
+
+.kv-day:hover {
+  background: var(--kv-bg-hover);
+}
+
+/* --- dosyalar --- */
+.kv-file {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+  width: 100%;
+  padding: var(--kv-space-2) var(--kv-space-3);
+  text-align: left;
+  background: transparent;
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-md);
+  color: var(--kv-fg);
+  cursor: pointer;
+}
+
+.kv-file:hover,
+.kv-file:focus-visible {
+  background: var(--kv-bg-hover);
+  outline: none;
+}
+
+.kv-file[aria-current="true"] {
+  border-color: var(--kv-accent);
+  background: var(--kv-bg-elev-2);
+}
+
+.kv-file__icon {
+  flex: 0 0 auto;
+  width: 16px;
+  text-align: center;
+  color: var(--kv-fg-muted);
+}
+
+.kv-file__main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.kv-file__main b {
+  font-size: var(--kv-fs-sm);
+  font-weight: var(--kv-fw-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kv-file__main small {
+  font-size: var(--kv-fs-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kv-file__pick {
+  flex: 0 0 auto;
+  accent-color: var(--kv-accent);
+  cursor: pointer;
+}
+
+@media (max-width: 1180px) {
+  .kv-stack {
+    overflow-y: visible;
+  }
+}
+
+/* ==========================================================================
+   8. Votion 2.0 — gerçek sesli asistan paneli (Tur 9)
+   ========================================================================== */
+
+.kv-votion__panel {
+  width: min(30rem, 92vw);
+  max-height: min(38rem, 82vh);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+}
+
+.kv-votion__head {
+  align-items: center;
+  border-bottom: 1px solid var(--kv-border);
+  padding-bottom: var(--kv-space-2);
+}
+
+.kv-votion__id {
+  gap: var(--kv-space-2);
+  min-width: 0;
+}
+
+.kv-votion__name {
+  display: flex;
+  flex-direction: column;
+  line-height: var(--kv-lh-tight);
+}
+
+.kv-votion__name em {
+  font-style: normal;
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+}
+
+.kv-votion__orb {
+  --level: 0.12;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 22px;
+  padding: 0 var(--kv-space-1);
+  border-radius: var(--kv-radius-pill);
+  background: var(--kv-bg-elev-2);
+}
+
+.kv-votion__orb i {
+  width: 3px;
+  height: calc(6px + 12px * var(--level));
+  border-radius: var(--kv-radius-pill);
+  background: var(--kv-accent);
+  transition: height 90ms linear;
+}
+
+.kv-votion__orb i:nth-child(2) { height: calc(4px + 16px * var(--level)); opacity: 0.85; }
+.kv-votion__orb i:nth-child(3) { height: calc(8px + 10px * var(--level)); opacity: 0.7; }
+.kv-votion__orb i:nth-child(4) { height: calc(3px + 13px * var(--level)); opacity: 0.6; }
+
+.kv-votion--listening .kv-votion__orb i { background: var(--kv-danger); }
+.kv-votion--speaking .kv-votion__orb i { background: var(--kv-success); }
+.kv-votion--thinking .kv-votion__orb i { background: var(--kv-warning); }
+
+.kv-votion__state {
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+  min-width: 6.5rem;
+  text-align: right;
+}
+
+.kv-votion__log {
+  flex: 1;
+  min-height: 12rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+  overflow-y: auto;
+  padding-right: var(--kv-space-1);
+}
+
+.kv-votion__row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 92%;
+  padding: var(--kv-space-2) var(--kv-space-3);
+  border-radius: var(--kv-radius-lg);
+  background: var(--kv-bg-elev-1);
+  border: 1px solid var(--kv-border);
+}
+
+.kv-votion__row[data-who="user"] {
+  align-self: flex-end;
+  background: var(--kv-bg-elev-2);
+  border-color: var(--kv-border-strong);
+}
+
+.kv-votion__row[data-error="true"] {
+  border-color: var(--kv-danger);
+}
+
+.kv-votion__row[data-transcript="true"] .kv-votion__text::before {
+  content: "🎙 ";
+}
+
+.kv-votion__text {
+  margin: 0;
+  font-size: var(--kv-fs-md);
+  line-height: var(--kv-lh-normal);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.kv-votion__meta {
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-subtle);
+}
+
+.kv-votion__shot {
+  max-width: 100%;
+  border-radius: var(--kv-radius-md);
+  border: 1px solid var(--kv-border);
+}
+
+.kv-votion__composer {
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+}
+
+.kv-votion__mic {
+  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--kv-radius-pill);
+  border: 1px solid var(--kv-border-strong);
+  background: var(--kv-bg-elev-1);
+  color: var(--kv-fg);
+  cursor: pointer;
+}
+
+.kv-votion__mic svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.kv-votion__mic:hover { background: var(--kv-bg-hover); }
+.kv-votion__mic:focus-visible { outline: none; box-shadow: var(--kv-shadow-focus); }
+
+.kv-votion__mic[data-state="listening"] {
+  background: var(--kv-danger);
+  border-color: var(--kv-danger);
+  color: var(--kv-on-accent);
+  animation: kv-votion-pulse 1.1s ease-in-out infinite;
+}
+
+.kv-votion__mic[data-state="thinking"] {
+  background: var(--kv-warning);
+  border-color: var(--kv-warning);
+  color: var(--kv-on-accent);
+}
+
+@keyframes kv-votion-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--kv-overlay); }
+  50% { box-shadow: 0 0 0 6px var(--kv-overlay); }
+}
+
+.kv-votion__hint {
+  margin: 0;
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-subtle);
+}
+
+.kv-votion__panel .kv-iconbtn svg,
+.kv-votion__panel [data-action="votion-speak-toggle"] svg,
+.kv-votion__panel [data-action="votion-stop"] svg,
+.kv-votion__panel [data-action="votion-close"] svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.kv-votion__panel [data-action="votion-speak-toggle"][aria-pressed="false"] {
+  color: var(--kv-fg-subtle);
+  opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+  .kv-votion__panel {
+    width: 100vw;
+    max-height: 82vh;
+  }
+}
+
+/* ==========================================================================
+   LIDER DONGUSU KATMANI (TUR 8 EXTENSION)
+   Added by T-089a. Deterministic card grid for Cycle logs.
+   ========================================================================== */
+
+/* Container Grid */
+.kv-cycle-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--t8-gap);
+  padding: var(--kv-space-4) 0;
+}
+
+/* Individual Awakening Card */
+.kv-cycle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+  padding: var(--kv-space-3);
+  background: var(--kv-bg-elev-2);
+  border: var(--t8-hair);
+  border-radius: var(--kv-radius-md);
+  transition: transform var(--kv-dur-fast) var(--kv-ease), box-shadow var(--kv-dur-fast) var(--kv-ease);
+}
+
+.kv-cycle:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--kv-shadow-sm);
+}
+
+/* Derived Variant */
+.kv-cycle--derived {
+  border-left: 4px solid var(--kv-fg-muted);
+}
+
+/* Header Row */
+.kv-cycle__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kv-space-2);
+}
+
+.kv-cycle__date {
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-subtle);
+  font-family: var(--kv-font-mono);
+}
+
+.kv-cycle__status {
+  font-size: var(--kv-fs-xs);
+  font-weight: var(--kv-fw-bold);
+  color: var(--kv-fg);
+  background: var(--kv-bg-elev-1);
+  padding: 2px 6px;
+  border-radius: var(--kv-radius-sm);
+  border: var(--t8-hair);
+}
+
+/* Content Areas */
+.kv-cycle__title {
+  font-size: var(--kv-fs-md);
+  font-weight: var(--kv-fw-bold);
+  color: var(--kv-fg);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kv-cycle__intent {
+  font-size: var(--kv-fs-sm);
+  color: var(--kv-fg-muted);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kv-cycle__idea {
+  font-size: var(--kv-fs-sm);
+  color: var(--kv-fg);
+  margin: 0;
+  line-height: var(--kv-lh-normal);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Empty State */
+.kv-cycle__empty {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: var(--kv-space-6);
+  color: var(--kv-fg-muted);
+  font-style: italic;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .kv-cycle-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .kv-cycle {
+    padding: var(--kv-space-2);
+  }
+}

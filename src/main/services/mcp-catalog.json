@@ -1,0 +1,962 @@
+[
+  {
+    "id": "filesystem",
+    "name": "Filesystem",
+    "vendor": "Model Context Protocol",
+    "category": "files",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-filesystem",
+      "."
+    ],
+    "envKeys": [],
+    "toolsHint": "Dosya okuma, yazma, dizin listeleme",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem"
+  },
+  {
+    "id": "git",
+    "name": "Git",
+    "vendor": "Model Context Protocol",
+    "category": "code",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-git"
+    ],
+    "envKeys": [],
+    "toolsHint": "Git deposi durum, diff, log ve commit aracı",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/git"
+  },
+  {
+    "id": "sqlite",
+    "name": "SQLite",
+    "vendor": "Model Context Protocol",
+    "category": "data",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-sqlite"
+    ],
+    "envKeys": [],
+    "toolsHint": "SQLite sorgulama ve şema inceleme",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/sqlite"
+  },
+  {
+    "id": "postgres",
+    "name": "PostgreSQL",
+    "vendor": "Model Context Protocol",
+    "category": "data",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-postgres"
+    ],
+    "envKeys": [
+      "DATABASE_URL"
+    ],
+    "toolsHint": "PostgreSQL sorgulama ve şema listeleme",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/postgres"
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "vendor": "GitHub",
+    "category": "code",
+    "transport": "http",
+    "url": "https://api.githubcopilot.com/mcp/",
+    "envKeys": [
+      "GITHUB_PERSONAL_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Depo, sorun ve çekme isteği araçları",
+    "docs": "https://docs.github.com/en/copilot/concepts/agents/about-copilot-coding-agent"
+  },
+  {
+    "id": "gitlab",
+    "name": "GitLab",
+    "vendor": "GitLab",
+    "category": "code",
+    "transport": "http",
+    "url": "https://gitlab.com/api/v4/mcp",
+    "envKeys": [
+      "GITLAB_PERSONAL_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Proje, sorun ve birleştirme isteği araçları",
+    "docs": "https://docs.gitlab.com/user/gitlab_duo/"
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "vendor": "Salesforce",
+    "category": "communication",
+    "transport": "http",
+    "url": "https://mcp.slack.com/mcp",
+    "envKeys": [
+      "SLACK_BOT_TOKEN"
+    ],
+    "toolsHint": "Kanal, ileti ve kullanıcı araçları",
+    "docs": "https://docs.slack.dev/ai-assistant-with-mcp/"
+  },
+  {
+    "id": "notion",
+    "name": "Notion",
+    "vendor": "Notion Labs",
+    "category": "productivity",
+    "transport": "http",
+    "url": "https://mcp.notion.com/mcp",
+    "envKeys": [
+      "NOTION_TOKEN"
+    ],
+    "toolsHint": "Sayfa, veritabanı ve arama araçları",
+    "docs": "https://developers.notion.com/docs/mcp"
+  },
+  {
+    "id": "linear",
+    "name": "Linear",
+    "vendor": "Linear",
+    "category": "productivity",
+    "transport": "http",
+    "url": "https://mcp.linear.app/mcp",
+    "envKeys": [
+      "LINEAR_API_KEY"
+    ],
+    "toolsHint": "Sorun, proje ve döngü araçları",
+    "docs": "https://linear.app/docs/mcp"
+  },
+  {
+    "id": "google-maps",
+    "name": "Google Maps",
+    "vendor": "Google",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-google-maps"
+    ],
+    "envKeys": [
+      "GOOGLE_MAPS_API_KEY"
+    ],
+    "toolsHint": "Yer arama, rota ve coğrafi kodlama",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/google-maps"
+  },
+  {
+    "id": "fetch",
+    "name": "Fetch",
+    "vendor": "Model Context Protocol",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-fetch"
+    ],
+    "envKeys": [],
+    "toolsHint": "URL getirme ve içerik dönüştürme",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch"
+  },
+  {
+    "id": "puppeteer",
+    "name": "Puppeteer",
+    "vendor": "Model Context Protocol",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-puppeteer"
+    ],
+    "envKeys": [],
+    "toolsHint": "Tarayıcı otomasyonu ve ekran görüntüsü",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer"
+  },
+  {
+    "id": "playwright",
+    "name": "Playwright",
+    "vendor": "Microsoft",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@playwright/mcp"
+    ],
+    "envKeys": [],
+    "toolsHint": "Web sayfası etkileşim ve test araçları",
+    "docs": "https://github.com/microsoft/playwright-mcp"
+  },
+  {
+    "id": "memory",
+    "name": "Memory",
+    "vendor": "Model Context Protocol",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-memory"
+    ],
+    "envKeys": [],
+    "toolsHint": "Kalıcı bilgi grafiği ve anısal arama",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory"
+  },
+  {
+    "id": "sequential-thinking",
+    "name": "Sequential Thinking",
+    "vendor": "Model Context Protocol",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-sequential-thinking"
+    ],
+    "envKeys": [],
+    "toolsHint": "Adımlı düşünme ve planlama aracı",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking"
+  },
+  {
+    "id": "time",
+    "name": "Time",
+    "vendor": "Model Context Protocol",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-time"
+    ],
+    "envKeys": [],
+    "toolsHint": "Saat dilimi ve zaman dönüştürme",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/time"
+  },
+  {
+    "id": "everything",
+    "name": "Everything",
+    "vendor": "Model Context Protocol",
+    "category": "code",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-everything"
+    ],
+    "envKeys": [],
+    "toolsHint": "Tüm MCP özelliklerini sergileyen referans sunucu",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/everything"
+  },
+  {
+    "id": "sentry",
+    "name": "Sentry",
+    "vendor": "Functional Software",
+    "category": "observability",
+    "transport": "http",
+    "url": "https://mcp.sentry.io/mcp",
+    "envKeys": [
+      "SENTRY_AUTH_TOKEN"
+    ],
+    "toolsHint": "Hata, sorun ve proje sorgulama",
+    "docs": "https://docs.sentry.io/product/sentry-mcp/"
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "vendor": "Docker",
+    "category": "cloud",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-docker"
+    ],
+    "envKeys": [],
+    "toolsHint": "Konteyner, imaj ve ağ yönetimi",
+    "docs": "https://github.com/ckostka/mcp-server-docker"
+  },
+  {
+    "id": "kubernetes",
+    "name": "Kubernetes",
+    "vendor": "Cloud Native Computing Foundation",
+    "category": "cloud",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-kubernetes"
+    ],
+    "envKeys": [
+      "KUBECONFIG"
+    ],
+    "toolsHint": "Pod, servis ve dağıtım sorgulama",
+    "docs": "https://github.com/Flux159/mcp-server-kubernetes"
+  },
+  {
+    "id": "aws-s3",
+    "name": "AWS S3",
+    "vendor": "Amazon Web Services",
+    "category": "cloud",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-aws-s3"
+    ],
+    "envKeys": [
+      "AWS_ACCESS_KEY_ID",
+      "AWS_SECRET_ACCESS_KEY",
+      "AWS_REGION"
+    ],
+    "toolsHint": "S3 kova ve nesne işlemleri",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/aws-s3"
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare",
+    "vendor": "Cloudflare",
+    "category": "cloud",
+    "transport": "http",
+    "url": "https://mcp.cloudflare.com/mcp",
+    "envKeys": [
+      "CLOUDFLARE_API_TOKEN"
+    ],
+    "toolsHint": "Zone, DNS ve Workers yönetimi",
+    "docs": "https://developers.cloudflare.com/agents/model-context-protocol/"
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "vendor": "Vercel",
+    "category": "cloud",
+    "transport": "http",
+    "url": "https://mcp.vercel.com",
+    "envKeys": [
+      "VERCEL_TOKEN"
+    ],
+    "toolsHint": "Proje ve dağıtım yönetimi",
+    "docs": "https://vercel.com/docs/mcp"
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "vendor": "Supabase",
+    "category": "cloud",
+    "transport": "http",
+    "url": "https://mcp.supabase.com/mcp",
+    "envKeys": [
+      "SUPABASE_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Proje, tablo ve sorgu araçları",
+    "docs": "https://supabase.com/docs/guides/getting-started/mcp"
+  },
+  {
+    "id": "mongodb",
+    "name": "MongoDB",
+    "vendor": "MongoDB",
+    "category": "data",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mongodb-mcp-server"
+    ],
+    "envKeys": [
+      "MONGODB_URI"
+    ],
+    "toolsHint": "Koleksiyon ve belge sorgulama",
+    "docs": "https://github.com/mongodb/mongodb-mcp-server"
+  },
+  {
+    "id": "redis",
+    "name": "Redis",
+    "vendor": "Redis",
+    "category": "data",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-redis"
+    ],
+    "envKeys": [
+      "REDIS_URL"
+    ],
+    "toolsHint": "Anahtar-değer okuma ve yazma",
+    "docs": "https://github.com/g0t4/mcp-server-redis"
+  },
+  {
+    "id": "elasticsearch",
+    "name": "Elasticsearch",
+    "vendor": "Elastic",
+    "category": "data",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-elasticsearch"
+    ],
+    "envKeys": [
+      "ELASTICSEARCH_URL"
+    ],
+    "toolsHint": "İndeks ve arama sorgulama",
+    "docs": "https://github.com/elastic/mcp-server-elasticsearch"
+  },
+  {
+    "id": "brave-search",
+    "name": "Brave Search",
+    "vendor": "Brave Software",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-brave-search"
+    ],
+    "envKeys": [
+      "BRAVE_API_KEY"
+    ],
+    "toolsHint": "Web ve yerel arama araçları",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search"
+  },
+  {
+    "id": "exa",
+    "name": "Exa",
+    "vendor": "Exa Labs",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-exa"
+    ],
+    "envKeys": [
+      "EXA_API_KEY"
+    ],
+    "toolsHint": "Sinir ağı destekli web arama",
+    "docs": "https://github.com/exa-labs/exa-mcp-server"
+  },
+  {
+    "id": "tavily",
+    "name": "Tavily",
+    "vendor": "Tavily",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-tavily"
+    ],
+    "envKeys": [
+      "TAVILY_API_KEY"
+    ],
+    "toolsHint": "Araştırma odaklı web arama",
+    "docs": "https://github.com/tavily-ai/tavily-mcp"
+  },
+  {
+    "id": "firecrawl",
+    "name": "Firecrawl",
+    "vendor": "Mendable",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "firecrawl-mcp"
+    ],
+    "envKeys": [
+      "FIRECRAWL_API_KEY"
+    ],
+    "toolsHint": "Web sayfası tarama ve metin çıkarma",
+    "docs": "https://github.com/mendableai/firecrawl-mcp-server"
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "vendor": "Google",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-youtube"
+    ],
+    "envKeys": [
+      "YOUTUBE_API_KEY"
+    ],
+    "toolsHint": "Video arama, kanal ve oynatma listesi",
+    "docs": "https://github.com/JarrodWatts/mcp-youtube"
+  },
+  {
+    "id": "spotify",
+    "name": "Spotify",
+    "vendor": "Spotify AB",
+    "category": "web",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-spotify"
+    ],
+    "envKeys": [
+      "SPOTIFY_CLIENT_ID",
+      "SPOTIFY_CLIENT_SECRET"
+    ],
+    "toolsHint": "Parça, albüm ve çalma listesi arama",
+    "docs": "https://github.com/chatbot-mcp/spotify"
+  },
+  {
+    "id": "gmail",
+    "name": "Gmail",
+    "vendor": "Google",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-gmail"
+    ],
+    "envKeys": [
+      "GOOGLE_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Posta okuma, arama ve taslak oluşturma",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/gmail"
+  },
+  {
+    "id": "google-drive",
+    "name": "Google Drive",
+    "vendor": "Google",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-google-drive"
+    ],
+    "envKeys": [
+      "GOOGLE_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Dosya arama ve içerik okuma",
+    "docs": "https://github.com/jshambley/mcp-google-drive"
+  },
+  {
+    "id": "google-calendar",
+    "name": "Google Calendar",
+    "vendor": "Google",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-google-calendar"
+    ],
+    "envKeys": [
+      "GOOGLE_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Etkinlik listeleme ve takvim sorgulama",
+    "docs": "https://github.com/vishnudxb/mcp-server-google-calendar"
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "vendor": "Stripe",
+    "category": "commerce",
+    "transport": "http",
+    "url": "https://mcp.stripe.com",
+    "envKeys": [
+      "STRIPE_API_KEY"
+    ],
+    "toolsHint": "Müşteri, ödeme ve fatura sorgulama",
+    "docs": "https://docs.stripe.com/stripe-mcp"
+  },
+  {
+    "id": "shopify",
+    "name": "Shopify",
+    "vendor": "Shopify",
+    "category": "commerce",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-shopify"
+    ],
+    "envKeys": [
+      "SHOPIFY_ACCESS_TOKEN",
+      "SHOPIFY_SHOP"
+    ],
+    "toolsHint": "Ürün, sipariş ve mağaza sorgulama",
+    "docs": "https://github.com/Shopify/mcp-server"
+  },
+  {
+    "id": "hubspot",
+    "name": "HubSpot",
+    "vendor": "HubSpot",
+    "category": "commerce",
+    "transport": "http",
+    "url": "https://mcp.hubspot.com/mcp",
+    "envKeys": [
+      "HUBSPOT_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Kişi, anlaşma ve şirket araçları",
+    "docs": "https://developers.hubspot.com/docs/mcp"
+  },
+  {
+    "id": "salesforce",
+    "name": "Salesforce",
+    "vendor": "Salesforce",
+    "category": "commerce",
+    "transport": "http",
+    "url": "https://mcp.salesforce.com/mcp",
+    "envKeys": [
+      "SALESFORCE_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Kayıt, rapor ve SOQL sorgulama",
+    "docs": "https://developer.salesforce.com/docs/einstein/genai/guide/mcp.html"
+  },
+  {
+    "id": "airtable",
+    "name": "Airtable",
+    "vendor": "Airtable",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "airtable-mcp-server"
+    ],
+    "envKeys": [
+      "AIRTABLE_API_KEY"
+    ],
+    "toolsHint": "Taban, tablo ve kayıt araçları",
+    "docs": "https://github.com/delorenj/mcp-airtable"
+  },
+  {
+    "id": "trello",
+    "name": "Trello",
+    "vendor": "Atlassian",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-trello"
+    ],
+    "envKeys": [
+      "TRELLO_API_KEY",
+      "TRELLO_TOKEN"
+    ],
+    "toolsHint": "Pano, liste ve kart yönetimi",
+    "docs": "https://github.com/modelcontextprotocol/servers/tree/main/src/trello"
+  },
+  {
+    "id": "asana",
+    "name": "Asana",
+    "vendor": "Asana",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-asana"
+    ],
+    "envKeys": [
+      "ASANA_ACCESS_TOKEN"
+    ],
+    "toolsHint": "Görev, proje ve çalışma alanı araçları",
+    "docs": "https://github.com/Asana/mcp-asana"
+  },
+  {
+    "id": "jira",
+    "name": "Jira",
+    "vendor": "Atlassian",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-atlassian"
+    ],
+    "envKeys": [
+      "JIRA_URL",
+      "JIRA_TOKEN"
+    ],
+    "toolsHint": "Sorun, proje ve arama araçları",
+    "docs": "https://github.com/sooperset/mcp-atlassian"
+  },
+  {
+    "id": "confluence",
+    "name": "Confluence",
+    "vendor": "Atlassian",
+    "category": "productivity",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-atlassian"
+    ],
+    "envKeys": [
+      "CONFLUENCE_URL",
+      "CONFLUENCE_TOKEN"
+    ],
+    "toolsHint": "Sayfa ve alan arama araçları",
+    "docs": "https://github.com/sooperset/mcp-atlassian"
+  },
+  {
+    "id": "figma",
+    "name": "Figma",
+    "vendor": "Figma",
+    "category": "productivity",
+    "transport": "http",
+    "url": "https://mcp.figma.com/mcp",
+    "envKeys": [
+      "FIGMA_API_KEY"
+    ],
+    "toolsHint": "Dosya, frame ve tasarım bileşeni okuma",
+    "docs": "https://www.figma.com/developers/mcp"
+  },
+  {
+    "id": "discord",
+    "name": "Discord",
+    "vendor": "Discord",
+    "category": "communication",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-discord"
+    ],
+    "envKeys": [
+      "DISCORD_TOKEN"
+    ],
+    "toolsHint": "Kanal, ileti ve sunucu araçları",
+    "docs": "https://github.com/SaseQ/discord-mcp"
+  },
+  {
+    "id": "telegram",
+    "name": "Telegram",
+    "vendor": "Telegram FZ-LLC",
+    "category": "communication",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-telegram"
+    ],
+    "envKeys": [
+      "TELEGRAM_BOT_TOKEN"
+    ],
+    "toolsHint": "Mesaj gönderme ve sohbet listeleme",
+    "docs": "https://github.com/telegram-bot-mcp/server"
+  },
+  {
+    "id": "twilio",
+    "name": "Twilio",
+    "vendor": "Twilio",
+    "category": "communication",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-twilio"
+    ],
+    "envKeys": [
+      "TWILIO_ACCOUNT_SID",
+      "TWILIO_AUTH_TOKEN"
+    ],
+    "toolsHint": "Mesaj, arama ve kayıt sorgulama",
+    "docs": "https://github.com/twilio-labs/mcp"
+  },
+  {
+    "id": "sendgrid",
+    "name": "SendGrid",
+    "vendor": "Twilio",
+    "category": "communication",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-sendgrid"
+    ],
+    "envKeys": [
+      "SENDGRID_API_KEY"
+    ],
+    "toolsHint": "E-posta, şablon ve liste araçları",
+    "docs": "https://github.com/twilio-labs/mcp"
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "vendor": "OpenAI",
+    "category": "ai",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-openai"
+    ],
+    "envKeys": [
+      "OPENAI_API_KEY"
+    ],
+    "toolsHint": "Model listeleme ve tamamlama araçları",
+    "docs": "https://platform.openai.com/docs/mcp"
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "vendor": "Anthropic",
+    "category": "ai",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-anthropic"
+    ],
+    "envKeys": [
+      "ANTHROPIC_API_KEY"
+    ],
+    "toolsHint": "Mesaj oluşturma ve model araçları",
+    "docs": "https://docs.anthropic.com/en/docs/mcp"
+  },
+  {
+    "id": "huggingface",
+    "name": "Hugging Face",
+    "vendor": "Hugging Face",
+    "category": "ai",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-huggingface"
+    ],
+    "envKeys": [
+      "HUGGINGFACE_API_KEY"
+    ],
+    "toolsHint": "Model, veri kümesi ve çıkarım arama",
+    "docs": "https://huggingface.co/docs/hub/mcp"
+  },
+  {
+    "id": "pinecone",
+    "name": "Pinecone",
+    "vendor": "Pinecone Systems",
+    "category": "ai",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-pinecone"
+    ],
+    "envKeys": [
+      "PINECONE_API_KEY"
+    ],
+    "toolsHint": "İndeks listeleme ve vektör arama",
+    "docs": "https://github.com/pinecone-io/pinecone-mcp-server"
+  },
+  {
+    "id": "qdrant",
+    "name": "Qdrant",
+    "vendor": "Qdrant",
+    "category": "ai",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-qdrant"
+    ],
+    "envKeys": [
+      "QDRANT_URL",
+      "QDRANT_API_KEY"
+    ],
+    "toolsHint": "Koleksiyon ve vektör arama",
+    "docs": "https://github.com/qdrant/mcp-server-qdrant"
+  },
+  {
+    "id": "weaviate",
+    "name": "Weaviate",
+    "vendor": "Weaviate",
+    "category": "ai",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-weaviate"
+    ],
+    "envKeys": [
+      "WEAVIATE_URL",
+      "WEAVIATE_API_KEY"
+    ],
+    "toolsHint": "Sınıf listeleme ve anlamsal arama",
+    "docs": "https://github.com/weaviate/mcp-server-weaviate"
+  },
+  {
+    "id": "grafana",
+    "name": "Grafana",
+    "vendor": "Grafana Labs",
+    "category": "observability",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-grafana"
+    ],
+    "envKeys": [
+      "GRAFANA_URL",
+      "GRAFANA_TOKEN"
+    ],
+    "toolsHint": "Pano, sorgu ve uyarı araçları",
+    "docs": "https://github.com/grafana/mcp-grafana"
+  },
+  {
+    "id": "datadog",
+    "name": "Datadog",
+    "vendor": "Datadog",
+    "category": "observability",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-datadog"
+    ],
+    "envKeys": [
+      "DD_API_KEY",
+      "DD_APP_KEY"
+    ],
+    "toolsHint": "Metrik, izleyici ve log sorgulama",
+    "docs": "https://github.com/DataDog/mcp-server-datadog"
+  },
+  {
+    "id": "pagerduty",
+    "name": "PagerDuty",
+    "vendor": "PagerDuty",
+    "category": "observability",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-server-pagerduty"
+    ],
+    "envKeys": [
+      "PAGERDUTY_API_TOKEN"
+    ],
+    "toolsHint": "Olay, servis ve kullanıcı araçları",
+    "docs": "https://github.com/PagerDuty/mcp-server-pagerduty"
+  },
+  {
+    "id": "grafana-loki",
+    "name": "Grafana Loki",
+    "vendor": "Grafana Labs",
+    "category": "observability",
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "mcp-grafana"
+    ],
+    "envKeys": [
+      "GRAFANA_URL",
+      "GRAFANA_TOKEN"
+    ],
+    "toolsHint": "Loki log sorgulama ve etiket keşfi",
+    "docs": "https://grafana.com/docs/loki/latest/query/"
+  }
+]

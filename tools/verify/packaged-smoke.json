@@ -1,0 +1,36 @@
+{
+  "exe": "dist\\Keyvotion Console\\Keyvotion Console.exe",
+  "exeBytes": 249788928,
+  "bootMs": 453,
+  "url": "dist/Keyvotion%20Console/resources/app/renderer/index.html",
+  "onboard": {
+    "open": true,
+    "hasSkip": true
+  },
+  "app": {
+    "title": "Keyvotion Console",
+    "nav": 23,
+    "screens": 23,
+    "empty": [],
+    "blank": [],
+    "visited": 23,
+    "design": "prototip",
+    "teamAuto": true
+  },
+  "connect": {
+    "ok": true,
+    "cards": 124,
+    "count": "124 bağlantı"
+  },
+  "tour": {
+    "ok": true,
+    "steps": 10,
+    "htmlHidden": false,
+    "openScreens": 1
+  },
+  "projectDirCreated": true,
+  "projectHasTeam": true,
+  "exceptions": 0,
+  "consoleErrors": 0,
+  "ok": true
+}

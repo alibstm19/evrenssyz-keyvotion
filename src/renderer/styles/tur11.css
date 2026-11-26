@@ -1,0 +1,290 @@
+/* keyvotion-console · Tur 11 (2040 Identity)
+   Saha: 管理中心 (Management Center) & Rol Projeksiyonu
+   Kural: UI-46 (No raw colors), UI-136 (Depth layers), UI-138 (Accessibility)
+*/
+
+/* --- Grid System --- */
+.kv-admin-grid {
+  display: grid;
+  gap: var(--kv-space-4);
+  width: 100%;
+  max-width: var(--kv-content-max);
+  margin: 0 auto;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 1024px) {
+  .kv-admin-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .kv-admin-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Component Layers (Glass & Elevation) --- */
+.kv-glass-panel {
+  background: var(--kv-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--kv-glass-border);
+  border-radius: var(--kv-radius-lg);
+  padding: var(--kv-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+}
+
+.kv-panel-title {
+  font-size: var(--kv-fs-sm);
+  font-weight: var(--kv-fw-medium);
+  color: var(--kv-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--kv-space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--kv-space-2);
+}
+
+/* --- B1: Agent Table --- */
+.kv-agent-table {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--kv-fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.kv-agent-row {
+  display: grid;
+  grid-template-columns: 60px 100px 1fr 80px 80px 1fr;
+  align-items: center;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-2) 0;
+  border-bottom: 1px solid var(--kv-hairline);
+}
+
+.kv-agent-row:first-child {
+  font-weight: var(--kv-fw-bold);
+  border-bottom: 2px solid var(--kv-border);
+}
+
+/* --- B2: Model Cards --- */
+.kv-model-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+}
+
+.kv-model-card {
+  background: var(--kv-bg-elev-1);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  padding: var(--kv-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+}
+
+.kv-model-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kv-progress-bar {
+  height: 4px;
+  background: var(--kv-progress-track);
+  border-radius: var(--kv-radius-pill);
+  overflow: hidden;
+}
+
+.kv-progress-fill {
+  height: 100%;
+  background: var(--kv-accent);
+  transition: width var(--kv-dur-progress) linear;
+}
+
+/* --- B3: Health Metrics --- */
+.kv-health-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--kv-space-3);
+}
+
+.kv-metric-box {
+  background: var(--kv-bg-elev-2);
+  padding: var(--kv-space-3);
+  border-radius: var(--kv-radius-sm);
+  text-align: center;
+}
+
+.kv-metric-val {
+  font-size: var(--kv-fs-xl);
+  font-weight: var(--kv-fw-bold);
+  color: var(--kv-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.kv-metric-lbl {
+  font-size: var(--kv-fs-micro);
+  color: var(--kv-fg-muted);
+}
+
+/* --- B4: Disk Usage --- */
+.kv-disk-bar {
+  height: 12px;
+  background: var(--kv-progress-track);
+  border-radius: var(--kv-radius-pill);
+  overflow: hidden;
+}
+
+.kv-disk-fill {
+  height: 100%;
+  background: var(--kv-accent);
+}
+
+/* --- B5: Versions --- */
+.kv-version-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--kv-space-2);
+  font-size: var(--kv-fs-xs);
+}
+
+.kv-version-item {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--kv-space-1) 0;
+  border-bottom: 1px solid var(--kv-hairline);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- B6: Audit Flow --- */
+.kv-audit-table {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--kv-fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.kv-audit-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px 1fr 60px;
+  gap: var(--kv-space-2);
+  padding: var(--kv-space-2) 0;
+  border-bottom: 1px solid var(--kv-hairline);
+}
+
+/* --- B7: Danger Zone --- */
+.kv-danger-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-3);
+}
+
+.kv-danger-card {
+  padding: var(--kv-space-3);
+  border: 1px solid var(--kv-danger);
+  border-radius: var(--kv-radius-md);
+  background: var(--kv-bg-elev-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-2);
+}
+
+.kv-danger-card__title {
+  color: var(--kv-danger);
+  font-size: var(--kv-fs-sm);
+  font-weight: var(--kv-fw-bold);
+}
+
+.kv-danger-card__desc {
+  font-size: var(--kv-fs-xs);
+  color: var(--kv-fg-muted);
+  margin: 0;
+}
+
+/* --- B8: Backups --- */
+.kv-backup-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* --- Global Helpers --- */
+.kv-col-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kv-space-4);
+}
+
+.kv-audit-header {
+  font-weight: var(--kv-fw-bold);
+  border-bottom: 2px solid var(--kv-border);
+}
+
+.kv-role-hidden {
+  display: none !important;
+}
+
+.kv-tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dokunma hedefi (UI sozlesmesi: masaustu isaretcide kompakt >=36px).
+ * Admin ekrani yogun tablo icinde `kv-iconbtn--sm` (26px, Tur 5'ten) kullanir;
+ * olculdu: 7 ajan satiri x 4 dugme = 28 dugme 26x26. Asgari 36x36'ya cekilir.
+ * Yalniz admin ekranina kapsanir; diger ekranlarin yogunlugu degismez. */
+[data-screen="admin"] .kv-iconbtn--sm {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+/* `kv-button--sm` 30px (Tur 5'ten). Sozlesme esigi 36px; admin ekraninda
+ * asgari yukseklige cekilir (olcum: 30 -> 36, metin dugmeleri). */
+[data-screen="admin"] .kv-button--sm {
+  min-height: 36px;
+}
+
+/* Dokunma hedefi (UI sozlesmesi: masaustu kompakt >=36px).
+ * Tur 5'ten kalan sapma: kv-button--sm 30px, kv-iconbtn--sm 26px.
+ * Admin ekrani kurallari yukarida; bu blok DIGER ekranlar icin.
+ * Admin'de zaten 36px oldugundan cift uygulama zararsizdir. */
+.kv-button--sm,
+.kv-iconbtn--sm,
+.kv-cmd__target,
+.kv-settings__chip,
+.kv-theme-card,
+.kv-composer__send,
+.kv-browser__go,
+.kv-toggle,
+.kv-button.kv-button--ghost,
+[data-screen="team"] button:not([class]),
+[data-screen="models"] button:not([class]),
+[data-screen="plans"] button:not([class]),
+[data-screen="settings"] button:not([class]),
+[data-screen="memory"] button:not([class]) {
+  min-height: 36px;
+}
+
+.kv-iconbtn--sm,
+.kv-browser__go,
+.kv-composer__send {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+/* MindMap Nodes: Adjusted to meet 36px threshold. */
+.kv-mind__node {
+  min-height: 36px;
+  min-width: 36px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

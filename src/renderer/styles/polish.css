@@ -1,0 +1,250 @@
+/* --- A) Global Interactions & Focus --- */
+*:focus-visible {
+  outline: 2px solid var(--kv-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--kv-radius-sm);
+  box-shadow: var(--kv-shadow-focus);
+}
+
+.kv-button {
+  transition: background-color var(--kv-dur-fast) var(--kv-ease), 
+              box-shadow var(--kv-dur-fast) var(--kv-ease),
+              transform var(--kv-dur-fast) var(--kv-ease);
+}
+
+.kv-nav__item {
+  transition: background-color var(--kv-dur-fast) var(--kv-ease), 
+              color var(--kv-dur-fast) var(--kv-ease);
+}
+
+.kv-iconbtn {
+  transition: background-color var(--kv-dur-fast) var(--kv-ease), 
+              color var(--kv-dur-fast) var(--kv-ease);
+}
+
+.kv-segmented > button {
+  transition: all var(--kv-dur-fast) var(--kv-ease);
+}
+
+/* --- B) Card Depths --- */
+.kv-card,
+.kv-board__card,
+.kv-model {
+  background: var(--kv-bg-elev-2);
+  border: 1px solid var(--kv-border);
+  border-radius: var(--kv-radius-md);
+  box-shadow: var(--kv-shadow-sm);
+  transition: background-color var(--kv-dur-fast) var(--kv-ease), 
+              border-color var(--kv-dur-fast) var(--kv-ease), 
+              box-shadow var(--kv-dur-fast) var(--kv-ease), 
+              transform var(--kv-dur-fast) var(--kv-ease);
+}
+
+.kv-card:hover,
+.kv-board__card:hover,
+.kv-model:hover {
+  background: var(--kv-bg-hover);
+  border-color: var(--kv-border-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--kv-shadow-md);
+}
+
+/* --- C) State Stripes (Scoped to Cards) --- */
+article.kv-card[data-state="busy"],
+.kv-board__card[data-state="busy"],
+.kv-board__card[data-status="devam"] {
+  border-left: 3px solid var(--kv-state-busy);
+}
+
+article.kv-card[data-state="error"],
+.kv-board__card[data-state="error"] {
+  border-left: 3px solid var(--kv-state-error);
+}
+
+article.kv-card[data-state="offline"],
+.kv-board__card[data-state="offline"] {
+  border-left: 3px solid var(--kv-state-offline);
+}
+
+article.kv-card[data-state="idle"],
+.kv-board__card[data-state="idle"],
+.kv-board__card[data-status="bitti"] {
+  border-left: 3px solid var(--kv-state-idle);
+}
+
+/* --- D) Empty States --- */
+.kv-empty {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: var(--kv-space-6);
+  color: var(--kv-fg-muted);
+}
+
+.kv-empty__icon {
+  font-size: var(--kv-fs-xl);
+  margin-bottom: var(--kv-space-3);
+  opacity: 0.5;
+}
+
+.kv-empty__title {
+  font-weight: var(--kv-fw-medium);
+  color: var(--kv-fg);
+  margin-bottom: var(--kv-space-2);
+}
+
+.kv-empty__hint {
+  font-size: var(--kv-fs-sm);
+  color: var(--kv-fg-subtle);
+}
+
+/* --- E) Skeleton Loading --- */
+.kv-skeleton {
+  background: var(--kv-bg-elev-1);
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--kv-radius-sm);
+}
+
+.kv-skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--kv-bg-hover), transparent);
+  animation: kv-shimmer var(--kv-dur-normal) infinite;
+}
+
+@keyframes kv-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-skeleton::after,
+  .kv-card,
+  .kv-board__card,
+  .kv-model,
+  .kv-button,
+  .kv-nav__item,
+  .kv-iconbtn,
+  .kv-segmented > button,
+  .kv-tab {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* --- F) Navigation & Tabs --- */
+.kv-tab {
+  padding: var(--kv-space-2) var(--kv-space-4);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  color: var(--kv-fg-muted);
+  transition: all var(--kv-dur-fast) var(--kv-ease);
+}
+
+.kv-tab:hover {
+  background: var(--kv-bg-hover);
+  color: var(--kv-fg);
+}
+
+.kv-tab[aria-selected="true"] {
+  color: var(--kv-accent);
+  border-bottom-color: var(--kv-accent);
+  font-weight: var(--kv-fw-medium);
+}
+
+/* --- G) Density Enhancements --- */
+[data-density="compact"] .kv-board__card {
+  padding: var(--kv-space-2);
+}
+
+[data-density="compact"] .kv-stat {
+  padding: var(--kv-space-2);
+}
+
+[data-density="compact"] .kv-message {
+  padding: var(--kv-space-2);
+}
+
+[data-density="compact"] .kv-table thead th {
+  padding: 4px var(--kv-space-2);
+}
+
+[data-density="compact"] .kv-nav__item {
+  padding: var(--kv-space-1) var(--kv-space-2);
+}
+
+[data-density="compact"] .kv-toolbar {
+  gap: var(--kv-space-2);
+}
+
+/* --- H) Table Refinement --- */
+.kv-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--kv-bg-elev-1);
+  z-index: 1;
+  font-weight: var(--kv-fw-medium);
+  color: var(--kv-fg-muted);
+  border-bottom: 1px solid var(--kv-border-strong);
+}
+
+.kv-table tbody tr {
+  transition: background-color var(--kv-dur-fast) var(--kv-ease);
+}
+
+.kv-table tbody tr:hover {
+  background: var(--kv-bg-hover);
+}
+
+/* --- I) Semantic Badges --- */
+.kv-badge--success {
+  color: var(--kv-success);
+}
+
+.kv-badge--warning {
+  color: var(--kv-warning);
+}
+
+.kv-badge--danger {
+  color: var(--kv-danger);
+}
+
+.kv-badge--info {
+  color: var(--kv-info);
+}
+
+/* --- J) Overlays & Layers --- */
+.kv-modal {
+  background: var(--kv-bg-elev-2);
+  border: 1px solid var(--kv-border-strong);
+  box-shadow: var(--kv-shadow-md);
+  border-radius: var(--kv-radius-md);
+  z-index: var(--kv-z-modal);
+}
+
+.kv-toast {
+  background: var(--kv-bg-elev-2);
+  border: 1px solid var(--kv-border-strong);
+  box-shadow: var(--kv-shadow-md);
+  border-radius: var(--kv-radius-md);
+  z-index: var(--kv-z-toast);
+}
+
+.kv-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--kv-overlay);
+  z-index: calc(var(--kv-z-modal) - 1);
+}
+
+/* --- K) Misc Polish --- */
+.kv-badge {
+  font-variant-numeric: tabular-nums;
+  min-width: 34px;
+  justify-content: center;
+}

@@ -1,0 +1,44 @@
+/* keyvotion-console · açık tema
+   Sahip: DSN · Sadece token override — aynı değişken adları. */
+
+[data-theme="light"] {
+  --kv-bg: #f7f7f8;
+  --kv-bg-elev-1: #ffffff;
+  --kv-bg-elev-2: #f0f0f2;
+  --kv-bg-hover: #e8e8ec;
+  --kv-overlay: rgba(0, 0, 0, 0.35);
+
+  --kv-fg: #16161a;
+  --kv-fg-muted: #5b5b66;
+  --kv-fg-subtle: #5c5c68;
+
+  --kv-border: #dcdce2;
+  --kv-border-strong: #c2c2cc;
+
+  --kv-accent: #2563eb;
+  --kv-accent-hover: #1d4ed8;
+  --kv-on-accent: #ffffff;
+
+  --kv-success: #15803d;
+  --kv-warning: #b45309;
+  --kv-danger: #b91c1c;
+  --kv-info: #0369a1;
+  --kv-focus-ring: #2563eb;
+
+  --kv-state-idle: #8a8a96;
+  --kv-state-busy: #2563eb;
+  --kv-state-error: #b91c1c;
+  --kv-state-offline: #8a8a96;
+  --kv-on-state: #ffffff;
+
+  /* T-136: rozet zeminleri — beyaz metinle ≥4.5 kontrast. */
+  --kv-linked: #0a7a61;
+  --kv-unlinked: #5c5c68;
+
+  --kv-shadow-sm: 0 1px 2px rgba(16, 16, 20, 0.08);
+  --kv-shadow-md: 0 4px 12px rgba(16, 16, 20, 0.12);
+}
+
+/* T-136: açık temada rozet metni koyu zemin rengi değil, beyaz olmalı. */
+[data-theme="light"] .kv-badge[data-tone],
+[data-theme="light"] [data-conn-state] { color: var(--kv-on-state); }
