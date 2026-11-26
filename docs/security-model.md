@@ -12,7 +12,7 @@ Keyvotion Console yüksek yetkili ajanları ve hassas API anahtarlarını yönet
 | Zararlı MCP sunucusu | Yerel dosya/komut erişimi | Kurulum ve her çağrı için açık onay; araç listesi görünür | Orta — kullanıcı güveni |
 | Renderer XSS | Oturum gaspı, kimlik avı | CSP `connect-src 'none'`, `innerHTML` yasağı, inline stil yasağı | Çok düşük |
 | Yol aşımı (path traversal) | Sistem dosyası okuma | Yol normalizasyonu + proje kökü kilidi | Düşük |
-| Ayrıcalık yükseltme | `student` → `admin` | Rol kontrolü main tarafında; ödeme sağlayıcıları yalnız `admin` | Düşük |
+| Ayrıcalık yükseltme | Yetkisiz yazma | Yazma kanalları `confirmToken` + izin matrisi ister; görünüm rolü yok | Düşük |
 | Tedarik zinciri | Bağımlılık saldırısı | Yalnız `electron` çalışma zamanı bağımlılığı; `doctor` denetler | Çok düşük |
 | LAN'a açık port (`remote.js`) | Aynı ağdaki cihazdan erişim | Yalnız özel ağ adresleri, eşleşme jetonu, 64 KB gövde, 60 istek/dk | Orta — Wi-Fi ağına güven |
 
@@ -42,12 +42,13 @@ Her yazma işlemi kaydedilir: `{ op, capabilityId, status }`.
 - Operasyon **parametreleri** ve sır değerleri yazılmaz.
 - Votion'un yaptığı çağrılar da aynı kayda düşer (yalnız `op, capabilityId, status`).
 
-## Rol sınırı (RBAC)
+## Görünüm rolü yok (T-209)
 
-Üç rol: `admin` (tam), `teacher` (orkestrasyon), `student` (sınırlı).
-- Ödeme sağlayıcıları (stripe, paypal, square, gumroad, lemon-squeezy) yalnız `admin`.
-- MCP sunucusu ekleme ve sistem ayarları yalnız `admin`.
-- Rol kontrolü main sürecinde yapılır; renderer'a bırakılmaz.
+Görünüm rolü (Yönetici/Eğitmen/Öğrenci) **kaldırıldı**; her kullanıcı bütün ekranları ve
+Ayarlar'ın bütün bloklarını görür.
+- Rol hiçbir zaman güvenlik sınırı değildi: yazma kanalları `confirmToken` + izin matrisi ister.
+- Ödeme sağlayıcıları dahil bütün bağlantılar her kullanıcıda görünür.
+- Denetim kaydı ve sır maskeleme kuralları değişmez.
 
 ## Votion erişimi
 
@@ -58,7 +59,7 @@ Her yazma işlemi kaydedilir: `{ op, capabilityId, status }`.
 ## Kullanıcı için güvenlik önerileri
 
 1. API anahtarınızı kimseyle paylaşmayın; ekran görüntüsüne almayın.
-2. `admin` rolünü yalnız gerçekten gereken kişiye verin.
+2. Uygulamayı yalnız güvendiğiniz kişisel Windows hesabında çalıştırın.
 3. Üçüncü parti MCP sunucusu eklemeden önce kaynağını doğrulayın.
 4. `remote.js` ile telefon erişimini kullanmadığınızda kapatın; güvenmediğiniz Wi-Fi'da açmayın.
 

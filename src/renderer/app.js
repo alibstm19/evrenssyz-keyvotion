@@ -146,8 +146,6 @@ const store = {
     font: 'sistem', size: 'normal', radius: 'normal',
     /* Tur 8: sağ panel kişiselleştirmesi */
     railOpen: true, railWidth: 'normal', railTab: 'lider',
-    /* Tur 11 (UI-133): görünüm rolü — yalnız projeksiyon, yetki vermez */
-    viewRole: 'admin',
     /* T-199: tasarım dili — 'classic' | 'volt' */
     design: 'classic',
     /* T-206: hareket tercihi — 'normal' | 'azalt' (animasyonları kapatır) */
@@ -372,8 +370,7 @@ function applyPrefs() {
     shell.dataset.size = store.prefs.size || 'normal';
     shell.dataset.radius = store.prefs.radius || 'normal';
   }
-  /* UI-133: görünüm rolü <html data-role> üzerinde; varsayılan admin. */
-  document.documentElement.dataset.role = store.prefs.viewRole || 'admin';
+  /* UI-133 kaldırıldı (T-209): görünüm rolü yok; her kullanıcı bütün ekranları görür. */
   /* T-199: alternatif tasarım dili. 'classic' → öznitelik kaldırılır. */
   const design = DESIGNS.includes(store.prefs.design) ? store.prefs.design : 'classic';
   if (design === 'classic') delete document.documentElement.dataset.design;
@@ -383,7 +380,6 @@ function applyPrefs() {
   for (const b of $$('[data-density-set]')) b.setAttribute('aria-pressed', String(b.dataset.densitySet === store.prefs.density));
   for (const b of $$('[data-size-set]')) b.setAttribute('aria-pressed', String(b.dataset.sizeSet === (store.prefs.size || 'normal')));
   for (const b of $$('[data-radius-set]')) b.setAttribute('aria-pressed', String(b.dataset.radiusSet === (store.prefs.radius || 'normal')));
-  for (const b of $$('[data-role-set]')) b.setAttribute('aria-pressed', String(b.dataset.roleSet === (store.prefs.viewRole || 'admin')));
   /* T-206: hareket tercihi — kapalı animasyon modu html üzerinde taşınır. */
   const motion = store.prefs.motion === 'azalt' ? 'azalt' : 'normal';
   document.documentElement.dataset.motion = motion;
@@ -392,106 +388,9 @@ function applyPrefs() {
   if (fam) fam.value = store.prefs.font || 'sistem';
 }
 
-/* ---------------- rol projeksiyonu (UI-133, v2.9) ----------------
- * Rol YALNIZCA görünümü sadeleştirir: gizlenen ekranın gezinme düğmesi ve
- * bölümü hidden + aria-hidden taşır, data-action düğmeleri DOM'dan çıkar.
- * Güvenlik sınırı DEĞİLDİR: yazma yine confirmToken + izin matrisinden geçer.
- */
-const ROLE_SCREENS = {
-  /* T-203: 'settings' her rolde açık. Rol seçicisi Ayarlar'ın içinde yaşar;
-     görünüm filtresi kendi geri dönüş yolunu gizlerse kullanıcı kilitlenir. */
-  teacher: new Set(['team', 'command', 'board', 'plans', 'files', 'contexts', 'memory', 'reports', 'chat', 'models', 'remote', 'guide', 'settings']),
-  student: new Set(['team', 'board', 'reports', 'chat', 'guide', 'settings'])
-};
-const ROLE_TR = { admin: 'Yönetici', teacher: 'Eğitmen', student: 'Öğrenci' };
-/* T-203: Ayarlar ekranı açık kalsa da yönetim blokları yalnız admin görünümünde.
-   Kart + bölüm çipi birlikte gizlenir; arama bunları geri getirmez. */
-const ADMIN_SETTINGS_SECTIONS = ['roster', 'skills', 'permissions', 'votion-grants'];
-
-function roleCanSee(screen) {
-  const role = store.prefs.viewRole || 'admin';
-  const allowed = ROLE_SCREENS[role];
-  return !allowed || allowed.has(screen);
-}
-
-/** Rol değişince DOM'dan çıkarılan düğmeler (geri takma çapasıyla birlikte). */
-const detachedActions = [];
-
-function reattachRoleActions() {
-  /* Sondan geriye: her düğme, çıkarılmadan SONRAKİ kardeşinin önüne döner. */
-  for (let i = detachedActions.length - 1; i >= 0; i--) {
-    const { node, parent, next } = detachedActions[i];
-    detachedActions.splice(i, 1);
-    if (!parent || !parent.isConnected) continue; /* kap yok olduysa render yeniden üretir */
-    try { parent.insertBefore(node, next && next.parentNode === parent ? next : null); } catch { /* yoksay */ }
-  }
-}
-
-function applyRoleProjection() {
-  const role = store.prefs.viewRole || 'admin';
-  document.documentElement.dataset.role = role;
-
-  for (const b of $$('[data-nav-item]')) {
-    const visible = roleCanSee(b.dataset.navItem);
-    b.hidden = !visible;
-    if (visible) b.removeAttribute('aria-hidden');
-    else b.setAttribute('aria-hidden', 'true');
-  }
-  for (const s of $$('[data-screen]')) {
-    if (!roleCanSee(s.dataset.screen)) {
-      s.hidden = true;
-      s.setAttribute('aria-hidden', 'true');
-    }
-  }
-
-  /* T-203: bütün üyeleri gizlenen grup başlığı havada kalmasın
-     (eski "Bağlantı" bölümü admin dışında boş bir etiketti). */
-  for (const g of $$('.kv-nav__group')) {
-    const items = [...g.querySelectorAll('[data-nav-item]')];
-    g.hidden = !items.some((b) => !b.hidden);
-  }
-
-  /* T-203: Ayarlar'ın yönetim blokları yalnız admin görünümünde. */
-  const isAdmin = role === 'admin';
-  for (const id of ADMIN_SETTINGS_SECTIONS) {
-    const card = document.querySelector(`[data-settings-section="${id}"]`);
-    if (card) card.hidden = !isAdmin;
-    const chip = document.querySelector(`[data-settings-jump="${id}"]`);
-    if (chip) chip.hidden = !isAdmin;
-  }
-
-  /* Gizli ekranın düğmesi DOM'da kalmaz (UI-133): görünmez ama tıklanabilir
-   * düğme bırakılmaz. Rol genişlerse önce hepsi yerine döner, sonra yine
-   * gizli kalanlar yeniden çıkarılır — arada kalan yeni render da yakalanır. */
-  reattachRoleActions();
-  for (const s of $$('[data-screen]')) {
-    if (roleCanSee(s.dataset.screen)) continue;
-    for (const btn of s.querySelectorAll('[data-action]')) {
-      if (!btn.isConnected) continue;
-      detachedActions.push({ node: btn, parent: btn.parentNode, next: btn.nextSibling });
-      btn.remove();
-    }
-  }
-
-  /* UI-155: "Votion bu bağlantıyı kullanabilir" anahtarı yalnız admin
-   * görünümünde DOM'da durur; teacher/student için düğüm çıkarılır. */
-  syncPresetVotionGate(role);
-
-  /* Geçerli ekran gizlendiyse kullanıcı boşlukta kalmasın; team her rolde görünür. */
-  if (store.screen && !roleCanSee(store.screen)) {
-    goSilent = true;
-    go('team');
-    goSilent = false;
-  }
-}
-
-function setViewRole(role) {
-  if (role !== 'admin' && !ROLE_SCREENS[role]) return;
-  store.prefs.viewRole = role;
-  savePrefs();
-  applyRoleProjection();
-  toast(`Görünüm rolü: ${ROLE_TR[role] || role}`, 'info');
-}
+/* T-209: görünüm rolü (UI-133) kaldırıldı. Her kullanıcı 23 ekranın
+   tamamını, ayarların bütün bloklarını ve MCP/entegrasyonları görür.
+   Yazma izinleri yine confirmToken + izin matrisiyle korunur. */
 
 /* ---------------- bildirim ---------------- */
 function notify(title, meta, tone = 'info') {
@@ -663,14 +562,12 @@ function announceScreen(title) {
 
 function go(screen) {
   if (!SCREEN_META[screen]) return;
-  /* UI-133: gizli ekranın kendisine de adres paletinden de giriş yok. */
-  if (!roleCanSee(screen)) { toast('Bu ekran bu görünüm rolünde gizli — Ayarlar → Görünüm → Görünüm rolü.', 'warning'); return; }
   /* Tarayıcı görünümü main prosesde yaşar: ekrandan çıkarken kapat. */
   if (store.screen === 'browser' && screen !== 'browser') closeBrowser();
   const changed = store.screen !== screen;
   store.screen = screen;
   for (const s of $$('[data-screen]')) {
-    s.hidden = s.dataset.screen !== screen || !roleCanSee(s.dataset.screen);
+    s.hidden = s.dataset.screen !== screen;
     if (s.hidden) s.setAttribute('aria-hidden', 'true');
     else s.removeAttribute('aria-hidden');
   }
@@ -726,8 +623,6 @@ function go(screen) {
   tur6Screen(screen);
   /* Tur 8: sağ panel ekranla birlikte tazelenir. */
   tur8Screen(screen);
-  /* UI-133: rolün gizlediği ekranlara render sonrası düğme temizliği uygulanır. */
-  applyRoleProjection();
   /* T-178: ekran değiştiyse odak başlığa taşınır ve ekran okuyucuya duyurulur;
      klavye kullanıcısı yeni ekranda sekmeye baştan başlamak zorunda kalmaz. */
   if (changed) {
@@ -1504,12 +1399,8 @@ function applySettingsFilter(query) {
   const cards = [...document.querySelectorAll('[data-settings-section]')];
   const countEl = $('[data-field="settings-search-count"]');
   const emptyEl = $('[data-field="settings-search-empty"]');
-  /* T-203: arama, rolün gizlediği yönetim bloğunu geri getirmez. */
-  const role = store.prefs.viewRole || 'admin';
-  const blocked = role === 'admin' ? null : new Set(ADMIN_SETTINGS_SECTIONS);
   let shown = 0;
   for (const card of cards) {
-    if (blocked && blocked.has(card.dataset.settingsSection)) { card.hidden = true; continue; }
     if (!q) { card.hidden = false; shown += 1; continue; }
     const hit = foldTr(card.textContent).includes(q);
     card.hidden = !hit;
@@ -2578,8 +2469,7 @@ const PALETTE_ITEMS = [
 ];
 
 function paletteAll() {
-  /* UI-133: rolün gizlediği ekranın palet girişi de yoktur. */
-  const base = PALETTE_ITEMS.filter((it) => !it.screen || roleCanSee(it.screen));
+  const base = PALETTE_ITEMS;
   const extra = store.sessions
     .filter((s) => s.sessionId)
     .map((s) => ({
@@ -2956,10 +2846,9 @@ async function dispatchAction(action, actionEl, sessionId) {
         run: async () => {
           Object.assign(store.prefs, {
             theme: 'dark', density: 'comfortable', font: 'sistem', size: 'normal',
-            radius: 'normal', motion: 'normal', viewRole: 'admin', design: 'prototip'
+            radius: 'normal', motion: 'normal', design: 'prototip'
           });
           savePrefs();
-          applyRoleProjection();
           applyPrefs();
           toast('Görünüm ayarları sıfırlandı.', 'success');
         }
@@ -4980,8 +4869,6 @@ function bindTur4() {
     /* T-206: hareket tercihi (erişilebilirlik / düşük donanım). */
     const motionSet = e.target.closest('[data-motion-set]');
     if (motionSet) { store.prefs.motion = motionSet.dataset.motionSet; savePrefs(); applyPrefsTur4(); return; }
-    const roleSet = e.target.closest('[data-role-set]');
-    if (roleSet) { setViewRole(roleSet.dataset.roleSet); return; }
 
     const actionEl = e.target.closest('[data-action]');
     if (!actionEl) return;
@@ -6223,21 +6110,6 @@ function presetVotionLabel() {
   return node;
 }
 
-function syncPresetVotionGate(role) {
-  const slot = $('[data-field="preset-votion-slot"]');
-  if (!slot) return;
-  if (role === 'admin') {
-    slot.hidden = !store.preset.selected;
-    presetVotionLabel();
-    return;
-  }
-  const label = slot.querySelector('label.kv-check');
-  if (label) label.remove();
-  presetVotionLabelNode = null;
-  slot.hidden = true;
-  store.preset.votion = {};
-}
-
 function bindPresetVotion() {
   const box = $('[data-field="preset-votion-access"]');
   if (!box || box.dataset.bound === '1') return;
@@ -6495,7 +6367,6 @@ function renderPresetHowTo(p) {
 /** B4: alan formu; install ise yalnız kurulum düğmesi. */
 function renderPresetForm() {
   const p = presetById(store.preset.selected);
-  const role = store.prefs.viewRole || 'admin';
   const hint = $('[data-field="preset-form-hint"]');
   const connect = $('[data-preset-connect]');
   const test = $('[data-preset-test]');
@@ -6511,7 +6382,11 @@ function renderPresetForm() {
     test.disabled = !cap;
     test.title = cap ? `${cap} ile test et` : 'Bu bağlantı için test yeteneği tanımlı değil';
   }
-  if (votionSlot) votionSlot.hidden = !p || role !== 'admin';
+  if (votionSlot) {
+    /* T-209: rol filtresi kalktı; anahtar seçili bağlantı için her zaman görünür. */
+    votionSlot.hidden = !p;
+    if (p) presetVotionLabel();
+  }
   const fieldsHost = $('[data-field="preset-fields"]');
   if (!fieldsHost) return;
   if (!p) { fieldsHost.replaceChildren(); return; }
@@ -7289,8 +7164,6 @@ async function boot() {
   await tur6Boot();
   /* Tur 8: sağ panel ilk çizimi. */
   tur8Boot();
-  /* Rol projeksiyonu: gizli ekranların eylem düğmeleri DOM'dan ayrılır (UI-133). */
-  applyRoleProjection();
   await autoCapture(
     [
       'Keyvotion Console açıldı; ekranlar ve yerel servisler yüklendi.',

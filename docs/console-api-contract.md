@@ -1159,10 +1159,9 @@ result, latencyMs, auditId}`; `params` **dönmez**.
 
 #### 7.12.4 Rol sınırı ve bağlam boyutu
 
-1. **Rol:** Votion yalnız `data-role="admin"` görünümündeki bağlantıları **görür ve kullanır**;
-   `teacher`/`student` görünümünde `catalog`/`connect`/`mcps`/`integrations` gizli olduğundan
-   manifest de **boş** döner (`integrations:[]`, `mcp:[]`). Bu bir *görünüm* sınırıdır; yetki yine
-   `confirmToken` + izin matrisindedir (UI-133 ile aynı ilke).
+1. **Görünüm rolü yok (T-209):** Görünüm rolü kaldırıldı; Votion bütün bağlantıları görür ve
+   kullanır. Manifest rol nedeniyle **boş dönmez** (`integrations:[]`, `mcp:[]` yalnız gerçekten
+   bağlantı yoksa oluşur). Yetki yine `confirmToken` + izin matrisindedir.
 2. **Bağlam boyutu:** manifest asistan bağlamına enjekte edilirken **≤ 24 KB** (24 576 bayt) sınırı
    uygulanır. Aşarsa: (a) `capabilities` **özet** alanı 60 karaktere kırpılır, (b) `params` şemaları
    çıkarılır, (c) hâlâ aşıyorsa kategori sırasına göre kesilir ve `truncated:true` + `bytes` döner.

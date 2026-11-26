@@ -78,7 +78,7 @@ Kartın durumu **yazıyla** yazar: `Hazır` · `Alan eksik` · `Kurulu` · `Bağ
 | MCP `install` | Sunucu kurulur, araçları Votion'a açılır |
 
 ### 3.5 Votion'a izin ver
-Formun altındaki **"Votion bu bağlantıyı kullanabilir"** anahtarını işaretle (yalnız `admin` rolü).
+Formun altındaki **"Votion bu bağlantıyı kullanabilir"** anahtarını işaretle.
 İşaretlemezsen bağlantı kurulur ama asistan onu kullanamaz.
 
 > Görsel kutu 20px, tıklama alanı **36px** — küçük hedef kalmadı (ölçüldü: 36px altı hedef 0).
@@ -93,8 +93,9 @@ Votion artık **kurulu olan her bağlantıyı** kullanabilir:
 - Manifest **22 306 B**, asistan bağlam bloğu **14 799 B** — sınır 24 000 B, sığıyor.
 - Çağrı **yeni bir ağ katmanı açmaz**; mevcut entegrasyon/MCP yoluna gider.
 - **Her çağrı denetime yazılır:** yalnız `{op, capabilityId, status}` — **parametre ve sır yazılmaz**.
-- **Rol sınırı:** ödeme/satış bağlantıları (stripe, paypal, square, gumroad, lemon-squeezy)
-  `teacher` ve `student` rolüne **kapalı**, yalnız `admin`.
+- **Rol sınırı yok:** ödeme/satış bağlantıları dahil **bütün sağlayıcılar her kullanıcıda görünür**
+  (görünüm rolü T-209 ile kaldırıldı). Yazma yine `confirmToken` + izin matrisinden geçer;
+  görünürlük yetki vermez.
 
 Yani: "Slack'e mesaj at", "GitHub'da issue aç", "Notion'a sayfa ekle" gibi istekleri
 **senin bağladığın hesaplarla** yapabilir.
@@ -134,7 +135,7 @@ node work\ldr-smoke.js         # uygulamayı açar, 23 ekranı gezer, 124 kart s
 | Kart "Alan eksik" diyor | Zorunlu alan boş; adımları izleyip doldurun |
 | "Bağlan" tepki vermiyor | Zorunlu alan boş — alan altındaki kırmızı metne bakın |
 | Bağlantı kuruldu ama Votion kullanmıyor | "Votion bu bağlantıyı kullanabilir" anahtarı kapalı |
-| Ödeme bağlantısı görünmüyor | `teacher`/`student` rolünde ödeme sağlayıcıları kapalı (tasarım) |
+| Ödeme bağlantısı görünmüyor | Katalogda `commerce` kategorisini seçin; sağlayıcılar her kullanıcıda görünür |
 
 ---
 

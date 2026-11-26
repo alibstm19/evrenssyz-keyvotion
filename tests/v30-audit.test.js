@@ -175,16 +175,12 @@ test('T-123/5 data-state yalniz §5.1, baglanti data-conn-state', () => {
   for (const v of used) assert.ok(STATES.has(v), `data-state gecersiz deger: ${v}`);
 });
 
-/* ---------- 6) Rol projeksiyonu: integrations/mcps admin-only ---------- */
-test('T-123/6 rol projeksiyonu: iki yeni ekran ROLE_SCREENS icinde degil', () => {
-  const start = APP.indexOf('const ROLE_SCREENS = {');
-  const end = APP.indexOf('};', start);
-  assert.ok(start > -1 && end > start, 'ROLE_SCREENS bulunamadi');
-  const block = APP.slice(start, end);
-  assert.equal(block.includes('integrations'), false, 'integrations teacher/student kumesinde');
-  assert.equal(block.includes('mcps'), false, 'mcps teacher/student kumesinde');
-  assert.match(block, /teacher:\s*new Set\(\[/, 'teacher kumesi yok');
-  assert.match(block, /student:\s*new Set\(\[/, 'student kumesi yok');
+/* ---------- 6) Görünüm rolü yok (T-209): bütün ekranlar herkese açık ---------- */
+test('T-123/6 görünüm rolü yok: MCP ve entegrasyonlar herkese açık', () => {
+  assert.equal(APP.includes('ROLE_SCREENS'), false, 'ROLE_SCREENS kalıntısı var');
+  assert.equal(APP.includes('roleCanSee'), false, 'roleCanSee kalıntısı var');
+  assert.ok(IDX.includes('data-nav-item="integrations"'), 'entegrasyonlar gezinmede yok');
+  assert.ok(IDX.includes('data-nav-item="mcps"'), 'MCP gezinmede yok');
 });
 
 /* ---------- 7) Kanal esligi ---------- */

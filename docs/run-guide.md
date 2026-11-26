@@ -37,7 +37,7 @@ Sol menüde **Hazır Bağlantılar**:
    - `oauth2` → tarayıcıda onay bağlantısı (anahtar yazmadan),
    - `token`/`basic` → bağlantı kaydedilir (değer `safeStorage` ile şifrelenir, ekrana geri dönmez),
    - MCP `install` → sunucu kurulur.
-5. **Votion bu bağlantıyı kullanabilir** anahtarı — asistanın o bağlantıyı kullanmasına izin verir (yalnız `admin`).
+5. **Votion bu bağlantıyı kullanabilir** anahtarı — asistanın o bağlantıyı kullanmasına izin verir.
 
 ## Votion asistanı
 
@@ -45,8 +45,9 @@ Sol menüde **Hazır Bağlantılar**:
   (manifest **22 306 B**, bağlam bloğu **14 799 B**, sınır 24 000 B).
 - `kv:votion:invoke` çağrıyı mevcut entegrasyon/MCP yoluna taşır; her çağrı **denetime** yazılır,
   kayıt yalnız `{op, capabilityId, status}` — **parametre ve sır yazılmaz**.
-- Ödeme/satış sağlayıcıları (stripe, paypal, square, gumroad, lemon-squeezy) `teacher`/`student`
-  rolüne **kapalıdır**.
+- Ödeme/satış sağlayıcıları (stripe, paypal, square, gumroad, lemon-squeezy) dahil **bütün
+  bağlantılar her kullanıcıda görünür**; görünüm rolü T-209 ile kaldırıldı. Yazma yine
+  `confirmToken` + izin matrisinden geçer.
 
 ## Doğrulama (istediğin an)
 
