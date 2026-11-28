@@ -33,7 +33,7 @@ test('inert 1: yardımcı yalnız kabuk katmanlarını kilitler', () => {
   assert.match(block, /\[\.\.\.app\.children\]/, 'kabuk çocukları gezilmiyor');
   assert.match(block, /setAttribute\('inert', ''\)/, 'inert uygulanmıyor');
   assert.match(block, /removeAttribute\('inert'\)/, 'inert kaldırılmıyor');
-  assert.match(app, /const MODAL_LAYERS = '\[data-modal-root\],\[data-toast-root\],\[data-crash-root\]'/, 'muaf katman listesi eksik');
+  assert.match(app, /const MODAL_LAYERS = '\[data-modal-root\],\[data-onboard\],\[data-toast-root\],\[data-crash-root\]'/, 'muaf katman listesi eksik');
   assert.match(block, /node\.matches\(MODAL_LAYERS\)/, 'muaf katman filtresi yok');
 });
 

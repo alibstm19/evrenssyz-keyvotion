@@ -278,6 +278,7 @@ select.kv-input {
 
 .kv-modal__actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--kv-space-2);
 }

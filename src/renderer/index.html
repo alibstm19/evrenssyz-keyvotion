@@ -1154,6 +1154,11 @@
       </div>
 
       <!-- T-153: ? düğmesiyle gelen ekrana özel yardım bölümü -->
+      <div class="kv-panel">
+        <div class="kv-panel-title">Geri bildirim</div>
+        <p class="kv-muted">Bir sorun bildirmek için Windows ve uygulama sürümünü, yaptığın adımları ve beklediğin sonucu yaz. Anahtarları ve özel dosya yollarını paylaşmadan önce kaldır.</p>
+        <a class="kv-link" href="https://github.com/alibstm19/evrenssyz-keyvotion/issues/new/choose" target="_blank" rel="noopener noreferrer">GitHub’da geri bildirim gönder</a>
+      </div>
       <div class="kv-panel" data-guide-help hidden>
         <div class="kv-panel__header">
           <span data-field="guide-help-title">Ekran yardımı</span>
@@ -1585,7 +1590,7 @@
         <div class="kv-panel kv-glass-panel" data-catalog-block="b1">
           <div class="kv-panel-title"><span>Arama ve filtre</span></div>
           <div class="kv-row">
-            <input class="kv-input kv-input--sm" type="search" data-catalog-search aria-label="Katalogda ara" placeholder="En az 2 karakter" autocomplete="off">
+            <input class="kv-input kv-input--sm" type="search" data-catalog-search aria-label="Katalogda ara" placeholder="Bağlantı ara. Örn. GitHub, Slack" autocomplete="off">
             <select class="kv-input kv-input--sm" data-catalog-category aria-label="Kategori">
               <option value="all">Tüm kategoriler</option>
             </select>
@@ -1625,7 +1630,7 @@
             <div class="kv-field"><span class="kv-muted">Kategori / tür</span><span data-field="catalog-detail-kind">—</span></div>
             <div class="kv-field"><span class="kv-muted">Ne yapar</span><span data-field="catalog-detail-hint">—</span></div>
             <div class="kv-field"><span class="kv-muted">Ortam anahtarları</span><span class="kv-mono" data-field="catalog-detail-env">—</span></div>
-            <div class="kv-field"><span class="kv-muted">Belgeler</span><a class="kv-link" data-field="catalog-detail-docs" href="#" target="_blank" rel="noopener noreferrer">—</a></div>
+            <div class="kv-field"><span class="kv-muted">Sağlayıcı belgeleri</span><a class="kv-link" data-field="catalog-detail-docs" href="#" target="_blank" rel="noopener noreferrer">—</a></div>
           </div>
         </div>
 
@@ -1748,26 +1753,16 @@
           </div>
         </div>
 
-        <!-- B2: preset galerisi (124 kart) -->
-        <div class="kv-panel kv-glass-panel" data-preset-block="b2">
-          <div class="kv-panel-title"><span>Bağlantı galerisi</span></div>
-          <div class="kv-preset__grid" data-preset-grid role="list">
-            <p class="kv-empty">Bağlantılar yükleniyor…</p>
-            <div class="kv-preset__card" data-preset-item role="listitem" data-preset-id="" data-preset-kind="integration" data-preset-ready="ready" tabindex="0" data-action="preset-pick" hidden aria-hidden="true">
-              <span class="kv-preset__logo" aria-hidden="true">—</span>
-              <span class="kv-card__title">—</span>
-            </div>
-          </div>
-        </div>
-
         <!-- B3: seçili preset ayrıntısı + her zaman görünür "nasıl alınır" -->
-        <div class="kv-panel kv-glass-panel" data-preset-block="b3">
-          <div class="kv-panel-title"><span>Ayrıntı ve kurulum adımları</span></div>
+        <div class="kv-panel kv-glass-panel" data-preset-block="b3" hidden>
+          <div class="kv-panel-title"><span>Bağlantı kurulumu</span>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="preset-close">Galeriye dön</button>
+          </div>
           <div class="kv-preset__detail" data-preset-detail hidden>
             <div class="kv-row">
               <span class="kv-preset__logo" aria-hidden="true" data-field="preset-detail-logo">—</span>
               <div>
-                <h3 data-field="preset-detail-name">—</h3>
+                <h3 data-field="preset-detail-name" tabindex="-1">—</h3>
                 <p class="kv-muted kv-mono" data-field="preset-detail-meta">—</p>
               </div>
             </div>
@@ -1784,7 +1779,7 @@
         </div>
 
         <!-- B4: alan formu + Votion anahtarı -->
-        <div class="kv-panel kv-glass-panel" data-preset-block="b4">
+        <div class="kv-panel kv-glass-panel" data-preset-block="b4" hidden>
           <div class="kv-panel-title"><span>Bağlan</span></div>
           <div class="kv-preset__form" data-preset-form>
             <p class="kv-muted kv-hint" data-field="preset-form-hint">Kart seçin.</p>
@@ -1807,11 +1802,23 @@
         </div>
 
         <!-- B5: sonuç / akış -->
-        <div class="kv-panel kv-glass-panel" data-preset-block="b5">
+        <div class="kv-panel kv-glass-panel" data-preset-block="b5" hidden>
           <div class="kv-panel-title"><span>Sonuç</span></div>
           <div class="kv-log">
             <p class="kv-empty" data-preset-empty hidden>Eşleşen bağlantı yok.</p>
             <p class="kv-muted" data-preset-result aria-live="polite">Kart seçin.</p>
+          </div>
+        </div>
+        <!-- B2: preset galerisi (124 kart) -->
+        <div class="kv-panel kv-glass-panel" data-preset-block="b2">
+          <div class="kv-panel-title"><span>Bağlantı galerisi</span>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="preset-refresh">Yenile</button></div>
+          <div class="kv-preset__grid" data-preset-grid role="list">
+            <p class="kv-empty">Bağlantılar yükleniyor…</p>
+            <div class="kv-preset__card" data-preset-item role="listitem" data-preset-id="" data-preset-kind="integration" data-preset-ready="ready" tabindex="0" data-action="preset-pick" hidden aria-hidden="true">
+              <span class="kv-preset__logo" aria-hidden="true">—</span>
+              <span class="kv-card__title">—</span>
+            </div>
           </div>
         </div>
       </div>

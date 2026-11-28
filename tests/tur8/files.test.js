@@ -60,8 +60,8 @@ test('tur8/files 2: kök dışı ve .. kaçışı reddedilir', () => {
   const { root, service } = sandbox();
   assert.strictEqual(service.list({ path: '..' }).error.code, 'E_FORBIDDEN');
   assert.strictEqual(service.list({ path: path.join(root, '..', 'x') }).error.code, 'E_FORBIDDEN');
-  assert.strictEqual(service.read({ path: '..\\secret.txt' }).error.code, 'E_FORBIDDEN');
-  assert.strictEqual(service.read({ path: 'C:\\Windows\\win.ini' }).error.code, 'E_FORBIDDEN');
+  assert.strictEqual(service.read({ path: path.join('..', 'secret.txt') }).error.code, 'E_FORBIDDEN');
+  assert.strictEqual(service.read({ path: path.resolve(root, '..', 'win.ini') }).error.code, 'E_FORBIDDEN');
 });
 
 test('tur8/files 3: sır dosyaları okunmaz ve listelenmez', () => {

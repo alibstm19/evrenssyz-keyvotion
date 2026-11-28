@@ -3,6 +3,7 @@
 const { app, BrowserWindow, ipcMain, safeStorage, desktopCapturer, shell, dialog } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
+const { pathToFileURL } = require('node:url');
 
 const { CHANNELS, WRITE_CHANNELS } = require('../shared/ipc-channels');
 const { CODES, ok, fail } = require('../shared/errors');
@@ -55,6 +56,8 @@ const { createVotionTools } = require('./services/votion-tools');
 
 const SCHEMA_VERSION = 1;
 const APP_VERSION = require('../package.json').version;
+const CONSOLE_PAGE = path.join(__dirname, '..', 'renderer', 'index.html');
+const CONSOLE_URL = pathToFileURL(CONSOLE_PAGE).href;
 
 /** @type {BrowserWindow|null} */
 let mainWindow = null;
@@ -69,6 +72,12 @@ let plannerTimer = null;
 function wrap(handler) {
   return async (event, payload) => {
     try {
+      const contents = mainWindow && !mainWindow.isDestroyed() && mainWindow.webContents;
+      const frame = event.senderFrame;
+      if (!contents || event.sender !== contents || !frame ||
+          frame !== contents.mainFrame || frame.url !== CONSOLE_URL) {
+        return fail(CODES.FORBIDDEN, 'Bu işlem yalnızca konsol penceresinden yapılabilir.');
+      }
       const result = await handler(normalizePayload(payload), event);
       return result && typeof result.ok === 'boolean'
         ? result
@@ -560,7 +569,20 @@ function createWindow(runtime) {
     });
   } catch { /* eski Electron: varsayılan davranış */ }
 
-  win.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
+  win.webContents.on('will-navigate', (event) => event.preventDefault());
+  win.webContents.on('will-attach-webview', (event) => event.preventDefault());
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    try {
+      const target = new URL(url);
+      if (target.protocol === 'https:' &&
+          !target.username && !target.password && win.webContents.getURL() === CONSOLE_URL) {
+        void shell.openExternal(target.href).catch(() => {});
+      }
+    } catch { /* Geçersiz adres açılmaz. */ }
+    return { action: 'deny' };
+  });
+
+  win.loadFile(CONSOLE_PAGE);
 
   /*
    * Kurtarma (T-170): çöken/boş kalan bir arayüz kullanıcıyı kilitli bırakmaz.
@@ -1614,7 +1636,17 @@ function registerChannels(runtime) {
       runtime.oauth = createOAuthService({
         safeStorage,
         userDataDir: app.getPath('userData'),
-        onEvent: (packet) => push(CHANNELS.EVENT_INTEGRATION, packet)
+        onEvent: (packet) => {
+          push(CHANNELS.EVENT_INTEGRATION, packet);
+          if (packet.type === 'oauth:callback' && packet.ok) {
+            void runtime.oauth.complete({ flowId: packet.flowId }).catch((error) => {
+              push(CHANNELS.EVENT_INTEGRATION, {
+                type: 'oauth:failed', accountId: packet.accountId,
+                providerId: packet.providerId, code: error.code || 'E_OAUTH_TOKEN'
+              });
+            });
+          }
+        }
       });
     }
     return runtime.oauth;

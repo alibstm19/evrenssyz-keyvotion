@@ -88,6 +88,17 @@ function build() {
   };
   fs.writeFileSync(path.join(appDir, 'package.json'), JSON.stringify(appPkg, null, 2) + '\n');
 
+  fs.copyFileSync(path.join(ROOT, 'LICENSE'), path.join(OUT, 'LICENSE-KEYVOTION.txt'));
+  fs.writeFileSync(path.join(OUT, 'BASLA.txt'), [
+    'Keyvotion Console ' + VERSION,
+    'Windows 10 / 11 x64',
+    '',
+    'Arşivin tamamını bir klasöre çıkar ve Keyvotion Console.exe dosyasını aç.',
+    'İlk ekranda Bağlantı kurmadan gez veya Model bağla seçeneklerinden birini seç.',
+    'Sorun bildirirken Rehber ekranındaki Geri bildirim bağlantısını kullan.',
+    ''
+  ].join('\r\n'), 'utf8');
+
   const screens = countScreens(path.join(appDir, 'renderer', 'index.html'));
   const size = dirSize(OUT);
   log('app packaged:', (size / 1048576).toFixed(1), 'MB;', screens, 'screens in index.html');
@@ -188,7 +199,13 @@ async function zip() {
   /* T-195: eski zip yolu her dosyanın disk zaman damgasını arşive yazdığı için
      aynı kaynaktan farklı SHA üretiyordu. Deterministik yazıcı sabit damga ve
      sıralı giriş kullanır; aynı `src/` her zaman aynı özeti verir. */
-  const result = await zipDirectory(OUT, target, { tmpDir: path.join(ROOT, 'work') });
+  const tmpDir = fs.mkdtempSync(path.join(ROOT, 'dist', '.zip-'));
+  let result;
+  try {
+    result = await zipDirectory(OUT, target, { tmpDir });
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
   const check = await verifyArchive(target);
   if (check.entries.length !== result.entries) {
     throw new Error(`zip self-check failed: ${check.entries.length} entries read, ${result.entries} written`);

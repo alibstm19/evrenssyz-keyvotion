@@ -70,7 +70,9 @@ function isPrivateAddress(raw) {
 
 function lanAddresses() {
   const out = [];
-  const nets = os.networkInterfaces();
+  let nets;
+  try { nets = os.networkInterfaces(); }
+  catch { return []; }
   for (const name of Object.keys(nets)) {
     for (const ni of nets[name] || []) {
       if (ni.family === 'IPv4' && !ni.internal) out.push(ni.address);
@@ -214,12 +216,9 @@ function createRemoteService(options) {
     return rec.count <= RATE_MAX;
   }
 
-  function authOf(req, url) {
+  function authOf(req) {
     const header = req.headers['x-kv-token'];
-    if (typeof header === 'string' && tokenEquals(header, token)) return true;
-    const q = url.searchParams.get('t');
-    if (typeof q === 'string' && tokenEquals(q, token)) return true;
-    return false;
+    return typeof header === 'string' && tokenEquals(header, token);
   }
 
   function snapshot() {
@@ -295,7 +294,7 @@ function createRemoteService(options) {
       return;
     }
 
-    if (!token || !authOf(req, url)) {
+    if (!token || !authOf(req)) {
       json(res, 401, { ok: false, error: { code: 'E_UNAUTHORIZED', message: 'Eşleşme kodu geçersiz.' } });
       return;
     }

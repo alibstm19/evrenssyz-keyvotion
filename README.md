@@ -113,8 +113,13 @@ sunucu için API anahtarı bile gerekmez:
 1. **Releases** sayfasından `Keyvotion-Console-win32-x64-v3.4.0.zip` indirin.
 2. Herhangi bir klasöre çıkarın ve `Keyvotion Console.exe` dosyasını çalıştırın.
    Yapı imzasızdır; SmartScreen **Ek bilgi → Yine de çalıştır** diyebilir.
-3. Sihirbazda sağlayıcıyı seçin, EVREN SSYZ'den aldığınız API jetonunu yapıştırın
-   → **Test** → **Kaydet**.
+3. Arayüzü anahtarsız incelemek için **Bağlantı kurmadan gez** seçeneğini kullanın.
+   Yanıt almak istediğinizde **Model bağla** ile bir sağlayıcı seçin.
+4. **Hazır Bağlantılar** ekranında kartı seçince kurulum adımları galerinin
+   üstünde açılır. OAuth için ilgili sağlayıcının istemci yapılandırması gerekir.
+5. **Rehber → Geri bildirim** üzerinden öneri ve hata iletebilirsiniz.
+   Güvenlik bildirimleri için [SECURITY.md](SECURITY.md) yönergesini kullanın.
+
 
 ### Kaynaktan
 
@@ -128,6 +133,7 @@ npm start
 Taşınabilir paket üretin (ek araç veya yeni bağımlılık yok):
 
 ```powershell
+node src/node_modules/electron/install.js
 node tools/package.js --verify --zip
 ```
 

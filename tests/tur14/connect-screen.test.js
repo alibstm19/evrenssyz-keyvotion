@@ -68,8 +68,8 @@ test('tur14/connect 1: ekran UI §2 kümesinde ve index.html ekran kümesi sözl
 });
 
 test('tur14/connect 2: data-preset-block b1..b5 tam 5 blok, her biri bir kez', () => {
-  const blocks = [...rendererSource.matchAll(/data-preset-block="([a-z0-9]+)"/g)].map((m) => m[1]);
-  assert.deepStrictEqual(blocks, ['b1', 'b2', 'b3', 'b4', 'b5'],
+  const blocks = [...html.matchAll(/data-preset-block="([a-z0-9]+)"/g)].map((m) => m[1]);
+  assert.deepStrictEqual(blocks, ['b1', 'b3', 'b4', 'b5', 'b2'],
     `blok sırası/kümesi b1..b5 olmalı; bulunan: ${blocks.join(', ') || '(yok)'}`);
 });
 

@@ -104,7 +104,7 @@ test('tur13/oauth 4: begin gerçek loopback dinleyici açar ve authUrl PKCE taş
 
   /* Gerçek istek: yalnız 127.0.0.1. Küçük HTML döner ve sunucu kapanır. */
   const html = await httpGet(`${res.redirectUri}?code=CODE1&state=${STATE}`);
-  assert.match(html, /Bağlantı tamam/);
+  assert.match(html, /Onay alındı/);
   await new Promise((r) => setTimeout(r, 80));
   await assert.rejects(() => httpGet(res.redirectUri));
 });
@@ -122,7 +122,7 @@ test('tur13/oauth 5: state uyuşmazlığı E_OAUTH_STATE', async (t) => {
 test('tur13/oauth 6: access_denied → E_OAUTH_DENIED', async (t) => {
   const { svc } = make(t);
   const res = await svc.begin({ providerId: 'gmail', accountId: 'acct-3' });
-  await httpGet(`${res.redirectUri}?error=access_denied`);
+  await httpGet(`${res.redirectUri}?error=access_denied&state=${STATE}`);
   await assert.rejects(
     () => svc.complete({ flowId: res.flowId, code: 'CODE1' }),
     (err) => err.code === 'E_OAUTH_DENIED'

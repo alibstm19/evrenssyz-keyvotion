@@ -178,17 +178,38 @@ function createFilesService(deps) {
     if (!target) return fail(CODES.FORBIDDEN, 'Yol proje dizininin dışında.');
     if (denyReason(target)) return fail(CODES.FORBIDDEN, 'Sır dosyası okunmaz (.env / anahtar dosyaları).');
     let st;
+    let resolved;
     try {
-      st = fs.statSync(target);
+      resolved = fs.realpathSync(target);
+      st = fs.statSync(resolved);
     } catch {
       return fail(CODES.NOT_FOUND, 'Dosya bulunamadı.');
+    }
+    if (denyReason(resolved)) {
+      return fail(CODES.FORBIDDEN, 'Dosya proje sınırının dışında veya korunuyor.');
     }
     if (!st.isFile()) return fail(CODES.BAD_REQUEST, 'Yol bir dosya değil.');
     if (st.size > MAX_READ) {
       return fail(CODES.BAD_REQUEST, `Dosya çok büyük (${Math.round(st.size / 1024)} KB; sınır ${Math.round(MAX_READ / 1024)} KB).`);
     }
 
-    const buffer = fs.readFileSync(target);
+    let buffer;
+    try {
+      const fd = fs.openSync(resolved, 'r');
+      try {
+        const bytes = Buffer.alloc(MAX_READ + 1);
+        let offset = 0;
+        while (offset < bytes.length) {
+          const count = fs.readSync(fd, bytes, offset, bytes.length - offset, null);
+          if (!count) break;
+          offset += count;
+        }
+        if (offset > MAX_READ) return fail(CODES.BAD_REQUEST, 'Dosya okuma sınırını aşıyor.');
+        buffer = bytes.subarray(0, offset);
+      } finally { fs.closeSync(fd); }
+    } catch {
+      return fail(CODES.FORBIDDEN, 'Dosya okunamadı.');
+    }
     const nul = buffer.includes(0);
     const textAllowed = isTextName(target) || (!nul && st.size > 0);
     if (nul || !textAllowed) {

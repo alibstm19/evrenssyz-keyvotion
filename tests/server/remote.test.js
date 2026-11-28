@@ -143,9 +143,9 @@ test('server/remote 3: dogru jeton 200 ve beklenen JSON', async (t) => {
   assert.equal(body.data.memoryCount, 1);
   assert.equal(body.data.team.length, 1);
 
-  /* Sorgu parametresiyle jeton da kabul edilir (telefon bağlantısı). */
+  /* Jeton URL üzerinden kabul edilmez. */
   const viaQuery = await request(port, { path: `/api/state?t=${TOKEN}` });
-  assert.equal(viaQuery.status, 200);
+  assert.equal(viaQuery.status, 401);
 
   const board = await request(port, { path: '/api/board', headers: { 'x-kv-token': TOKEN } });
   assert.equal(board.status, 500);

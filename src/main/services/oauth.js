@@ -110,6 +110,7 @@ function defaultFetchImpl(tokenUrl, params) {
     const transport = target.protocol === 'http:' ? http : https;
     const req = transport.request(target, {
       method: 'POST',
+      signal: AbortSignal.timeout(15_000),
       headers: {
         accept: 'application/json, application/x-www-form-urlencoded',
         'content-type': 'application/x-www-form-urlencoded',
@@ -118,7 +119,11 @@ function defaultFetchImpl(tokenUrl, params) {
     }, (res) => {
       let raw = '';
       res.setEncoding('utf8');
-      res.on('data', (chunk) => { raw += chunk; });
+      res.on('data', (chunk) => {
+        raw += chunk;
+        if (Buffer.byteLength(raw) > 256 * 1024) req.destroy(makeError('E_OAUTH_TOKEN'));
+      });
+      res.on('error', () => reject(makeError('E_OAUTH_TOKEN')));
       res.on('end', () => {
         try {
           const parsed = JSON.parse(raw);
@@ -256,10 +261,10 @@ function createOAuthService(options = {}) {
         return;
       }
 
-      const err = parsed.searchParams.get('error');
-      if (err) {
-        flow.error = makeError('E_OAUTH_DENIED');
-      } else {
+      if (flow.settled || flow.error) {
+        res.writeHead(409); res.end('already handled'); return;
+      }
+      {
         const got = String(parsed.searchParams.get('state') || '');
         const want = flow.state;
         let match = false;
@@ -270,15 +275,26 @@ function createOAuthService(options = {}) {
         } catch { match = false; }
         if (!match) {
           flow.error = makeError('E_OAUTH_STATE');
+        } else if (parsed.searchParams.has('error')) {
+          flow.error = makeError('E_OAUTH_DENIED');
         } else {
           flow.code = parsed.searchParams.get('code');
-          flow.settled = true;
+          if (!flow.code) flow.error = makeError('E_OAUTH_FLOW');
+          else flow.settled = true;
         }
       }
 
       const html = '<!doctype html><html lang="tr"><meta charset="utf-8">'
-        + '<title>Keyvotion</title><p>Bağlantı tamam, pencereyi kapatabilirsin.</p></html>';
-      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'content-length': Buffer.byteLength(html) });
+        + '<title>Keyvotion</title><p>'
+        + (flow.error ? 'Onay tamamlanmadı. Keyvotion’a dön ve yeniden dene.'
+          : 'Onay alındı. Bağlantı durumunu görmek için Keyvotion’a dön.')
+        + '</p></html>';
+      res.writeHead(200, {
+        'content-type': 'text/html; charset=utf-8',
+        'content-length': Buffer.byteLength(html),
+        'cache-control': 'no-store',
+        'referrer-policy': 'no-referrer'
+      });
       res.end(html, () => closeFlow(flow));
       emit('oauth:callback', { flowId, accountId, providerId, ok: !flow.error });
     });
@@ -356,7 +372,7 @@ function createOAuthService(options = {}) {
       scopes: flow.providerId && provider.scopes ? provider.scopes.slice() : [],
       accessToken: token.access_token,
       refreshToken: token.refresh_token || null,
-      expiresAt: Number.isFinite(expiresIn) ? Date.now() + expiresIn * 1000 : null
+      expiresAt: Number.isFinite(expiresIn) && expiresIn > 0 ? Date.now() + expiresIn * 1000 : null
     };
     writeRecord(flow.accountId, rec);
     flows.delete(flowId);
@@ -373,7 +389,7 @@ function createOAuthService(options = {}) {
     if (input.providerId && rec.providerId !== input.providerId) {
       return { connected: false, expiresAt: null, scopes: [] };
     }
-    return { connected: true, expiresAt: rec.expiresAt === undefined ? null : rec.expiresAt,
+    return { connected: rec.expiresAt == null || rec.expiresAt > Date.now(), expiresAt: rec.expiresAt === undefined ? null : rec.expiresAt,
       scopes: Array.isArray(rec.scopes) ? rec.scopes.slice() : [] };
   }
 
@@ -402,7 +418,7 @@ function createOAuthService(options = {}) {
     const expiresIn = Number(token.expires_in);
     rec.accessToken = token.access_token;
     if (token.refresh_token) rec.refreshToken = token.refresh_token;
-    rec.expiresAt = Number.isFinite(expiresIn) ? Date.now() + expiresIn * 1000 : null;
+    rec.expiresAt = Number.isFinite(expiresIn) && expiresIn > 0 ? Date.now() + expiresIn * 1000 : null;
     writeRecord(accountId, rec);
     emit('oauth:refreshed', { accountId, providerId: rec.providerId });
     return safeSummary(rec);

@@ -933,16 +933,9 @@ export async function tur6Action(action) {
   }
 }
 
-/** Açılış akışı: rehber tamamlanmadıysa rehber ekranına götürür. */
+/** Rehber verisini kullanıcı açmadan önce hazırlar. */
 export async function tur6Boot() {
   await loadGuide(true);
-  if (!t6.guide.onboarded) {
-    if (typeof ctx.setGoSilent === 'function') ctx.setGoSilent(true);
-    ctx.go('guide');
-    if (typeof ctx.setGoSilent === 'function') ctx.setGoSilent(false);
-    return true;
-  }
-  return false;
 }
 
 export function tur6DeskOpen() { return deskEnsure(); }

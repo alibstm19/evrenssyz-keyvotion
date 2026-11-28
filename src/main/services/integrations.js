@@ -334,16 +334,27 @@ function createIntegrationsService(opts) {
   function checkSize(response) {
     const declared = Number(response && response.headers && response.headers.get && response.headers.get('content-length'));
     if (Number.isFinite(declared) && declared > MAX_RESPONSE_BYTES) {
+      void response.body?.cancel?.().catch(() => {});
       throw makeError('E_BAD_REQUEST', 'Yanıt 4 MB sınırını aşıyor.');
     }
   }
 
   async function readBody(response) {
-    const text = await response.text();
-    if (Buffer.byteLength(text, 'utf8') > MAX_RESPONSE_BYTES) {
+    if (!response.body) {
+      const text = await response.text();
+      if (Buffer.byteLength(text, 'utf8') <= MAX_RESPONSE_BYTES) return text;
       throw makeError('E_BAD_REQUEST', 'Yanıt 4 MB sınırını aşıyor.');
     }
-    return text;
+    const chunks = [];
+    let size = 0;
+    for await (const chunk of response.body) {
+      size += chunk.byteLength;
+      if (size > MAX_RESPONSE_BYTES) {
+        throw makeError('E_BAD_REQUEST', 'Yanıt 4 MB sınırını aşıyor.');
+      }
+      chunks.push(chunk);
+    }
+    return Buffer.concat(chunks, size).toString('utf8');
   }
 
   /** test/invoke ortak isteği: ağ isteği, gerçek fetch. */
@@ -354,7 +365,7 @@ function createIntegrationsService(opts) {
     if (extraHeaders) Object.assign(headers, extraHeaders);
     const bodyValue = fillBody(bodyTemplate, values);
     const method = String(verb || 'GET').toUpperCase();
-    const init = { method, headers };
+    const init = { method, headers, redirect: 'error', signal: AbortSignal.timeout(15_000) };
     if (bodyValue !== undefined && method !== 'GET' && method !== 'HEAD') {
       init.body = typeof bodyValue === 'string' ? bodyValue : JSON.stringify(bodyValue);
       if (!headers['content-type'] && !headers['Content-Type']) headers['content-type'] = 'application/json';

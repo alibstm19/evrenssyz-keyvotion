@@ -216,6 +216,14 @@ const store = {
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+function revealDetail(node) {
+  if (!node || node.hidden) return;
+  const heading = node.querySelector('h2, h3, .kv-panel-title') || node;
+  heading.setAttribute('tabindex', '-1');
+  heading.focus({ preventScroll: true });
+  node.scrollIntoView({ block: 'start' });
+}
+
 function esc(v) {
   return String(v == null ? '' : v)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -584,7 +592,7 @@ function go(screen) {
   const helpLink = $('[data-guide-link]');
   if (helpLink) helpLink.dataset.guideLink = screen;
   const main = $('[data-main]');
-  if (main) main.scrollTop = 0;
+  if (main && changed) main.scrollTop = 0;
   if (screen === 'chat') renderChat();
   if (screen === 'command') renderCommand();
   if (screen === 'board') renderBoard();
@@ -1273,7 +1281,11 @@ function renderReports() {
       ]),
       el('div', { class: 'kv-report-card__body', text: r.ozet || r.raw || 'Özet yok.' })
     ]);
-    const select = () => { store.reportSelected = r.id; renderReports(); };
+    const select = () => {
+      store.reportSelected = r.id;
+      renderReports();
+      revealDetail($('[data-report-drawer]'));
+    };
     card.addEventListener('click', select);
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(); }
@@ -1458,7 +1470,7 @@ let modalInertNodes = null;
  * yalnız kardeş katmanlar (başlık, paneller, main…) inert yapılır; modal, bildirim
  * ve çökme katmanları dışarıda kalır.
  */
-const MODAL_LAYERS = '[data-modal-root],[data-toast-root],[data-crash-root]';
+const MODAL_LAYERS = '[data-modal-root],[data-onboard],[data-toast-root],[data-crash-root]';
 
 function setAppInert(on) {
   const app = $('[data-app]');
@@ -2742,6 +2754,7 @@ const SINGLE_FLIGHT_ACTIONS = new Set([
   'mcp-add',
   'mcp-call',
   'audit-refresh',
+  'onboard-setup',
   'onboard-test',
   'onboard-save',
   'onboard-connect',
@@ -2947,11 +2960,14 @@ async function dispatchAction(action, actionEl, sessionId) {
     case 'audit-reset': resetAudit(); break;
     case 'audit-row-pick': pickAudit(actionEl.dataset.auditId || ''); break;
     /* --- Tur 14 (T-147): hazır bağlantılar (UI §15.9) --- */
+    case 'preset-close': closePreset(); break;
+    case 'preset-refresh': await refreshPresets(); break;
     case 'preset-pick': pickPreset(actionEl.dataset.presetId || ''); break;
     case 'preset-reset': resetPresets(); break;
     case 'preset-connect': confirmPresetApply(); break;
     /* --- T-153: ilk kurulum + başlık yardımı --- */
     case 'screen-help': screenHelp(); break;
+    case 'onboard-setup': await onboardStartSetup(); break;
     case 'onboard-test': await onboardTest(); break;
     case 'onboard-save': await onboardSave(); break;
     case 'onboard-next': onboard.step = 3; onboardRender(); break;
@@ -3080,11 +3096,12 @@ function bindControls() {
     });
   }
   const preTest = $('[data-preset-test]');
-  if (preTest) preTest.addEventListener('click', () => { testPreset(); });
+  if (preTest) preTest.addEventListener('click', () => { runPresetAction(testPreset); });
   bindPresetVotion();
   /* Zorunlu alan dolunca kartın durum metni "Hazır"a döner (UI-151/UI-154). */
   const preFields = $('[data-field="preset-fields"]');
   if (preFields) preFields.addEventListener('input', () => {
+    showPresetFieldErrors([]);
     updatePresetCardState(store.preset.selected);
   });
 
@@ -4824,6 +4841,7 @@ function bindTur4() {
     if (memPick) {
       store.memory.selected = memPick.dataset.memoryPick;
       renderMemory();
+      revealDetail($('[data-memory-detail]'));
       return;
     }
 
@@ -5724,6 +5742,7 @@ function pickCatalog(id, kind) {
   renderCatalogGrid();
   renderCatalogDetail();
   renderCatalogInstall();
+  revealDetail($('[data-catalog-detail]'));
 }
 
 function selectedCatalogItem() {
@@ -5749,7 +5768,7 @@ function renderCatalogDetail() {
   const docs = $('[data-field="catalog-detail-docs"]');
   if (docs) {
     const url = /^https:\/\//i.test(item.docs) ? item.docs : '';
-    docs.textContent = url || '—';
+    docs.textContent = url ? 'Belgeleri tarayıcıda aç' : '—';
     if (url) { docs.setAttribute('href', url); docs.removeAttribute('aria-disabled'); }
     else { docs.setAttribute('href', '#'); docs.setAttribute('aria-disabled', 'true'); }
   }
@@ -5897,6 +5916,13 @@ function confirmCatalogOAuth() {
         }
         store.catalog.pending = { ...(store.catalog.pending || {}), [accountId]: item.id };
         catalogFlow('pending', `${item.id} · onay bekleniyor`);
+        const url = res.data?.authUrl;
+        const flow = $('[data-catalog-flow]');
+        if (flow && /^https:\/\//i.test(String(url || ''))) {
+          flow.append(el('a', { class: 'kv-link', href: url, target: '_blank',
+            rel: 'noopener noreferrer', text: 'Onay sayfasını aç' }));
+          revealDetail(flow);
+        }
         renderCatalogGrid(); renderCatalogInstall();
         startCatalogPoll();
       } })
@@ -6033,6 +6059,7 @@ function pickAudit(id) {
   if (!id) return;
   store.audit.selected = id;
   renderAudit();
+  revealDetail($('[data-audit-detail]'));
 }
 
 async function refreshAudit() {
@@ -6084,6 +6111,7 @@ const PRESET_ERROR_TEXT = {
   E_PRESET_UNKNOWN: 'Bağlantı şablonu bulunamadı; listeyi tazeleyip yeniden deneyin.',
   E_PRESET_KIND_MISMATCH: 'Bağlantı türü uyuşmuyor; kartı yeniden seçin.',
   E_PRESET_MISSING_FIELDS: 'Zorunlu alanlar eksik; işaretli alanları doldurun.',
+  E_OAUTH_CLIENT_CONFIG: 'Bu sağlayıcı için OAuth istemcisi yapılandırılmamış. Sağlayıcı belgelerini açarak gereken ayarları kontrol edin.',
   E_CONFIRM_REQUIRED: 'Onay anahtarı geçersiz; "Bağlan" ile onayı yeniden verin.'
 };
 
@@ -6178,7 +6206,9 @@ function renderPreset() {
   fillPresetCategories();
   renderPresetGrid();
   renderPresetDetail();
-  renderPresetForm();
+  const fields = $('[data-field="preset-fields"]');
+  if (fields && fields.dataset.presetOwner !== store.preset.selected) renderPresetForm();
+  syncPresetActions();
   refreshPresetVotionLine();
 }
 
@@ -6247,11 +6277,31 @@ function updatePresetCardState(id) {
 }
 
 function pickPreset(id) {
-  if (!id) return;
+  if (!presetById(id) || store.preset.busy) return;
   store.preset.selected = id;
-  renderPresetGrid();
-  renderPresetDetail();
-  renderPresetForm();
+  renderPreset();
+  setPresetResult('');
+  revealDetail($('[data-preset-block="b3"]'));
+}
+
+function closePreset() {
+  if (store.preset.busy) return;
+  const selected = store.preset.selected;
+  store.preset.selected = '';
+  renderPreset();
+  setPresetResult('');
+  const card = $$('[data-preset-item]').find((item) => item.dataset.presetId === selected);
+  (card || $('[data-preset-search]'))?.focus();
+}
+
+function syncPresetActions() {
+  const p = presetById(store.preset.selected);
+  const test = $('[data-preset-test]');
+  const connect = $('[data-preset-connect]');
+  const busy = Boolean(store.preset.busy);
+  $('[data-preset-form]')?.setAttribute('aria-busy', String(busy));
+  if (test) test.disabled = busy || !p || !store.preset.accounts[p.refId];
+  if (connect) connect.disabled = busy;
 }
 
 /** B3: summary + docsUrl + her zaman görünür adım listesi (UI-153). */
@@ -6260,6 +6310,9 @@ function renderPresetDetail() {
   if (!host) return;
   const p = presetById(store.preset.selected);
   host.hidden = !p;
+  for (const block of $$('[data-preset-block="b3"],[data-preset-block="b4"],[data-preset-block="b5"]')) {
+    block.hidden = !p || (block.dataset.presetBlock === 'b5' && !$('[data-preset-result]')?.textContent.trim());
+  }
   if (!p) return;
   setFieldText('preset-detail-logo', presetLetter(p));
   setFieldText('preset-detail-name', p.name || p.id);
@@ -6269,7 +6322,7 @@ function renderPresetDetail() {
   const docs = $('[data-field="preset-detail-docs"]');
   if (docs) {
     const url = /^https:\/\//i.test(String(p.docsUrl || '')) ? String(p.docsUrl) : '';
-    docs.textContent = url || '—';
+    docs.textContent = url ? 'Belgeleri tarayıcıda aç' : '—';
     if (url) { docs.setAttribute('href', url); docs.removeAttribute('aria-disabled'); }
     else { docs.setAttribute('href', '#'); docs.setAttribute('aria-disabled', 'true'); }
   }
@@ -6357,7 +6410,7 @@ function renderPresetHowTo(p) {
         url ? document.createTextNode(' ') : null,
         url ? el('a', {
           class: 'kv-link', href: url, target: '_blank',
-          rel: 'noopener noreferrer', text: url
+          rel: 'noopener noreferrer', text: 'Sağlayıcı sayfasını aç'
         }) : null
       ])
     ]);
@@ -6374,13 +6427,14 @@ function renderPresetForm() {
   if (hint) hint.textContent = p ? `${p.name || p.id} · ${p.authMode || 'none'}` : 'Kart seçin.';
   if (connect) {
     connect.hidden = !p;
-    connect.textContent = p && p.authMode === 'install' ? 'Kur' : 'Bağlan';
+    connect.textContent = p?.authMode === 'install' ? 'Kur'
+      : p?.authMode === 'oauth2' ? 'Sağlayıcıya bağlan' : 'Bağlan';
   }
   if (test) {
     const cap = p && p.kind === 'integration' && p.testCapability ? String(p.testCapability) : '';
     test.hidden = !cap;
-    test.disabled = !cap;
-    test.title = cap ? `${cap} ile test et` : 'Bu bağlantı için test yeteneği tanımlı değil';
+    test.title = store.preset.accounts[p?.refId]
+      ? 'Kayıtlı bağlantıyı doğrula' : 'Test etmek için önce bağlantıyı kaydet';
   }
   if (votionSlot) {
     /* T-209: rol filtresi kalktı; anahtar seçili bağlantı için her zaman görünür. */
@@ -6389,6 +6443,7 @@ function renderPresetForm() {
   }
   const fieldsHost = $('[data-field="preset-fields"]');
   if (!fieldsHost) return;
+  fieldsHost.dataset.presetOwner = p ? p.id : '';
   if (!p) { fieldsHost.replaceChildren(); return; }
   const fields = Array.isArray(p.fields) ? p.fields : [];
   if (!fields.length) {
@@ -6398,6 +6453,7 @@ function renderPresetForm() {
   } else {
     fieldsHost.replaceChildren(...fields.map((f) => presetFieldRow(f)));
   }
+  syncPresetActions();
   const votion = $('[data-field="preset-votion-access"]');
   if (votion) votion.checked = Boolean(store.preset.votion[p.id]);
 }
@@ -6454,6 +6510,8 @@ function showPresetFieldErrors(keys) {
     const hint = row.querySelector('[data-preset-field-hint]');
     if (!hint) continue;
     const field = p && (p.fields || []).find((f) => f.key === key);
+    const fieldInput = row.querySelector('[data-preset-input]');
+    if (fieldInput) fieldInput.setAttribute('aria-invalid', String(list.includes(key)));
     hint.textContent = list.includes(key)
       ? 'Zorunlu alan boş — bu alanı doldurun.'
       : String((field && field.hint) || '');
@@ -6464,6 +6522,8 @@ function setPresetResult(text) {
   const node = $('[data-preset-result]');
   if (!node) return;
   node.replaceChildren(document.createTextNode(String(text == null ? '' : text)));
+  const block = $('[data-preset-block="b5"]');
+  if (block) block.hidden = !text || !store.preset.selected;
 }
 
 function resetPresets() {
@@ -6484,6 +6544,7 @@ function confirmPresetApply() {
   const missing = presetMissingFields(p);
   if (missing.length) {
     showPresetFieldErrors(missing);
+    $('[data-preset-input][aria-invalid="true"]')?.focus();
     setPresetResult(`Zorunlu alanlar eksik: ${missing.join(', ')}. İşaretli alanları doldurup yeniden deneyin. [E_PRESET_MISSING_FIELDS]`);
     return;
   }
@@ -6493,22 +6554,36 @@ function confirmPresetApply() {
     sub: `${p.name || p.id} · ${p.vendor || p.kind || ''}`,
     body: [el('p', {
       class: 'kv-modal__sub',
-      text: 'Değerler yerel şifreli kayda gider; onay olmadan istek gitmez.'
+      text: isInstall ? 'Bu şablon yerel bir MCP sunucusu kurar.'
+        : p.authMode === 'oauth2' ? 'Bir sonraki adımda sağlayıcının kendi onay sayfasını açacaksınız.'
+          : 'Girilen bilgiler bilgisayarınızda şifreli olarak tutulur.'
     })],
     actions: [
       el('button', { class: 'kv-button kv-button--ghost', type: 'button', text: 'Vazgeç', onclick: closeModal }),
       el('button', {
         class: 'kv-button', type: 'button', text: isInstall ? 'Kur' : 'Bağlan',
-        onclick: () => { closeModal(); applyPreset(p); }
+        onclick: () => { closeModal(); runPresetAction(() => applyPreset(p)); }
       })
     ]
   });
 }
 
+async function runPresetAction(action) {
+  if (store.preset.busy) return;
+  store.preset.busy = true;
+  syncPresetActions();
+  try { await action(); }
+  finally {
+    store.preset.busy = false;
+    syncPresetActions();
+  }
+}
+
 async function applyPreset(p) {
   if (!p) return;
   const values = presetFieldValues();
-  setPresetResult(`${p.name || p.id}: istek gönderiliyor…`);
+  setPresetResult(`${p.name || p.id}: işlem sürüyor…`);
+  revealDetail($('[data-preset-block="b5"]'));
   const res = await call(KV && KV.preset && KV.preset.apply, {
     presetId: p.id, values, kind: p.kind, confirmToken: makeConfirmToken()
   });
@@ -6533,12 +6608,25 @@ async function applyPreset(p) {
     /* OAuth2: kart "Hazır" kalır; onay tarayıcıda tamamlanır. */
     delete store.preset.marks[p.id];
     const url = /^https:\/\//i.test(String(d.authUrl || '')) ? String(d.authUrl) : '';
-    setPresetResult(`Tarayıcıda onayla: ${url || 'adres dönmedi'}. Onaydan sonra bağlantı "Bağlı" olur.`);
+    setPresetResult(url ? 'Tarayıcıda sağlayıcı onayını tamamlayın.' : 'Sağlayıcı bir onay adresi göndermedi.');
     const node = $('[data-preset-result]');
     if (node && url) {
       node.append(document.createTextNode(' '), el('a', {
         class: 'kv-link', href: url, target: '_blank',
-        rel: 'noopener noreferrer', text: 'tarayıcıda onayla'
+        rel: 'noopener noreferrer', text: 'Onay sayfasını aç'
+      }), document.createTextNode(' '), el('button', {
+        class: 'kv-button kv-button--ghost kv-button--sm', type: 'button', text: 'Onayı kontrol et',
+        onclick: () => runPresetAction(async () => {
+          const status = await call(KV && KV.oauth && KV.oauth.status, { accountId: d.accountId });
+          if (!status.ok || !status.data?.connected) {
+            toast('Onay henüz tamamlanmadı. Tarayıcıdaki adımı kontrol edin.', 'warning');
+            return;
+          }
+          await refreshPresets();
+          store.preset.marks[p.id] = 'connected';
+          renderPresetGrid();
+          setPresetResult('Sağlayıcı onayı doğrulandı.');
+        })
       }));
     }
   } else if (d.next === 'installed') {
@@ -6782,19 +6870,10 @@ function onboardFillSelect() {
 }
 
 function onboardFooter(extra) {
-  const never = el('label', { class: 'kv-field kv-field--inline' }, [
-    el('input', { type: 'checkbox', 'data-field': 'onboard-never' }),
-    el('span', { text: 'bir daha gösterme' })
-  ]);
-  const check = never.querySelector('input');
-  check.addEventListener('change', () => { if (check.checked) onboardFinish(null); });
-  return [...extra,
-    el('button', {
-      class: 'kv-button kv-button--ghost kv-button--sm', type: 'button',
-      text: 'Atla', 'data-action': 'onboard-skip'
-    }),
-    never
-  ];
+  return [...extra, el('button', {
+    class: 'kv-button kv-button--ghost', type: 'button',
+    text: 'Bağlantı kurmadan gez', 'data-action': 'onboard-skip'
+  })];
 }
 
 /** Panel gövdesini ve düğmelerini mevcut adıma göre yeniden kurar. */
@@ -6849,10 +6928,27 @@ function onboardPaint() {
   const actions = $('[data-onboard-actions]');
   const title = $('[data-field="onboard-title"]');
   if (!body || !actions) return;
-  if (title) title.textContent = ONBOARD_TITLE;
+  if (title) title.textContent = onboard.step === 0 ? 'Keyvotion Console’a hoş geldin' : ONBOARD_TITLE;
+  const subtitle = $('[data-field="onboard-sub"]');
+  if (subtitle) {
+    subtitle.hidden = false;
+    subtitle.textContent = onboard.step === 0
+      ? 'Ekibi, panoyu ve ayarları hemen inceleyebilirsin. Yanıt almak istediğinde bir sağlayıcı veya yerel model bağla.'
+      : 'Bulut sağlayıcısı ya da bilgisayarında çalışan bir model seç.';
+  }
   const previousKey = ($('[data-field="onboard-key"]') || {}).value || '';
   body.replaceChildren();
   actions.replaceChildren();
+  onboardStatus('');
+  if (onboard.step === 0) {
+    actions.append(...onboardFooter([
+      el('button', {
+        class: 'kv-button', type: 'button',
+        text: 'Model bağla', 'data-action': 'onboard-setup'
+      })
+    ]));
+    return;
+  }
   body.append(el('p', {
     class: 'kv-muted kv-mono', 'data-field': 'onboard-step',
     text: `Adım ${onboard.step} / 3`
@@ -6929,8 +7025,8 @@ function onboardPaint() {
       })
     );
     actions.append(...onboardFooter([
-      el('button', { class: 'kv-button kv-button--sm', type: 'button', text: 'connect ekranına git', 'data-action': 'onboard-connect' }),
-      el('button', { class: 'kv-button kv-button--ghost kv-button--sm', type: 'button', text: 'Model seçime geç', 'data-action': 'onboard-next' })
+      el('button', { class: 'kv-button kv-button--sm', type: 'button', text: 'Hazır bağlantıları aç', 'data-action': 'onboard-connect' }),
+      el('button', { class: 'kv-button kv-button--ghost kv-button--sm', type: 'button', text: 'Model seçimine geç', 'data-action': 'onboard-next' })
     ]));
     return;
   }
@@ -6943,28 +7039,39 @@ function onboardPaint() {
     })
   );
   actions.append(...onboardFooter([
-    el('button', { class: 'kv-button kv-button--sm', type: 'button', text: 'models ekranına git', 'data-action': 'onboard-models' })
+    el('button', { class: 'kv-button kv-button--sm', type: 'button', text: 'Modelleri aç', 'data-action': 'onboard-models' })
   ]));
 }
 
 /** Paneli açar. force=true ise kullanıcı yardımdan yeniden açmak istedi. */
 function onboardOpen(force) {
   const root = $('[data-onboard]');
-  if (!root) return;
-  if (!force && store.onboarded) { root.hidden = true; return; }
+  if (!root || (!force && store.onboarded)) return;
   root.hidden = false;
-  onboard.step = 1;
+  setAppInert(true);
+  onboard.step = 0;
   onboardRender();
-  onboardLoadProviders();
+}
+
+async function onboardStartSetup() {
+  onboard.step = 1;
+  await onboardLoadProviders();
 }
 
 async function onboardFinish(target) {
-  await onboardPersist(true);
+  if (onboard.busy) return;
+  const saved = await onboardPersist(true);
   const root = $('[data-onboard]');
-  if (root) root.hidden = true;
-  if (target) go(target);
-  else go('team');
-  toast('Kurulum tamamlandı. İyi çalışmalar.', 'success');
+  if (root) {
+    root.hidden = true;
+    $('[data-onboard-body]').replaceChildren();
+    $('[data-onboard-actions]').replaceChildren();
+  }
+  setAppInert(false);
+  onboard.step = 0;
+  onboard.savedSig = '';
+  go(target || 'team');
+  if (!saved) toast('Başlangıç tercihi kaydedilemedi.', 'warning');
 }
 
 async function onboardCreateProvider() {
@@ -7060,17 +7167,6 @@ async function onboardSave() {
   onboardRender();
 }
 
-/** İlk açılışta paneli gösterir; onboarded:true ise hiç dokunmaz. */
-async function onboardBoot() {
-  const root = $('[data-onboard]');
-  if (!root) return;
-  if (store.onboarded) { root.hidden = true; return; }
-  root.hidden = false;
-  onboard.step = 1;
-  onboardRender();
-  await onboardLoadProviders();
-}
-
 /* ---------------- açılış ---------------- */
 async function boot() {
   installCrashGuard();
@@ -7122,29 +7218,25 @@ async function boot() {
   renderTabs();
   syncStatus();
 
-  let connected = await pingConnection();
-  /* T-205/T-206: açılışta sunucu yeni başlıyor olabilir (main arka planda
-     başlatır). Kullanıcıya "bağlantı yok" göstermeden önce birkaç kez daha
-     dene; 12 sn sonra da main'in `server.changed` olayı göstergeyi düzeltir. */
-  for (let i = 0; i < 12 && !connected; i += 1) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    connected = await pingConnection();
-  }
+  await loadSettings();
+  onboardOpen(false);
+  tur8Boot();
+
+  /* Yerel ekranlar sunucu yoklamasını beklemeden yüklenir. */
+  const connectionCheck = pingConnection();
+  await refreshProjects();
+  await refreshProviders();
+  await refreshChats();
+  await refreshBoard();
+  await refreshMemory();
+  const connected = await connectionCheck;
   await refreshTeam();
   await refreshModels();
   await refreshReports();
-  await refreshBoard();
-  await loadSettings();
   await loadMessages();
-
-  /* Tur 4: yerel servisler (sunucu gerekmez) */
-  await refreshMemory();
-  await refreshProjects();
-  await refreshProviders();
   await refreshSkills();
   await refreshPermissions();
   await refreshVotionGrants();
-  await refreshChats();
   await refreshRemote();
   updateChatCounter();
 
@@ -7158,12 +7250,7 @@ async function boot() {
   syncStatus();
   renderTabs();
 
-  /* T-153: ilk açılışta karşılama paneli; tamamlandıysa hiç görünmez. */
-  await onboardBoot();
-  /* Rehber tamamlanmadıysa ilk açılışta rehber ekranı gösterilir (T6-1). */
   await tur6Boot();
-  /* Tur 8: sağ panel ilk çizimi. */
-  tur8Boot();
   await autoCapture(
     [
       'Keyvotion Console açıldı; ekranlar ve yerel servisler yüklendi.',
