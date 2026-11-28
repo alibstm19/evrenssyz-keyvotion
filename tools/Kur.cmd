@@ -1,6 +1,12 @@
 @echo off
-chcp 65001 >nul
+setlocal
 title Keyvotion Console - Kurulum
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install.ps1" %*
+if /I "%~1"=="/Kaldir" (
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install.ps1" -Uninstall
+) else (
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install.ps1"
+)
+set "KV_SETUP_EXIT=%ERRORLEVEL%"
 echo.
 pause
+exit /b %KV_SETUP_EXIT%

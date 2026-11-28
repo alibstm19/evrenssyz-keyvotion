@@ -64,7 +64,7 @@ function createSettings(options) {
   }
 
   function sanitize(input) {
-    const next = { ...DEFAULT_CONFIG };
+    const next = { ...DEFAULT_CONFIG, projectDir: options.defaultProjectDir || DEFAULT_PROJECT_DIR };
     if (input && typeof input === 'object') {
       if (typeof input.serverURL === 'string' && input.serverURL.trim()) next.serverURL = input.serverURL.trim();
       if (typeof input.projectDir === 'string' && input.projectDir.trim()) next.projectDir = input.projectDir.trim();

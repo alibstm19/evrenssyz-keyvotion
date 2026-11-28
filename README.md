@@ -48,17 +48,9 @@ Neden bu kadar önemli?
 | --- | --- |
 | ![Entegrasyonlar](docs/screenshots/03-integrations.png) | ![MCP](docs/screenshots/04-mcp.png) |
 
-| Sohbet | Yönetim |
-| --- | --- |
-| ![Sohbet](docs/screenshots/05-chat.png) | ![Yönetim](docs/screenshots/06-admin.png) |
-
-| Görev panosu | Ayarlar · Tanılama |
-| --- | --- |
-| ![Pano](docs/screenshots/07-board.png) | ![Ayarlar](docs/screenshots/08-settings.png) |
-
-| Telefon erişimi (uzaktan) |
+| Görev panosu |
 | --- |
-| ![Uzaktan](docs/screenshots/09-remote.png) |
+| ![Pano](docs/screenshots/07-board.png) |
 
 İlk açılış, hazır sağlayıcılarla üç adımlı bir sihirbazdır; Ollama gibi yerel bir
 sunucu için API anahtarı bile gerekmez:

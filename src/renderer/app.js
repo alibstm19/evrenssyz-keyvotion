@@ -2902,6 +2902,7 @@ async function dispatchAction(action, actionEl, sessionId) {
   case 'team-auto': if (!store.models.pool.length) refreshModels(); openTeamAuto(); break;
     case 'set-leader': openSetLeader(sessionId, actionEl.dataset.roleCode); break;
     case 'mind-refresh': await tur6Action('mind-refresh'); break;
+    case 'product-intro': showProductIntro(); break;
     case 'team-show-roster': revealDetail($('[data-team-grid]')); break;
     case 'desk-status':
     case 'desk-blockers': {
@@ -3079,6 +3080,7 @@ async function dispatchAction(action, actionEl, sessionId) {
     case 'onboard-next': onboard.step = 3; onboardRender(); break;
     case 'onboard-connect': await onboardFinish('connect'); break;
     case 'onboard-models': await onboardFinish('models'); break;
+    case 'onboard-server': await onboardFinish('settings'); break;
     case 'onboard-skip': await onboardFinish(null); break;
     case 'onboard-provider-new': await onboardCreateProvider(); break;
     default:
@@ -7111,6 +7113,30 @@ function onboardTrap(event) {
   }
 }
 
+function introVideo() {
+  return el('video', {
+    class: 'kv-intro-film',
+    src: '../assets/keyvotion-intro.mp4',
+    poster: '../assets/keyvotion-intro.jpg',
+    controls: true,
+    playsinline: true,
+    preload: 'none',
+    'aria-label': 'Keyvotion tanıtımı. Ekip kur, işi takip et, Lider’e yaz.'
+  });
+}
+
+function showProductIntro() {
+  modal({
+    title: 'Keyvotion’u tanı',
+    body: [
+      introVideo(),
+      el('p', { class: 'kv-muted', text: 'Ekibi planla, görev panosundan ilerlemeyi takip et ve Lider’e yaz.' })
+    ],
+    actions: [el('button', { class: 'kv-button', type: 'button', text: 'Kapat', onclick: closeModal })],
+    wide: true
+  });
+}
+
 function onboardPaint() {
   const body = $('[data-onboard-body]');
   const actions = $('[data-onboard-actions]');
@@ -7121,7 +7147,7 @@ function onboardPaint() {
   if (subtitle) {
     subtitle.hidden = false;
     subtitle.textContent = onboard.step === 0
-      ? 'Ekibi, panoyu ve ayarları hemen inceleyebilirsin. Yanıt almak istediğinde bir sağlayıcı veya yerel model bağla.'
+      ? 'Projeni aç, ekibini planla ve ilerlemeyi takip et. Başlamak için aşağıdaki seçeneklerden birini seç.'
       : 'Bulut sağlayıcısı ya da bilgisayarında çalışan bir model seç.';
   }
   const previousKey = ($('[data-field="onboard-key"]') || {}).value || '';
@@ -7129,11 +7155,20 @@ function onboardPaint() {
   actions.replaceChildren();
   onboardStatus('');
   if (onboard.step === 0) {
+    const choices = el('dl', { class: 'kv-onboard-options' });
+    for (const [label, description] of [
+      ['Bağlantı kurmadan gez', 'Ekip ekranını, görev panosunu ve yerel planlamayı incele. API anahtarı gerekmez.'],
+      ['Model bağla', 'Lider ile sohbet etmek için bir sağlayıcı veya bilgisayarında çalışan bir model seç.'],
+      ['OpenCode', 'Canlı ajan seansları için Ayarlar içinden yerel OpenCode sunucusunu başlat veya mevcut sunucuya bağlan.']
+    ]) choices.append(el('dt', { text: label }), el('dd', { text: description }));
+    body.append(introVideo(), choices);
     actions.append(...onboardFooter([
       el('button', {
         class: 'kv-button', type: 'button',
         text: 'Model bağla', 'data-action': 'onboard-setup'
-      })
+      }),
+      el('button', { class: 'kv-button kv-button--ghost', type: 'button',
+        text: 'Sunucu ayarları', 'data-action': 'onboard-server' })
     ]));
     return;
   }

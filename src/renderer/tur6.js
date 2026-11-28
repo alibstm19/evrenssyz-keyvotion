@@ -382,7 +382,13 @@ async function serverAction(kind) {
     await refreshServer(true);
     return;
   }
-  ctx.toast(kind === 'start' ? 'Sunucu istendi.' : 'Sunucu durduruldu.', 'success');
+  if (kind === 'start') {
+    ctx.toast(res.data?.connected ? 'Sunucu bağlandı.' : (res.data?.hint || 'Sunucu için bağlantı doğrulanamadı.'),
+      res.data?.connected ? 'success' : 'warning');
+  } else {
+    ctx.toast(res.data?.stopped ? 'Sunucu durduruldu.' : (res.data?.note || 'Yönetilen sunucu çalışmıyor.'),
+      res.data?.stopped ? 'success' : 'info');
+  }
   await refreshServer(true);
 }
 

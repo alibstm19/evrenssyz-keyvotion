@@ -52,11 +52,24 @@ function freshDir(dir) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
+const { assertPublicFiles } = require('./verify/public-content');
+
+function sourceFiles(root, directory) {
+  return fs.readdirSync(path.join(root, directory), { withFileTypes: true }).flatMap((entry) => {
+    const relative = path.join(directory, entry.name);
+    return entry.isDirectory() ? sourceFiles(root, relative) : [relative];
+  });
+}
+
 function build() {
   const electronDist = path.join(SRC, 'node_modules', 'electron', 'dist');
   if (!fs.existsSync(path.join(electronDist, 'electron.exe'))) {
     throw new Error('Electron runtime not found: src/node_modules/electron/dist. Run "npm ci" in src first.');
   }
+
+  const appFolders = ['main', 'preload', 'renderer', 'shared', 'assets'];
+  assertPublicFiles(SRC, appFolders.filter((folder) => fs.existsSync(path.join(SRC, folder)))
+    .flatMap((folder) => sourceFiles(SRC, folder)));
 
   log('clean target', path.relative(ROOT, OUT));
   freshDir(OUT);
@@ -71,7 +84,7 @@ function build() {
 
   const appDir = path.join(OUT, 'resources', 'app');
   log('copy application sources -> resources/app');
-  for (const name of ['main', 'preload', 'renderer', 'shared', 'assets']) {
+  for (const name of appFolders) {
     const from = path.join(SRC, name);
     if (fs.existsSync(from)) copyDir(from, path.join(appDir, name));
   }
@@ -88,12 +101,17 @@ function build() {
   };
   fs.writeFileSync(path.join(appDir, 'package.json'), JSON.stringify(appPkg, null, 2) + '\n');
 
+  for (const name of ['Kur.cmd', 'install.ps1']) {
+    fs.copyFileSync(path.join(__dirname, name), path.join(OUT, name));
+  }
+  fs.writeFileSync(path.join(OUT, 'Temiz-Deneme.cmd'), '@echo off\r\nstart "" "%~dp0Keyvotion Console.exe" --clean-profile\r\n', 'utf8');
   fs.copyFileSync(path.join(ROOT, 'LICENSE'), path.join(OUT, 'LICENSE-KEYVOTION.txt'));
   fs.writeFileSync(path.join(OUT, 'BASLA.txt'), [
     'Keyvotion Console ' + VERSION,
     'Windows 10 / 11 x64',
     '',
-    'Arşivin tamamını bir klasöre çıkar ve Keyvotion Console.exe dosyasını aç.',
+    'Arşivin tamamını çıkar. Kur.cmd ile kur veya Keyvotion Console.exe ile taşınabilir çalıştır.',
+    'İlk açılışı mevcut verilerden ayrı denemek için Temiz-Deneme.cmd dosyasını aç.',
     'İlk ekranda Bağlantı kurmadan gez veya Model bağla seçeneklerinden birini seç.',
     'Sorun bildirirken Rehber ekranındaki Geri bildirim bağlantısını kullan.',
     ''

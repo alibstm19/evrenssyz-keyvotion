@@ -128,3 +128,16 @@ test('tur6/server 5: start opencodeBin yoksa E_NOT_FOUND döner', async (t) => {
   assert.equal(res.ok, false);
   assert.equal(res.error.code, 'E_NOT_FOUND');
 });
+
+test('server start is single-flight and shuts down without restarting', async () => {
+  const manager = createServerManager({
+    settings: { connection: () => ({ serverURL: 'http://127.0.0.1:1' }) },
+    httpClient: {},
+    opencodeBin: null
+  });
+  const start = manager.start();
+  assert.equal(manager.start(), start);
+  assert.equal((await start).error.code, 'E_NOT_FOUND');
+  manager.shutdown();
+  assert.equal((await manager.start()).error.code, 'E_CONFLICT');
+});

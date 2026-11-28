@@ -38,7 +38,7 @@ function portOpen(port, host, timeoutMs) {
     socket.setTimeout(timeoutMs || 900, () => finish(false));
     socket.once('connect', () => finish(true));
     socket.once('error', () => finish(false));
-    socket.connect(port, host);
+    socket.connect(port, host === '[::1]' ? '::1' : host);
   });
 }
 
@@ -59,6 +59,10 @@ function parseTarget(serverURL) {
 /**
  * @param {{baseDir:string, httpClient:object, settings:object, audit?:object, opencodeBin?:string|null}} options
  */
+function isLocalTarget(host) {
+  return ['127.0.0.1', 'localhost', '[::1]', '::1'].includes(host);
+}
+
 function createServerManager(options) {
   const httpClient = options.httpClient;
   const settings = options.settings;
@@ -70,6 +74,9 @@ function createServerManager(options) {
   let startedAt = null;
   let lastError = null;
   let lastCheck = null;
+  let starting = null;
+  let stopping = null;
+  let shuttingDown = false;
 
   function target() {
     const cfg = settings && settings.connection ? settings.connection() : null;
@@ -107,7 +114,7 @@ function createServerManager(options) {
       pid: childAlive() ? child.pid : null,
       startedAt,
       hasPassword: Boolean(pwd),
-      canStart: Boolean(opencodeBin),
+      canStart: Boolean(opencodeBin) && isLocalTarget(t.host),
       opencodeBin,
       checkedAt: new Date().toISOString(),
       error: lastError
@@ -115,9 +122,9 @@ function createServerManager(options) {
 
     if (!open) {
       /* E_OFFLINE tek basina yetmez: kullanici nedeni ve cozumu gormeli. */
-      const fix = opencodeBin
-        ? "'Sunucuyu başlat' ile açabilirsiniz."
-        : "Ayarlar → Bağlantı’dan opencode yolunu girip 'Sunucuyu başlat' ile açabilirsiniz.";
+      const fix = !isLocalTarget(t.host) ? 'Uzak sunucuyu bulunduğu bilgisayarda başlatın.'
+        : opencodeBin ? 'Sunucuyu başlat düğmesini kullanabilirsiniz.'
+          : 'OpenCode bulunamadı. Kuruluysa opencode.exe dosyasını PATH’e ekleyip konsolu yeniden açın.';
       lastCheck = {
         ...base,
         connected: false,
@@ -173,16 +180,28 @@ function createServerManager(options) {
   }
 
   /** opencode serve baslatir (yalnizca opencodeBin biliniyorsa). */
-  async function start() {
+  function start() {
+    if (shuttingDown || stopping) return Promise.resolve(fail(CODES.CONFLICT, 'Sunucu kapanıyor.'));
+    if (!starting) {
+      starting = startProcess().finally(() => { starting = null; });
+    }
+    return starting;
+  }
+
+  async function startProcess() {
     if (childAlive()) {
       const st = await status({ probe: true });
       return ok({ ...st.data, alreadyRunning: true });
     }
     const t = target();
     const open = await portOpen(t.port, t.host);
+    if (shuttingDown) return fail(CODES.CONFLICT, 'Konsol kapanıyor.');
     if (open) {
       const st = await status({ probe: true });
       return ok({ ...st.data, alreadyRunning: true, external: true });
+    }
+    if (!isLocalTarget(t.host)) {
+      return fail(CODES.FORBIDDEN, 'Konsol yalnız yerel adreste OpenCode başlatır. Uzak sunucu ayrı başlatılmalı.');
     }
     if (!opencodeBin) {
       return fail(CODES.NOT_FOUND, 'opencode çalıştırılabilir dosyası bulunamadı; sunucuyu elle başlatın.', {
@@ -211,7 +230,7 @@ function createServerManager(options) {
     };
 
     try {
-      child = spawn(opencodeBin, ['serve', '--hostname', t.host, '--port', String(t.port)], {
+      child = spawn(opencodeBin, ['serve', '--hostname', t.host === '[::1]' ? '::1' : t.host, '--port', String(t.port)], {
         cwd: options.projectDir || process.cwd(),
         stdio: ['ignore', 'pipe', 'pipe'],
         windowsHide: true
@@ -226,18 +245,25 @@ function createServerManager(options) {
     if (child.stdout) child.stdout.on('data', (d) => scanPassword(d.toString('utf8')));
     if (child.stderr) child.stderr.on('data', (d) => scanPassword(d.toString('utf8')));
 
+    const processHandle = child;
+    const clearProcess = () => {
+      if (child === processHandle) { child = null; startedAt = null; }
+    };
     child.once('exit', (code) => {
       lastError = code ? `process-exit:${code}` : null;
-      child = null;
-      startedAt = null;
+      clearProcess();
     });
     child.once('error', (error) => {
-      lastError = String((error && error.message) || 'process-error');
+      lastError = String((error && error.code) || 'process-error');
+      clearProcess();
     });
 
     /* Acilana kadar bekle (en fazla ~8 sn). */
     for (let i = 0; i < 16; i += 1) {
       await new Promise((r) => setTimeout(r, 500));
+      if (shuttingDown || child !== processHandle) {
+        return fail(CODES.INTERNAL, 'OpenCode süreci başlamadan kapandı.', { detail: { code: lastError } });
+      }
       if (await portOpen(t.port, t.host, 400)) {
         /* opencode "listening" satırını paroladan ÖNCE yazar; parolanın
            tampona düşmesi için kısa bir pencere bırak. */
@@ -260,13 +286,24 @@ function createServerManager(options) {
       }
     }
 
+    if (child === processHandle && childAlive()) {
+      try { processHandle.kill(); } catch { /* status reports subsequent state */ }
+    }
     lastError = lastError || 'E_START_TIMEOUT';
     audit.append({ op: 'server.start', code: CODES.INTERNAL, target: `${t.host}:${t.port}`, extra: { error: lastError } });
     return fail(CODES.TIMEOUT, 'Sunucu zamanında açılmadı.', { detail: { code: lastError } });
   }
 
   /** Yalnizca bizim baslattigimiz sureci durdurur. */
-  async function stop() {
+  function stop() {
+    if (!stopping) {
+      stopping = stopProcess().finally(() => { stopping = null; });
+    }
+    return stopping;
+  }
+
+  async function stopProcess() {
+    if (starting) await starting;
     const t = target();
     if (!childAlive()) {
       const st = await status({ probe: true });
@@ -293,8 +330,15 @@ function createServerManager(options) {
     return fail(CODES.TIMEOUT, 'Sunucu durduruldu ama port hâlâ dinliyor.', { detail: { port: t.port } });
   }
 
+  function shutdown() {
+    shuttingDown = true;
+    if (childAlive()) {
+      try { child.kill(); } catch { /* process may have stopped */ }
+    }
+  }
+
   return {
-    status, start, stop,
+    status, start, stop, shutdown,
     _internals: { portOpen, parseTarget, target, childAlive }
   };
 }

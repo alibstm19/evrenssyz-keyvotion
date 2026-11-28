@@ -19,11 +19,16 @@ const pkgTool = read(path.join(ROOT, 'tools', 'package.js'));
 const freshTool = read(path.join(ROOT, 'tools', 'verify', 'package-freshness.js'));
 
 test('package-contract 1: paket yalnız ürün dizinlerini taşır', () => {
-  const copyLine = pkgTool.match(/for \(const name of \[([^\]]+)\]\)/);
+  const copyLine = pkgTool.match(/const appFolders = \[([^\]]+)\];/);
   assert.ok(copyLine, 'kopyalama dizin listesi bulunamadı');
   const names = [...copyLine[1].matchAll(/'([^']+)'/g)].map((m) => m[1]);
   assert.deepStrictEqual(names, ['main', 'preload', 'renderer', 'shared', 'assets'],
     'paketlenen dizinler değişmiş: tazelik kapısı güncellenmeli');
+
+  assert.match(pkgTool, /assertPublicFiles\(SRC,/);
+  assert.match(pkgTool, /'Kur.cmd', 'install.ps1'/);
+  assert.match(pkgTool, /Temiz-Deneme\.cmd/);
+  assert.match(pkgTool, /--clean-profile/);
 
   /* node_modules / tests / tools / docs pakete girmemeli (boyut + sır yüzeyi). */
   for (const excluded of ['node_modules', 'tests', 'tools', 'work']) {

@@ -596,3 +596,24 @@ html[data-motion="azalt"] *::after {
   animation-iteration-count: 1 !important;
   scroll-behavior: auto !important;
 }
+
+.kv-onboard-options {
+  display: grid;
+  gap: var(--kv-space-2);
+  margin: var(--kv-space-3) 0;
+}
+.kv-onboard-options dt {
+  font-weight: 650;
+}
+.kv-onboard-options dd {
+  color: var(--kv-fg-muted);
+  margin: 0 0 var(--kv-space-2);
+}
+
+.kv-intro-film {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--kv-radius-md);
+  background: var(--kv-bg-elev-1);
+}

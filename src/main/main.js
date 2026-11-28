@@ -2,6 +2,7 @@
 
 const { app, BrowserWindow, ipcMain, safeStorage, desktopCapturer, shell, dialog } = require('electron');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 
@@ -58,6 +59,9 @@ const SCHEMA_VERSION = 1;
 const APP_VERSION = require('../package.json').version;
 const CONSOLE_PAGE = path.join(__dirname, '..', 'renderer', 'index.html');
 const CONSOLE_URL = pathToFileURL(CONSOLE_PAGE).href;
+
+const cleanProfile = app.commandLine.hasSwitch('clean-profile');
+if (cleanProfile) app.setPath('userData', fs.mkdtempSync(path.join(os.tmpdir(), 'keyvotion-preview-')));
 
 /** @type {BrowserWindow|null} */
 let mainWindow = null;
@@ -307,7 +311,6 @@ function resolveOpencodeBin() {
   for (const dir of String(process.env.PATH || '').split(path.delimiter)) {
     if (!dir) continue;
     candidates.push(path.join(dir, 'opencode.exe'));
-    candidates.push(path.join(dir, 'opencode.cmd'));
   }
 
   for (const candidate of candidates) {
@@ -324,7 +327,10 @@ function createRuntime() {
   const baseDir = app.getPath('userData');
   const logDir = path.join(baseDir, 'logs');
 
-  const settings = createSettings({ baseDir, safeStorage });
+  const settings = createSettings({
+    baseDir, safeStorage,
+    ...(cleanProfile ? { defaultProjectDir: path.join(baseDir, 'project'), envPassword: () => undefined } : {})
+  });
   const audit = createAuditLog({ logDir });
 
   const getProjectDir = () => settings.connection().projectDir;
@@ -1338,6 +1344,7 @@ function registerChannels(runtime) {
   ipcMain.handle(CHANNELS.SERVER_START, wrap(async (payload) => {
     const denied = confirm.verify(payload.confirmToken, CHANNELS.SERVER_START);
     if (denied) return denied;
+    serverAutoStartPaused = false;
     const res = await runtime.serverManager.start();
     push(CHANNELS.EVENT_PATCH, {
       type: 'server.changed',
@@ -1352,6 +1359,7 @@ function registerChannels(runtime) {
   ipcMain.handle(CHANNELS.SERVER_STOP, wrap(async (payload) => {
     const denied = confirm.verify(payload.confirmToken, CHANNELS.SERVER_STOP);
     if (denied) return denied;
+    serverAutoStartPaused = true;
     const res = await runtime.serverManager.stop();
     push(CHANNELS.EVENT_PATCH, {
       type: 'server.changed',
@@ -1887,37 +1895,8 @@ function startBoardWatch(runtime) {
  * açılır; renderer `plan.fired` yamasını alır. `unref` ile uygulama kapanışını
  * engellemez.
  */
-/* T-205: açılışta otomatik bağlantı. Kullanıcı "sunucuya bağlanılamıyor"
-   görmesin: yerel OpenCode sunucusu kapalıysa bir kez başlatılır; telefon
-   uzaktan erişimi yalnız daha önce eşleşmiş bir jeton varsa otomatik açılır
-   (ilk kurulumda LAN'a kapı açmamak için). Hatalar sessizdir; renderer durumu
-   ve ipucunu gösterir. */
-async function autoConnect(runtime) {
-  try {
-    const st = await runtime.serverManager.status({ probe: true });
-    if (!(st.ok && st.data && st.data.connected)) {
-      await runtime.serverManager.start();
-    }
-  } catch { /* sunucu yoksa renderer ipucu gösterir */ }
-  try {
-    const r = runtime.remote ? runtime.remote.state() : null;
-    if (r && r.hasSavedToken && !r.running) await runtime.remote.start({});
-  } catch { /* uzaktan erişim isteğe bağlı */ }
-}
-
-/**
- * T-206: bağlantı gözcüsü.
- *
- * ÖLÇÜLEN KUSUR: `autoConnect` tek atımlıktı ve sonucu renderer'a
- * BİLDİRMİYORDU. Sunucu açılışı 8 sn'ye kadar sürebildiği için renderer'ın
- * açılış yoklaması bitiyor, kullanıcı kalıcı olarak "Çevrimdışı" (kırmızı)
- * görüyordu; sunucu arkada açılsa bile gösterge güncellenmiyordu. Ayrıca
- * sunucu sonradan ölürse hiçbir şey yeniden bağlanmıyordu.
- *
- * ÇÖZÜM: durum değiştiğinde `server.changed` yayınlanır (renderer göstergesi
- * gerçek duruma çekilir) ve bağlantı yoksa artan aralıkla yeniden başlatma
- * denenir. Denemeler sınırlıdır; opencode bulunamıyorsa sonsuz döngü olmaz.
- */
+/* Sunucu durumunu seri olarak ölç ve yalnız uygun yerel sunucuyu yeniden dene. */
+let serverAutoStartPaused = cleanProfile;
 let serverWatchTimer = null;
 let serverWatchSignature = '';
 
@@ -1949,19 +1928,20 @@ function watchServer(runtime) {
         return;
       }
       publishServerState(runtime, data);
-      if (step >= DELAYS.length) return; /* pes et: kullanıcı elle başlatabilir */
+      if (serverAutoStartPaused || !data?.canStart || data.running || step >= DELAYS.length) return;
       const res = await runtime.serverManager.start();
       const after = res && res.ok && res.data ? res.data : data;
       publishServerState(runtime, after);
       if (!(after && after.connected)) step += 1;
     } catch { /* sessiz: renderer ipucu gösterir */ }
   };
-  const loop = () => {
-    tick();
+  const loop = async () => {
+    await tick();
+    if (!serverWatchTimer) return;
     serverWatchTimer = setTimeout(loop, DELAYS[Math.min(step, DELAYS.length - 1)]);
-    if (serverWatchTimer && typeof serverWatchTimer.unref === 'function') serverWatchTimer.unref();
+    serverWatchTimer.unref?.();
   };
-  loop();
+  serverWatchTimer = setTimeout(loop, 0);
 }
 
 function startPlanner(runtime) {
@@ -2012,8 +1992,6 @@ app.whenReady().then(() => {
   startEvents(runtime);
   startPlanner(runtime);
   scheduleResync(runtime, 500);
-  /* T-205: pencere açılırken bağlantıyı arka planda kur; açılışı bekletme. */
-  autoConnect(runtime);
   /* T-206: bağlantı düşerse/gecikirse kendini onar ve göstergesi güncellensin. */
   watchServer(runtime);
 
@@ -2036,6 +2014,7 @@ app.on('window-all-closed', () => {
 
 /* Uzak erisim sunucusu uygulamayla birlikte kapanir (port sizmasin). */
 app.on('before-quit', () => {
+  activeRuntime?.serverManager?.shutdown();
   if (activeRuntime && activeRuntime.remote) {
     try { activeRuntime.remote.stop(); } catch { /* yoksay */ }
   }

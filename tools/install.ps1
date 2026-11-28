@@ -1,55 +1,76 @@
-param([switch]$Kaldir)
+param([Alias('Kaldir')][switch]$Uninstall)
 
-# Keyvotion Console - kurulum / kaldirma (yonetici gerekmez, HKCU)
-# Yaptigi: uygulamayi %LOCALAPPDATA%'ya kopyalar + masaustu ve baslangic
-# menüsüne kisayol koyar. Registry'ye YAZMAZ (Anayasa: registry yasak).
-
-$ErrorActionPreference = "Stop"
-$AppName  = "Keyvotion Console"
-$ExeName  = "Keyvotion Console.exe"
-$Src      = $PSScriptRoot
-$Target   = Join-Path $env:LOCALAPPDATA "Programs\$AppName"
-$Desktop  = [Environment]::GetFolderPath("Desktop")
-$StartDir = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs"
-$LnkD = Join-Path $Desktop "$AppName.lnk"
-$LnkS = Join-Path $StartDir "$AppName.lnk"
+$ErrorActionPreference = 'Stop'
+$AppName = 'Keyvotion Console'
+$ExeName = "$AppName.exe"
+$Programs = Join-Path $env:LOCALAPPDATA 'Programs'
+$Target = Join-Path $Programs $AppName
 $ExeTarget = Join-Path $Target $ExeName
+$StartDir = Join-Path ([Environment]::GetFolderPath('Programs')) $AppName
+$Desktop = [Environment]::GetFolderPath('Desktop')
+$Shortcuts = @(
+  (Join-Path $Desktop "$AppName.lnk"),
+  (Join-Path $StartDir "$AppName.lnk")
+)
 
-if ($Kaldir) {
-    Write-Host "[...] Kaldiriliyor: $AppName"
-    foreach ($l in @($LnkD, $LnkS)) { if (Test-Path $l) { Remove-Item $l -Force } }
-    if (Test-Path $Target) { Remove-Item $Target -Recurse -Force }
-    Write-Host "[OK] Kaldirildi. (Ayarlariniz %APPDATA%\keyvotion-console altinda duruyor.)"
-    exit 0
+if ($Uninstall) {
+  if (Test-Path -LiteralPath $Target) { Remove-Item -LiteralPath $Target -Recurse -Force }
+  foreach ($Shortcut in $Shortcuts) {
+    if (Test-Path -LiteralPath $Shortcut) { Remove-Item -LiteralPath $Shortcut -Force }
+  }
+  Write-Host 'Uygulama kaldirildi. Projeler ve yerel profil korundu.'
+  exit 0
 }
 
-Write-Host "[...] Kuruluyor: $AppName"
-if (-not (Test-Path (Join-Path $Src $ExeName))) {
-    Write-Host "[HATA] '$ExeName' bulunamadi. Kur.cmd dosyasini uygulama klasorunden calistirin." -ForegroundColor Red
-    exit 1
+$Source = $PSScriptRoot
+if ([string]::Equals($Source.TrimEnd('\'), $Target.TrimEnd('\'), [StringComparison]::OrdinalIgnoreCase)) {
+  Write-Host 'Keyvotion zaten bu klasorde kurulu. Guncellemek icin yeni ZIP paketini baska bir klasore acin.'
+  exit 0
+}
+foreach ($Required in @($ExeName, 'resources\app\package.json', 'resources\app\main\main.js')) {
+  if (-not (Test-Path -LiteralPath (Join-Path $Source $Required) -PathType Leaf)) {
+    throw 'Paket eksik. ZIP dosyasinin tamamini cikarip Kur.cmd dosyasini o klasorden acin.'
+  }
 }
 
-# 1) Dosyalari kopyala
-if (Test-Path $Target) { Remove-Item $Target -Recurse -Force }
-New-Item -ItemType Directory -Force -Path $Target | Out-Null
-Copy-Item -Path (Join-Path $Src "*") -Destination $Target -Recurse -Force
+New-Item -Path $Programs -ItemType Directory -Force | Out-Null
+$Nonce = [Guid]::NewGuid().ToString('N')
+$Stage = Join-Path $Programs "$AppName.install-$Nonce"
+$Backup = Join-Path $Programs "$AppName.backup-$Nonce"
+$PreviousMoved = $false
+$Activated = $false
 
-# 2) Kisayollar
-$sh = New-Object -ComObject WScript.Shell
-foreach ($lnkPath in @($LnkD, $LnkS)) {
-    $sc = $sh.CreateShortcut($lnkPath)
-    $sc.TargetPath       = $ExeTarget
-    $sc.WorkingDirectory = $Target
-    $sc.IconLocation     = (Join-Path $Target "icon.ico")
-    $sc.Description      = $AppName
-    $sc.Save()
+try {
+  New-Item -Path $Stage -ItemType Directory | Out-Null
+  Write-Host 'Uygulama dosyalari hazirlaniyor...'
+  foreach ($Item in Get-ChildItem -LiteralPath $Source -Force) {
+    if ($Item.Name -in @('conversations.json', 'config.json', 'secrets.bin', 'keys.bin', 'remote.json', '.keyvotion', '.team', 'logs')) { continue }
+    Copy-Item -LiteralPath $Item.FullName -Destination $Stage -Recurse
+  }
+  if (Test-Path -LiteralPath $Target) {
+    Write-Host 'Onceki kurulum yedekleniyor...'
+    [IO.Directory]::Move($Target, $Backup)
+    $PreviousMoved = $true
+  }
+  [IO.Directory]::Move($Stage, $Target)
+  $Activated = $true
+  New-Item -Path $StartDir -ItemType Directory -Force | Out-Null
+  $Shell = New-Object -ComObject WScript.Shell
+  foreach ($Link in $Shortcuts) {
+    $Shortcut = $Shell.CreateShortcut($Link)
+    $Shortcut.TargetPath = $ExeTarget
+    $Shortcut.WorkingDirectory = $Target
+    $Shortcut.Description = $AppName
+    $Shortcut.Save()
+  }
+} catch {
+  if ($Activated -and (Test-Path -LiteralPath $Target)) { Remove-Item -LiteralPath $Target -Recurse -Force }
+  if ($PreviousMoved -and (Test-Path -LiteralPath $Backup)) { [IO.Directory]::Move($Backup, $Target) }
+  throw "Kurulum tamamlanamadi. Acik Keyvotion pencerelerini kapatip tekrar deneyin. $($_.Exception.Message)"
+} finally {
+  if (Test-Path -LiteralPath $Stage) { Remove-Item -LiteralPath $Stage -Recurse -Force }
 }
-
-Write-Host ""
-Write-Host "[OK] Kurulum tamam." -ForegroundColor Green
-Write-Host "  Masaustu kisayolu : $LnkD"
-Write-Host "  Baslangic menusu  : $LnkS"
-Write-Host "  Kurulum yeri      : $Target"
-Write-Host ""
-Write-Host "Masaustundeki '$AppName' kisayoluna cift tiklayin."
-Write-Host "Kaldirmak icin: Kur.cmd /Kaldir"
+if (Test-Path -LiteralPath $Backup) {
+  Remove-Item -LiteralPath $Backup -Recurse -Force -ErrorAction SilentlyContinue
+}
+Write-Host 'Kurulum tamamlandi. Keyvotion masaustu ve Baslat menusu kisayollarindan acilabilir.' -ForegroundColor Green

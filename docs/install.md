@@ -3,21 +3,13 @@
 Keyvotion Console runs on **Windows 10/11 (x64)**. All data stays on your
 machine; no account and no server are required.
 
-## Option A — Prebuilt app (recommended)
+## Hazır Windows paketi
 
-1. Download `Keyvotion-Console-win32-x64-v3.4.0.zip` from the Releases page.
-2. Extract it anywhere (for example `C:\Apps\Keyvotion Console`). Keep the
-   folder contents together.
-3. Run `Keyvotion Console.exe`.
-   The build is unsigned, so Windows SmartScreen may show a warning:
-   **More info → Run anyway**.
-4. Follow the three-step welcome wizard:
-   - **Step 1** — pick a provider, paste your API key, press **Test**, then
-     **Save**. Keys are encrypted with the Windows keystore.
-   - **Step 2** — choose a ready-made connection (or skip it).
-   - **Step 3** — pick a model.
-5. Press **Skip** if you only want to look around; you can re-run the wizard
-   from **Settings**.
+1. ZIP arşivinin tamamını yeni bir klasöre çıkarın.
+2. **Kur.cmd** masaüstü ve Başlat menüsü kısayollarını oluşturur. Taşınabilir kullanım için **Keyvotion Console.exe** dosyasını açın.
+3. **Temiz-Deneme.cmd** ilk açılışı ayrı bir geçici profil ve proje klasörüyle gösterir. Eski ayar ve sohbetler bu oturuma yüklenmez.
+4. İlk ekranda ürün tanıtımını izleyebilir, **Bağlantı kurmadan gez** seçeneğiyle arayüzü deneyebilir ya da **Model bağla** ile sağlayıcı ekleyebilirsiniz.
+5. **Ayarlar → Yerel sunucu** üzerinden OpenCode durumuna bakabilirsiniz. OpenCode ayrıca kurulmuşsa konsol yerel sunucuyu başlatabilir.
 
 ### Where do I get an API key?
 
@@ -60,8 +52,7 @@ writes `dist\Keyvotion-Console-win32-x64-v3.4.0.zip`.
 | Secrets | OS keystore via Electron `safeStorage` (encrypted) |
 | Project files, board, reports | your project folder (`.team/`, `docs/`) — local only, not in the repo |
 
-Uninstalling is deleting the folder. Nothing is written outside the app folder
-and your `%APPDATA%` profile.
+Kurulumu kaldırmak için kurulum klasöründeki `Kur.cmd /Kaldir` komutunu kullanın. Proje ve profil verileri korunur.
 
 ## Troubleshooting
 
