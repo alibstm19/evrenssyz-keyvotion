@@ -1317,3 +1317,31 @@
     padding: var(--kv-space-2);
   }
 }
+
+.kv-team-shortcuts {
+  flex-wrap: wrap;
+  padding: var(--kv-space-2) var(--kv-space-3);
+}
+
+.kv-team-activity {
+  max-block-size: 18rem;
+  overflow: auto;
+  list-style: none;
+  margin: 0;
+  padding: var(--kv-space-2);
+}
+
+.kv-team-activity__row {
+  display: flex;
+  gap: var(--kv-space-2);
+  align-items: center;
+  flex-wrap: wrap;
+  padding: var(--kv-space-2);
+  border-bottom: 1px solid var(--kv-border);
+}
+
+.kv-team-task {
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+}

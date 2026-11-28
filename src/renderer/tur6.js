@@ -525,10 +525,10 @@ async function settingsRemoteAction(kind) {
 
 const DESK_TITLE = 'Lider masası';
 
-async function deskEnsure() {
+async function deskEnsure(createNew = false) {
   if (t6.desk.id) return t6.desk.id;
-  const listRes = await ctx.call(ctx.KV.chat.list);
-  const list = (listRes.ok && listRes.data && listRes.data.conversations) || [];
+  const listRes = createNew ? null : await ctx.call(ctx.KV?.chat?.list);
+  const list = (listRes?.ok && listRes.data && listRes.data.conversations) || [];
   const found = list.find((c) => c.role === 'LDR' && String(c.title || '').trim() === DESK_TITLE);
   if (found) {
     await deskOpen(found.id);
@@ -537,7 +537,7 @@ async function deskEnsure() {
   const providers = (ctx.store.providers.providers || []);
   const firstModel = providers.flatMap((p) => (p.models || []).map((m) => `${p.id}::${m}`))[0];
   const [providerId, model] = firstModel ? firstModel.split('::') : [undefined, undefined];
-  const res = await ctx.call(ctx.KV.chat.create, {
+  const res = await ctx.call(ctx.KV?.chat?.create, {
     role: 'LDR',
     title: DESK_TITLE,
     model,
@@ -556,7 +556,7 @@ async function deskEnsure() {
 }
 
 async function deskOpen(id) {
-  const res = await ctx.call(ctx.KV.chat.get, { id });
+  const res = await ctx.call(ctx.KV?.chat?.get, { id });
   if (!res.ok) { deskRenderError('Konuşma açılamadı.'); return; }
   t6.desk.id = res.data.conversation.id;
   t6.desk.model = res.data.conversation.model || '';
@@ -640,12 +640,12 @@ async function deskSend() {
   const text = input ? input.value.trim() : '';
   if (!text) return;
   if (t6.desk.busy) return;
+  t6.desk.busy = true;
   const id = await deskEnsure();
-  if (!id) return;
-  if (input) input.value = '';
+  if (!id) { t6.desk.busy = false; return; }
+  if (input && input.value.trim() === text) input.value = '';
 
   t6.desk.messages.push({ role: 'user', text, at: new Date().toISOString() });
-  t6.desk.busy = true;
   t6.desk.startedAt = Date.now();
   renderDesk();
 
@@ -667,6 +667,7 @@ async function deskSend() {
     const message = code === 'E_SECRET_MISSING'
       ? 'Model anahtarı yok — Sağlayıcılar ekranından bir anahtar ekleyin.'
       : (res.error && res.error.message) || code || 'gönderilemedi';
+    if (input && !input.value) input.value = text;
     t6.desk.messages.push({ role: 'assistant', text: `Gönderilemedi: ${message}`, at: new Date().toISOString(), kind: 'error' });
     renderDesk();
   }
@@ -883,8 +884,17 @@ export async function tur6Action(action) {
     }
     case 'summary-to-memory': await summaryToMemory(); return true;
     case 'desk-new': {
-      t6.desk = { id: null, messages: [], busy: false, model: '' };
-      await deskEnsure();
+      if (t6.desk.busy) return true;
+      const previous = t6.desk;
+      t6.desk = { id: null, messages: [], busy: true, model: '' };
+      if (await deskEnsure(true)) {
+        t6.desk.busy = false;
+        renderDesk();
+      } else {
+        t6.desk = previous;
+        renderDesk();
+        ctx.toast('Yeni lider konuşması açılamadı.', 'warning');
+      }
       return true;
     }
     case 'desk-send': await deskSend(); return true;

@@ -6,6 +6,8 @@
 import { initTur6, tur6Screen, tur6Action, tur6Boot, autoCapture, tur6DeskRefresh, tur6VotionSay, tur6VotionPrefill } from './tur6.js';
 import { initTur8, tur8Screen, tur8Action, tur8Boot, tur8FilesLocalAccessChanged } from './tur8.js';
 
+import { addTeamActivity, teamTasks } from './team-activity.js';
+
 const KV = window.keyvotion || null;
 const CACHE_KEY = 'kv.cache.v2';
 const PREFS_KEY = 'kv.prefs.v2';
@@ -139,6 +141,7 @@ const store = {
   filters: { team: '', teamState: 'all', board: '', model: '', modelTab: 'pool', reportRole: '', reportStatus: '', reportTask: '', command: '' },
   notifications: [],
   eventCount: 0,
+  teamActivity: [],
   lastSync: null,
   prefs: {
     theme: 'dark', density: 'comfortable', notifyReports: true, notifyErrors: true,
@@ -597,6 +600,7 @@ function go(screen) {
   if (helpLink) helpLink.dataset.guideLink = screen;
   const main = $('[data-main]');
   if (main && changed) main.scrollTop = 0;
+  if (screen === 'team') renderTeam();
   if (screen === 'chat') renderChat();
   if (screen === 'command') renderCommand();
   if (screen === 'board') renderBoard();
@@ -904,9 +908,43 @@ function sessionCards() {
   });
 }
 
+function renderTeamActivity() {
+  const list = $('[data-team-activity]');
+  const filter = $('[data-team-activity-filter]');
+  if (!list || !filter) return;
+  const selected = filter.value;
+  const sessions = new Map(store.sessions.filter((row) => row.sessionId).map((row) => [row.sessionId, row]));
+  const options = [...sessions.values()].map((row) => [row.sessionId, row.role || row.code]);
+  const signature = JSON.stringify(options);
+  if (filter.dataset.options !== signature) {
+    filter.replaceChildren(el('option', { value: '', text: 'Tüm ekip' }),
+      ...options.map(([value, text]) => el('option', { value, text })));
+    filter.value = sessions.has(selected) ? selected : '';
+    filter.dataset.options = signature;
+  }
+  const rows = filter.value ? store.teamActivity.filter((row) => row.sessionId === filter.value) : store.teamActivity;
+  list.replaceChildren();
+  if (!rows.length) {
+    list.append(el('li', { class: 'kv-empty', text: 'Bu seçim için henüz canlı olay yok.' }));
+    return;
+  }
+  for (const row of rows.slice(0, 20)) {
+    const session = sessions.get(row.sessionId);
+    const name = session?.role || session?.code || (row.sessionId ? 'Kadro dışı seans' : 'Ekip');
+    const button = session ? el('button', { class: 'kv-button kv-button--ghost kv-button--sm',
+      type: 'button', text: 'Akışı aç', 'data-action': 'card-flow', 'data-session': row.sessionId }) : null;
+    list.append(el('li', { class: 'kv-team-activity__row' }, [
+      el('span', { text: `${name} · ${row.label}` }),
+      el('span', { class: 'kv-muted', text: hhmm(new Date(row.at)) }),
+      button
+    ]));
+  }
+}
+
 function renderTeam() {
   const root = $('[data-team-grid]');
   if (!root) return;
+  renderTeamActivity();
   const cards = sessionCards();
   root.replaceChildren();
 
@@ -936,7 +974,18 @@ function renderTeam() {
       el('span', { text: s.updatedAt ? hhmm(new Date(s.updatedAt)) : '—' }),
     ]);
 
-    const task = el('p', { class: 'kv-card__task', text: s.task || 'Bekleyen iş yok.' });
+    const work = teamTasks(store.board.rows, s.code);
+    const task = el('div', { class: 'kv-card__task' }, [
+      el('p', { text: s.task || 'Seansın bildirdiği görev yok.' }),
+      ...work.slice(0, 3).map((row) => el('button', {
+        class: 'kv-button kv-button--ghost kv-button--sm kv-team-task',
+        type: 'button', text: `${row.status === 'bloke' ? 'Engel' : 'Devam ediyor'} · ${row.id} · ${row.title}`,
+        onclick: () => navOpen(navEntryOf('task', row.id))
+      })),
+      work.length > 3 ? el('button', { class: 'kv-button kv-button--ghost kv-button--sm',
+        type: 'button', text: `${work.length - 3} görev daha · Panoyu aç`,
+        onclick: () => navOpen(navEntryOf('screen', 'board')) }) : null
+    ]);
 
     const actions = el('div', { class: 'kv-card__actions' }, [
       el('button', { class: 'kv-button kv-button--ghost', type: 'button', 'data-action': 'card-command', 'data-session': s.sessionId || '', text: '⌘ Komut' }),
@@ -2229,6 +2278,7 @@ async function refreshBoard() {
   }
   /* Uydurma satır YOK: okunamıyorsa pano boş kalır, nedeni yazılır. */
   renderBoard();
+  if (store.screen === 'team') renderTeam();
 }
 
 async function refreshModels() {
@@ -2605,6 +2655,11 @@ function bindEvents() {
 
       const kind = evt.kind || 'patch';
       const name = evt.type || '';
+      const activity = addTeamActivity(store.teamActivity, evt);
+      if (activity !== store.teamActivity) {
+        store.teamActivity = activity;
+        if (store.screen === 'team') renderTeamActivity();
+      }
 
       /* 1) Bağlantı durumu: yerel göstergeyi gerçek duruma çek. */
       if (kind === 'connection' || name === 'connection.state') {
@@ -2652,6 +2707,7 @@ function bindEvents() {
           store.board.nextID = evt.payload.nextID || store.board.nextID;
           store.board.phases = evt.payload.phases || store.board.phases;
           if (store.screen === 'board') renderBoard();
+          if (store.screen === 'team') renderTeam();
         } else {
           refreshBoard();
         }
@@ -2815,6 +2871,18 @@ async function dispatchAction(action, actionEl, sessionId) {
     case 'team-add': if (!store.models.pool.length) refreshModels(); openTeamAdd(); break;
   case 'team-auto': if (!store.models.pool.length) refreshModels(); openTeamAuto(); break;
     case 'set-leader': openSetLeader(sessionId, actionEl.dataset.roleCode); break;
+    case 'team-show-roster': revealDetail($('[data-team-grid]')); break;
+    case 'desk-status':
+    case 'desk-blockers': {
+      const input = $('[data-field="desk-text"]');
+      if (input) {
+        if (!input.value.trim()) input.value = action === 'desk-status'
+          ? 'Ekibin son durumunu özetle. Kim hangi görevde ve sıradaki adım ne?'
+          : 'Bloke olan işleri, nedenlerini ve benden beklenen kararları özetle.';
+        input.focus();
+      }
+      break;
+    }
     case 'team-refresh': await refreshTeam(); await refreshBoard(); toast('Yenilendi', 'success'); break;
     case 'card-command': openCommandFor(sessionId); break;
     case 'card-model': openModelDialog(sessionId); break;
@@ -3016,6 +3084,7 @@ function bindControls() {
   });
 
   /* filtreler */
+  $('[data-team-activity-filter]')?.addEventListener('change', renderTeamActivity);
   const teamFilter = $('[data-field="team-filter"]');
   if (teamFilter) teamFilter.addEventListener('input', () => { store.filters.team = teamFilter.value; renderTeam(); });
 
@@ -4026,6 +4095,7 @@ function openProjectNew() {
 async function switchProject(id) {
   const res = await call(KV && KV.project && KV.project.switch, { id, confirmToken: makeConfirmToken() });
   if (res.ok) {
+    store.teamActivity = [];
     notify('Proje değişti', id, 'success');
     await refreshProjects();
     await refreshTeam(); await refreshBoard(); await refreshMemory(); await refreshReports();

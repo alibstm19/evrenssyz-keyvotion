@@ -1841,7 +1841,7 @@ function startEvents(runtime) {
         type: event.type,
         seq: event.seq,
         at: event.at,
-        data: pickEventRef(event.payload)
+        data: pickEventRef(event.data)
       });
       if (/^session\./.test(event.type) || event.type === 'unknown') {
         scheduleResync(runtime, 2000);

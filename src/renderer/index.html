@@ -265,6 +265,51 @@
 
     <!-- ---------- EKİP ---------- -->
     <section data-screen="team" aria-labelledby="screen-title">
+      <!-- ---------- LİDER MASASI (T6-5): liderle konuş + ekibi izle ---------- -->
+      <div class="kv-desk">
+        <section class="kv-panel kv-desk__main">
+          <div class="kv-panel__header">
+            <h2 class="kv-section-title" id="team-leader-title">Lider ile konuş</h2>
+            <div class="kv-row">
+              <span class="kv-muted kv-mono" data-field="desk-model">—</span>
+              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="desk-new" title="Yeni konuşma">＋</button>
+            </div>
+          </div>
+          <div class="kv-desk__stream" data-desk-stream>
+            <p class="kv-empty">Lider’e bir şey yazın: durum sorun, görev dağıtın, karar isteyin.</p>
+          </div>
+          <div class="kv-row kv-team-shortcuts">
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="desk-status">Durumu sor</button>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="desk-blockers">Engelleri sor</button>
+            <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="team-show-roster">Ekibi göster</button>
+          </div>
+          <form class="kv-desk__composer" data-desk-form>
+            <textarea class="kv-input kv-input--area" rows="2" data-field="desk-text"
+                      placeholder="Lider’e yaz…  (Ctrl+Enter = gönder)" aria-label="Lider mesajı"></textarea>
+            <button class="kv-button" type="submit" data-action="desk-send">Gönder</button>
+          </form>
+        </section>
+
+        <aside class="kv-panel kv-desk__side">
+          <div class="kv-panel__header">
+            <span>Ekip nabzı</span>
+            <span class="kv-muted" data-field="desk-roster-count">0</span>
+          </div>
+          <div class="kv-desk__roster" data-desk-roster>
+            <p class="kv-empty">Ekip listesi boş.</p>
+          </div>
+          <div class="kv-panel__header">
+            <span>Son eylemler</span>
+            <label class="kv-sr-only" for="team-activity-filter">Eylemleri ajana göre filtrele</label>
+            <select id="team-activity-filter" class="kv-input kv-input--sm" data-team-activity-filter>
+              <option value="">Tüm ekip</option>
+            </select>
+          </div>
+          <ul class="kv-team-activity" data-team-activity aria-label="Bu oturumda görülen eylemler">
+            <li class="kv-empty">Bu oturumda henüz canlı olay yok.</li>
+          </ul>
+        </aside>
+      </div>
       <div class="kv-toolbar">
         <div class="kv-toolbar__group">
           <button class="kv-button" type="button" data-action="team-add">＋ Ajan ekle</button>
@@ -291,7 +336,7 @@
         <div class="kv-stat"><span class="kv-stat__value" data-stat="reports">0</span><span class="kv-stat__label">Rapor</span></div>
       </div>
 
-      <div class="kv-grid" data-team-grid></div>
+      <div class="kv-grid" data-team-grid tabindex="-1" aria-label="Ekip kartları"></div>
 
       <h2 class="kv-section-title" data-extra-title hidden>Kadro dışı seanslar</h2>
       <div class="kv-grid kv-grid--extra" data-team-extra data-unassigned hidden></div>
@@ -308,37 +353,6 @@
         <div class="kv-panel__body kv-thread" data-embed></div>
       </section>
 
-      <!-- ---------- LİDER MASASI (T6-5): liderle konuş + ekibi izle ---------- -->
-      <h2 class="kv-section-title">Lider masası</h2>
-      <div class="kv-desk">
-        <section class="kv-panel kv-desk__main">
-          <div class="kv-panel__header">
-            <span>Lider ile konuşma</span>
-            <div class="kv-row">
-              <span class="kv-muted kv-mono" data-field="desk-model">—</span>
-              <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="desk-new" title="Yeni konuşma">＋</button>
-            </div>
-          </div>
-          <div class="kv-desk__stream" data-desk-stream>
-            <p class="kv-empty">Lider’e bir şey yazın: durum sorun, görev dağıtın, karar isteyin.</p>
-          </div>
-          <form class="kv-desk__composer" data-desk-form>
-            <textarea class="kv-input kv-input--area" rows="2" data-field="desk-text"
-                      placeholder="Lider’e yaz…  (Ctrl+Enter = gönder)" aria-label="Lider mesajı"></textarea>
-            <button class="kv-button" type="submit" data-action="desk-send">Gönder</button>
-          </form>
-        </section>
-
-        <aside class="kv-panel kv-desk__side">
-          <div class="kv-panel__header">
-            <span>Ekip nabzı</span>
-            <span class="kv-muted" data-field="desk-roster-count">0</span>
-          </div>
-          <div class="kv-desk__roster" data-desk-roster>
-            <p class="kv-empty">Ekip listesi boş.</p>
-          </div>
-        </aside>
-      </div>
     </section>
 
     <!-- ---------- KOMUT MERKEZİ ---------- -->
