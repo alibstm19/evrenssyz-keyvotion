@@ -62,11 +62,13 @@ async function harness(t) {
   const svc = createRemoteService({
     baseDir: dir,
     chat: {
-      list: () => ({ ok: true, data: { conversations: [{ id: 'c1', title: 'Konuşma' }] } }),
-      get: () => ({
+      list: () => ({ ok: true, data: { conversations: [
+        { id: 'c1', title: 'Konuşma' }, { id: 'c2', title: 'İkinci konuşma' }
+      ] } }),
+      get: ({ id }) => ({
         ok: true,
         data: {
-          conversation: { id: 'c1', title: 'Konuşma', model: 'test/model', role: 'LDR' },
+          conversation: { id, title: 'Konuşma', model: 'test/model', role: 'LDR' },
           messages: [{ id: 'm1', role: 'user', text: 'merhaba' }]
         }
       }),
@@ -289,4 +291,13 @@ test('server/remote 10: start idempotent, stop portu kapatir, config 0600 yazili
 
   const afterStop = await request(port, { path: '/api/health' });
   assert.equal(afterStop.status, 0, 'stop sonrası port hâlâ yanıt veriyor');
+});
+
+test('server/remote: authenticated conversation selection opens the requested thread', async (t) => {
+  const { port } = await harness(t);
+  const response = await request(port, {
+    path: '/api/state?conversation=c2', headers: { 'x-kv-token': TOKEN }
+  });
+  assert.equal(response.status, 200);
+  assert.equal(JSON.parse(response.text).data.conversation.id, 'c2');
 });

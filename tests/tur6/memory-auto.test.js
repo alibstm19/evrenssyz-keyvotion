@@ -148,3 +148,12 @@ test('tur6/memory 9: graph koordinatları iki çağrıda aynı (deterministik)',
     assert.equal(node.y, other.y, `y deterministik değil: ${node.id}`);
   }
 });
+
+test('tur6/memory: Turkish search and kind filter retain the unfiltered total', (t) => {
+  const { service } = makeService('memory-filters', t);
+  assert.ok(service.write({ text: 'İstanbul dosyası', scope: 'project', kind: 'decision' }).ok);
+  assert.ok(service.write({ text: 'İstanbul kılavuzu', scope: 'project', kind: 'fact' }).ok);
+  const result = service.read({ q: 'istanbul', kind: 'decision', sort: 'recent' });
+  assert.equal(result.data.total, 2);
+  assert.deepEqual(result.data.entries.map((entry) => entry.text), ['İstanbul dosyası']);
+});

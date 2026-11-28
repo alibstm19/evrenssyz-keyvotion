@@ -68,7 +68,7 @@ test('empty 3: veri boşlukları ekleme penceresi açar', () => {
   for (const [anchor, label, fn] of cases) {
     const at = app.indexOf(anchor);
     assert.ok(at > 0, `${anchor} yok`);
-    const block = app.slice(at - 200, at + 400);
+    const block = app.slice(at - 200, at + 900);
     assert.match(block, new RegExp(`emptyState\\([^)]*'${label}', ${fn}\\)|emptyState\\([^)]*, '${label}', ${fn}`), `${anchor} eylem düğmesi (${label}) yok`);
   }
 });

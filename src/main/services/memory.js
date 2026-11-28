@@ -89,20 +89,20 @@ function createMemoryService(options) {
     return String(b.at || '').localeCompare(String(a.at || ''));
   }
 
-  function filtered(query) {
+  function filtered(query, source = all()) {
     const q = query && typeof query === 'object' ? query : {};
-    let rows = all();
+    let rows = source.slice();
     if (q.scope) rows = rows.filter((e) => e.scope === q.scope);
     if (q.kind) rows = rows.filter((e) => e.kind === q.kind);
     if (q.role) rows = rows.filter((e) => String(e.role || '').toUpperCase() === String(q.role).toUpperCase());
-    const needle = typeof q.q === 'string' ? q.q.trim().toLowerCase() : '';
+    const needle = typeof q.q === 'string' ? q.q.trim().toLocaleLowerCase('tr') : '';
     if (needle) {
       rows = rows.filter((e) => {
-        const hay = `${e.text} ${(e.tags || []).join(' ')}`.toLowerCase();
+        const hay = `${e.text} ${(e.tags || []).join(' ')}`.toLocaleLowerCase('tr');
         return hay.includes(needle);
       });
     }
-    rows.sort(rank);
+    rows.sort(q.sort === 'recent' ? (a, b) => String(b.at).localeCompare(String(a.at)) : rank);
     const limit = Number.isInteger(q.limit) && q.limit > 0 ? Math.min(q.limit, 500) : 200;
     return rows.slice(0, limit);
   }
@@ -128,10 +128,11 @@ function createMemoryService(options) {
   }
 
   function read(query) {
-    const rows = filtered(query);
+    const source = all();
+    const rows = filtered(query, source);
     return ok({
       entries: rows,
-      total: all().length,
+      total: source.length,
       dir: dir(),
       scopes: SCOPES.slice(),
       kinds: KINDS.slice()
@@ -317,8 +318,9 @@ function createMemoryService(options) {
    */
   function graph(input) {
     const p = input && typeof input === 'object' ? input : {};
-    const rows = filtered({ limit: Number.isInteger(p.limit) ? p.limit : 160 });
-    const total = all().length;
+    const source = all();
+    const rows = filtered({ limit: Number.isInteger(p.limit) ? p.limit : 160 }, source);
+    const total = source.length;
 
     function hash(str) {
       let h = 2166136261;

@@ -157,7 +157,7 @@ const store = {
     id: null, conversation: null, messages: [], list: [],
     role: 'LDR', model: '', providerId: '', busy: false, q: '', sort: 'recent'
   },
-  memory: { entries: [], flow: null, selected: null, scope: '', q: '', dir: '' },
+  memory: { entries: [], flow: null, selected: null, scope: '', kind: '', sort: '', q: '', dir: '', total: 0, request: 0, error: '' },
   projects: { projects: [], activeId: null, activeDir: null },
   providers: { providers: [], secretsEncrypted: true },
   /* T-153: ilk-kurulum akışı tamamlandı mı? settings.get'ten gelir. */
@@ -573,6 +573,10 @@ function go(screen) {
   /* Tarayıcı görünümü main prosesde yaşar: ekrandan çıkarken kapat. */
   if (store.screen === 'browser' && screen !== 'browser') closeBrowser();
   const changed = store.screen !== screen;
+  if (changed && store.screen === 'remote') {
+    remoteTokenVisible = false;
+    renderRemote();
+  }
   store.screen = screen;
   for (const s of $$('[data-screen]')) {
     s.hidden = s.dataset.screen !== screen;
@@ -3760,16 +3764,19 @@ function renderMemory() {
   }
 
   const total = $('[data-field="memory-total"]');
-  if (total) total.textContent = `${store.memory.entries.length} kayıt`;
+  if (total) total.textContent = `${store.memory.total} kayıt`;
   const count = $('[data-field="memory-count"]');
-  if (count) count.textContent = String(store.memory.entries.length);
+  if (count) count.textContent = `${store.memory.entries.length} gösteriliyor / ${store.memory.total} toplam`;
   const pathEl = $('[data-field="memory-path"]');
   if (pathEl) pathEl.textContent = store.memory.dir || '—';
 
   const list = $('[data-memory-list]');
   if (list) {
     list.replaceChildren();
-    if (!store.memory.entries.length) {
+    if (store.memory.error) list.append(emptyState(store.memory.error, 'Tekrar dene', refreshMemory));
+    else if (!store.memory.entries.length && (store.memory.q || store.memory.kind || store.memory.scope)) {
+      list.append(emptyState('Filtrelerle eşleşen kayıt yok.', 'Filtreleri temizle', clearMemoryFilters));
+    } else if (!store.memory.entries.length) {
       list.append(emptyState('Hafıza boş. “Hatırlanacak ekle” ile ilk tercihi yazın.', 'Hatırlanacak ekle', openMemoryAdd));
     }
     for (const e of store.memory.entries) {
@@ -3819,22 +3826,43 @@ function renderMemoryDetail() {
     el('p', { class: 'kv-muted kv-mono', text: `${entry.at} · rol ${entry.role || '—'} · kaynak ${entry.source || '—'}` }),
     (entry.tags || []).length ? el('div', { class: 'kv-row' }, entry.tags.map((t) => badge(t, 'info'))) : null,
     el('div', { class: 'kv-row' }, [
+      el('button', { class: 'kv-button kv-button--ghost kv-button--sm', type: 'button',
+        text: 'Kaydı kopyala', onclick: () => copyText(entry.text, 'Hafıza kaydı kopyalandı.') }),
       el('button', { class: 'kv-button kv-button--ghost kv-button--sm', type: 'button', 'data-action': 'memory-copy-context', text: 'Bağlam bloğunu göster' })
     ])
   ]));
 }
 
+function clearMemoryFilters() {
+  Object.assign(store.memory, { scope: '', kind: '', sort: '', q: '' });
+  for (const name of ['memory-filter', 'memory-kind', 'memory-sort']) {
+    const control = $(`[data-field="${name}"]`);
+    if (control) control.value = '';
+  }
+  for (const button of $$('[data-memory-scope]')) {
+    button.setAttribute('aria-pressed', String(!button.dataset.memoryScope));
+  }
+  return refreshMemory();
+}
+
 async function refreshMemory() {
+  const state = store.memory;
+  const request = ++state.request;
   const res = await call(KV && KV.memory && KV.memory.read, {
-    scope: store.memory.scope || undefined,
-    q: store.memory.q || undefined
+    scope: state.scope || undefined,
+    kind: state.kind || undefined,
+    sort: state.sort || undefined,
+    q: state.q || undefined
   });
+  if (request !== state.request) return;
   if (res.ok && res.data) {
-    store.memory.entries = res.data.entries || [];
-    store.memory.flow = res.data.flow || store.memory.flow;
-    store.memory.dir = res.data.dir || '';
+    state.entries = res.data.entries || [];
+    state.flow = res.data.flow || state.flow;
+    state.dir = res.data.dir || '';
+    state.total = res.data.total ?? state.entries.length;
+    state.error = '';
   } else {
-    store.memory.entries = [];
+    state.error = 'Hafıza okunamadı. Proje klasörünü kontrol edin.';
   }
   renderMemory();
 }
@@ -3872,10 +3900,12 @@ function openMemoryAdd() {
       el('button', { class: 'kv-button kv-button--ghost', type: 'button', text: 'Vazgeç', onclick: closeModal }),
       el('button', {
         class: 'kv-button', type: 'button', text: 'Hatırla',
-        onclick: async () => {
+        onclick: async (event) => {
+          const button = event.currentTarget;
           const value = text.value.trim();
           if (!value) { toast('Metin boş.', 'warning'); return; }
-          closeModal();
+          if (button.disabled) return;
+          button.disabled = true;
           const res = await call(KV && KV.memory && KV.memory.write, {
             text: value,
             scope: scope.value,
@@ -3884,7 +3914,9 @@ function openMemoryAdd() {
             tags: tags.value.split(',').map((t) => t.trim()).filter(Boolean),
             confirmToken: makeConfirmToken()
           });
+          button.disabled = false;
           if (res.ok) {
+            if (button.isConnected) closeModal();
             notify('Hafızaya eklendi', `${scopeLabel(scope.value)} · ${kindLabel(kind.value)}`, 'success');
             await refreshMemory();
             await refreshChatMemoryHint();
@@ -4396,6 +4428,8 @@ function scheduleBrowserSync() {
 }
 
 /* --------------------------- UZAKTAN ERİŞİM (T5-4) --------------------------- */
+let remoteTokenVisible = false;
+
 async function refreshRemote() {
   const res = await call(KV && KV.remote && KV.remote.state);
   if (res.ok && res.data) {
@@ -4412,11 +4446,21 @@ function renderRemote() {
     badge.dataset.tone = r.running ? 'success' : 'idle';
   }
   const pair = $('[data-field="remote-pair"]');
-  if (pair) pair.hidden = false;
+  if (pair) pair.hidden = !r.running;
   const tokenEl = $('[data-field="remote-token"]');
-  if (tokenEl) tokenEl.textContent = r.token || '—';
+  if (tokenEl) tokenEl.textContent = (remoteTokenVisible ? r.token : r.tokenMask) || '—';
+  const reveal = $('[data-action="remote-reveal-token"]');
+  if (reveal) {
+    reveal.textContent = remoteTokenVisible ? 'Gizle' : 'Göster';
+    reveal.setAttribute('aria-pressed', String(remoteTokenVisible));
+  }
+  for (const action of ['remote-start', 'remote-stop', 'remote-rotate', 'remote-copy-url', 'remote-copy-token']) {
+    const button = $(`[data-action="${action}"]`);
+    if (button) button.disabled = action === 'remote-start' ? Boolean(r.running)
+      : !r.running || (action === 'remote-copy-url' && !r.urls?.length);
+  }
   const urlEl = $('[data-field="remote-url"]');
-  if (urlEl) urlEl.textContent = r.pairUrl || (r.urls && r.urls[0]) || '—';
+  if (urlEl) urlEl.textContent = r.urls?.[0] || 'Adres bulunamadı';
   const running = $('[data-field="remote-running"]');
   if (running) running.textContent = r.running ? 'çalışıyor' : 'kapalı';
   const portEl = $('[data-field="remote-port"]');
@@ -4429,7 +4473,8 @@ function renderRemote() {
   const note = $('[data-field="remote-note"]');
   if (note) {
     note.textContent = r.running
-      ? 'Telefon aynı ağdaysa bağlantıyı açabilir.'
+      ? (r.urls?.length ? 'Adresi telefonda açın. Kod sorulursa Göster düğmesine basın.'
+        : 'Ağ adresi bulunamadı. Wi-Fi bağlantısını kontrol edip durumu yenileyin.')
       : (r.lastError ? `son hata: ${r.lastError}` : 'Başlatmadan telefon bağlanamaz.');
   }
 
@@ -4458,7 +4503,7 @@ async function remoteStart() {
   if (res.ok) {
     store.remote = res.data;
     renderRemote();
-    notify('Uzaktan erişim açıldı', store.remote.pairUrl || '', 'success');
+    notify('Uzaktan erişim açıldı', 'Eşleşme bilgileri Uzaktan Erişim ekranında.', 'success');
   } else {
     notify('Açılamadı', (res.error && res.error.message) || 'hata', 'danger');
   }
@@ -4466,7 +4511,7 @@ async function remoteStart() {
 
 async function remoteStop() {
   const res = await call(KV && KV.remote && KV.remote.stop, { confirmToken: makeConfirmToken() });
-  if (res.ok) { store.remote = res.data; renderRemote(); notify('Uzaktan erişim kapandı', 'port serbest', 'info'); }
+  if (res.ok) { remoteTokenVisible = false; store.remote = res.data; renderRemote(); notify('Uzaktan erişim kapandı', 'port serbest', 'info'); }
   else notify('Kapatılamadı', (res.error && res.error.message) || 'hata', 'danger');
 }
 
@@ -4931,6 +4976,7 @@ function bindTur4() {
       case 'chat-preview': chatPreview(); break;
       case 'memory-add': openMemoryAdd(); break;
       case 'memory-refresh': refreshMemory(); break;
+      case 'memory-clear-filters': clearMemoryFilters(); break;
       case 'memory-copy-context': showMemoryContext(); break;
       case 'project-new': openProjectNew(); break;
       case 'project-refresh': refreshProjects(); break;
@@ -4953,7 +4999,9 @@ function bindTur4() {
       case 'remote-stop': remoteStop(); break;
       case 'remote-rotate': remoteRotate(); break;
       case 'remote-copy-token': copyText(store.remote.token || '', 'Eşleşme kodu kopyalandı.'); break;
-      case 'remote-copy-url': copyText(store.remote.pairUrl || '', 'Bağlantı kopyalandı.'); break;
+      case 'remote-copy-url': copyText(store.remote.urls?.[0] || '', 'Telefon adresi kopyalandı.'); break;
+      case 'remote-refresh': refreshRemote(); break;
+      case 'remote-reveal-token': remoteTokenVisible = !remoteTokenVisible; renderRemote(); break;
       default: break;
     }
   }, true);
@@ -5028,6 +5076,13 @@ function bindTur4() {
     });
   }
 
+  for (const key of ['kind', 'sort']) {
+    const select = $(`[data-field="memory-${key}"]`);
+    select?.addEventListener('change', () => {
+      store.memory[key] = select.value;
+      refreshMemory();
+    });
+  }
   const memFilter = $('[data-field="memory-filter"]');
   if (memFilter) {
     let t = null;

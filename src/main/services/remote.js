@@ -221,11 +221,11 @@ function createRemoteService(options) {
     return typeof header === 'string' && tokenEquals(header, token);
   }
 
-  function snapshot() {
+  function snapshot(conversationId) {
     /* Sohbet: aktif konusmanin son hali. */
     const listRes = chat.list();
     const conversations = (listRes.ok && listRes.data.conversations) || [];
-    const first = conversations[0] || null;
+    const first = conversations.find((item) => item.id === conversationId) || conversations[0] || null;
     let messages = [];
     let model = '';
     let role = 'LDR';
@@ -300,7 +300,7 @@ function createRemoteService(options) {
     }
 
     if (req.method === 'GET' && url.pathname === '/api/state') {
-      json(res, 200, { ok: true, data: snapshot() });
+      json(res, 200, { ok: true, data: snapshot(url.searchParams.get('conversation')) });
       return;
     }
 

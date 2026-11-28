@@ -202,6 +202,10 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
 }
 .guide-tile b { display: block; margin-bottom: 4px; color: var(--acc-light); }
 .guide-tile p { margin: 0; font-size: 13.5px; color: var(--muted); }
+.conversation-bar { display:flex; gap:8px; position:sticky; top:0; z-index:1; padding:8px 0; background:var(--surface); }
+.conversation-bar select { flex:1; min-width:0; color:inherit; background:var(--surface); }
+.conversation-bar select, .conversation-bar button, #unpairBtn { min-height:44px; padding:0 10px; border:1px solid var(--line); border-radius:8px; }
+.chat-status { color:var(--muted); font-size:0.9rem; padding:4px 0; }
 </style>
 </head>
 <body>
@@ -209,13 +213,13 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
 <header>
   <div class="logo">K</div>
   <div class="brand"><b id="brand-title">Keyvotion</b><span id="brand-sub">BAĞLANIYOR</span></div>
-  <div class="conn-indicator">
+  <div class="conn-indicator" role="status" aria-live="polite">
     <i class="dot" id="dot"></i>
     <span id="conn-text">kontrol ediliyor...</span>
   </div>
 </header>
 
-<nav class="nav-bar" id="navBar">
+<nav class="nav-bar" id="navBar" aria-label="Telefon ekranları">
   <button class="nav-tab active" data-tab="chat">Sohbet</button>
   <button class="nav-tab" data-tab="team">Ekip</button>
   <button class="nav-tab" data-tab="board">Pano</button>
@@ -226,6 +230,11 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
 <main id="mainArea">
   <!-- Views -->
   <div id="view-chat" class="view active">
+    <div class="conversation-bar">
+      <select id="conversationPicker" aria-label="Açık konuşma"></select>
+      <button id="newConversation" type="button">Yeni sohbet</button>
+    </div>
+    <p id="chatStatus" class="chat-status" role="status" aria-live="polite" hidden></p>
     <div id="chat-container" style="display:flex; flex-direction:column; gap:12px;"></div>
   </div>
   <div id="view-team" class="view">
@@ -240,6 +249,7 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
   </div>
   <div id="view-guide" class="view">
     <div id="guide-content"></div>
+    <button id="unpairBtn" type="button">Bu telefondaki eşleşmeyi kaldır</button>
   </div>
 
   <!-- Bottom Composer (Global for Chat) -->
@@ -254,9 +264,9 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
   <div class="login-box">
     <h1>Uzaktan Erişim</h1>
     <p>Bilgisayarınızdaki <b>Ayarlar → Uzaktan erişim</b> ekranındaki 10 haneli kodu girin.</p>
-    <input id="tokenIn" inputmode="text" autocapitalize="characters" maxlength="10" placeholder="XXXX XXXXXX">
+    <input id="tokenIn" aria-label="Eşleşme kodu" inputmode="text" autocomplete="off" autocapitalize="characters" maxlength="32" placeholder="Eşleşme kodu">
     <button id="pairBtn">Bağlan</button>
-    <div class="error-msg" id="loginErr"></div>
+    <div class="error-msg" id="loginErr" role="status"></div>
   </div>
 </div>
 
@@ -282,7 +292,11 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
     conv: null,
     caches: { team: [], memory: [], board: [] },
     isConnected: false,
-    failures: 0
+    failures: 0,
+    syncing: false,
+    conversationId: '',
+    drafts: new Map(),
+    previousMessages: ''
   };
 
   // DOM HELPERS
@@ -298,6 +312,8 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
       res = await fetch(path, {
         method: opts.method || 'GET',
         headers,
+        cache: 'no-store',
+        signal: AbortSignal.timeout(opts.method === 'POST' ? 90000 : 10000),
         body: opts.body ? JSON.stringify(opts.body) : null
       });
     } catch {
@@ -342,11 +358,17 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
     $('dot').className = 'dot' + (on ? ' on' : '');
     $('conn-text').textContent = text;
     $('brand-sub').textContent = text.toUpperCase();
+    updateChatControls();
   }
 
   function switchTab(tabId) {
     state.activeTab = tabId;
-    $$('.nav-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+    $$('.nav-tab').forEach(b => {
+      const active = b.dataset.tab === tabId;
+      b.classList.toggle('active', active);
+      if (active) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
     $$('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + tabId));
     $('globalComposer').style.display = (tabId === 'chat') ? 'flex' : 'none';
     
@@ -366,12 +388,17 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
       return;
     }
     const msgs = state.conv.messages;
+    const signature = JSON.stringify([state.conv.id, msgs]);
+    if (state.previousMessages === signature) return;
+    state.previousMessages = signature;
+    const scroll = $('mainArea');
+    const atBottom = scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight < 100;
     container.innerHTML = msgs.map(m => {
       const cls = m.role === 'user' ? 'user' : (m.role === 'assistant' ? 'assistant' : 'sys');
       const meta = m.meta ? `<div class="bubble-meta">${esc(m.meta.model || '')}${m.meta.latency ? ' · ' + m.meta.latency + 'ms' : ''}</div>` : '';
       return `<div class="bubble ${cls}">${esc(m.content)}${meta}</div>`;
     }).join('');
-    container.scrollTop = container.scrollHeight;
+    if (atBottom) scroll.scrollTop = scroll.scrollHeight;
   }
 
   function renderTeam() {
@@ -467,14 +494,52 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
     `).join('');
   }
 
-  async function syncState() {
-    if (state.busy) return false;
+  function updateChatControls() {
+    const disabled = !state.isConnected || state.busy || state.syncing;
+    $('conversationPicker').disabled = disabled;
+    $('newConversation').disabled = disabled;
+    $('sendBtn').disabled = disabled || !$('msgInput').value.trim();
+  }
+
+  function chatStatus(text) {
+    $('chatStatus').textContent = text;
+    $('chatStatus').hidden = !text;
+  }
+
+  function rememberDraft() {
+    const text = $('msgInput').value;
+    if (text) state.drafts.set(state.conversationId, text);
+    else state.drafts.delete(state.conversationId);
+  }
+
+  function updateConversations(data) {
+    const select = $('conversationPicker');
+    const rows = Array.isArray(data.conversations) ? data.conversations : [];
+    const nextId = data.conversation?.id || '';
+    const changed = state.conversationId !== nextId;
+    if (changed) {
+      state.conversationId = nextId;
+      $('msgInput').value = state.drafts.get(nextId) || '';
+    }
+    select.replaceChildren(...rows.map((row) => new Option(row.title || 'Sohbet', row.id)));
+    if (!rows.length) select.add(new Option('Sohbet yok', ''));
+    select.value = nextId;
+  }
+
+  async function syncState(conversationId = state.conversationId) {
+    if (!state.token || state.busy || state.syncing) return false;
+    state.syncing = true;
+    const token = state.token;
+    updateChatControls();
     try {
-      const res = await api('/api/state');
+      const query = conversationId ? '?conversation=' + encodeURIComponent(conversationId) : '';
+      const res = await api('/api/state' + query);
+      if (token !== state.token) return false;
       if (!res || !res.ok) throw { code: 'E_STATE', message: 'Durum okunamadı.' };
 
       const d = res.data || {};
       state.conv = d.conversation;
+      updateConversations(d);
       state.caches.team = d.team || [];
       state.caches.memory = d.memory || [];
       state.caches.board = d.board || null;
@@ -489,8 +554,11 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
       state.failures = 0;
       setConn(true, 'bağlı');
       $('overlay-error').hidden = true;
+      $('overlay-login').hidden = true;
+      try { sessionStorage.setItem(STORAGE_KEY, state.token); } catch {}
       return true;
     } catch (e) {
+      if (token !== state.token) return false;
       if (e.code === 'E_TOKEN') {
         showLogin('Kodun süresi dolmuş. Lütfen yeniden bağlanın.');
         return false;
@@ -501,6 +569,9 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
          geçici bir yarış olabilir. Kalıcı kartı iki üst üste hatadan sonra aç. */
       if (state.failures >= 2) showError(e);
       return false;
+    } finally {
+      state.syncing = false;
+      updateChatControls();
     }
   }
 
@@ -518,6 +589,8 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
   }
 
   function showLogin(msg) {
+    state.token = '';
+    try { sessionStorage.removeItem(STORAGE_KEY); } catch {}
     $('overlay-login').hidden = false;
     $('loginErr').textContent = msg || '';
     $('tokenIn').value = '';
@@ -526,14 +599,19 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
 
   function boot() {
     const hash = location.hash.substring(1).toUpperCase();
-    const stored = localStorage.getItem(STORAGE_KEY);
+    let stored = '';
+    try {
+      stored = sessionStorage.getItem(STORAGE_KEY) || '';
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {}
+    if (location.hash) history.replaceState(null, '', location.pathname);
     state.token = hash || stored || '';
 
     if (!state.token) {
       showLogin();
     } else {
       const first = syncState();
-      setInterval(syncState, POLL_INTERVAL);
+
       /* Uygulama yeni açılmış olabilir: ilk yoklama düşerse hızlıca iki kez
          daha dene, sonra 15 sn'lik normal yoklamaya bırak. */
       first.then((ok) => {
@@ -542,6 +620,8 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
         setTimeout(syncState, 5000);
       });
     }
+    setInterval(() => { if (!document.hidden) syncState(); }, POLL_INTERVAL);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) syncState(); });
     renderGuide();
   }
 
@@ -550,16 +630,16 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
     if (t.length < 6) { $('loginErr').textContent = 'Kod çok kısa.'; return; }
     $('pairBtn').disabled = true;
     state.token = t;
-    localStorage.setItem(STORAGE_KEY, t);
+
     const ok = await syncState();
     $('pairBtn').disabled = false;
     if (ok) {
       $('overlay-login').hidden = true;
       location.hash = '';
-    } else if ($('overlay-login').hidden) {
+    } else if (state.token) {
       /* Eşleşme geçti ama durum okunamadı; giriş ekranını kapatma. */
       $('overlay-login').hidden = false;
-      $('loginErr').textContent = 'Bağlandı ama veri okunamadı. Yeniden deneyin.';
+      $('loginErr').textContent = 'Bilgisayara ulaşılamadı. Aynı Wi-Fi ağında olduğunuzu kontrol edin.';
     }
   };
 
@@ -570,53 +650,90 @@ main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direct
     if (!ok) $('overlay-error').hidden = false;
   };
 
-  $('sendBtn').onclick = async () => {
-    const input = $('msgInput');
-    const text = input.value.trim();
-    if (!text || state.busy) return;
+  $('conversationPicker').onchange = async (event) => {
+    rememberDraft();
+    if (!(await syncState(event.target.value))) event.target.value = state.conversationId;
+  };
 
+  $('newConversation').onclick = async () => {
+    if (state.busy || !state.isConnected) return;
+    rememberDraft();
     state.busy = true;
-    $('sendBtn').disabled = true;
-    
-    const chatCont = $('chat-container');
-    chatCont.insertAdjacentHTML('beforeend', `<div class="bubble user">${esc(text)}</div>`);
-    chatCont.insertAdjacentHTML('beforeend', `<div class="typing-indicator" id="think-${Date.now()}">düşünüyor…</div>`);
-    chatCont.scrollTop = chatCont.scrollHeight;
-
+    updateChatControls();
     try {
-      const res = await api('/api/send', {
-        method: 'POST',
-        body: { text: text, conversationId: state.conv ? state.conv.id : null }
-      });
-      
-      const indicators = document.querySelectorAll('.typing-indicator');
-      indicators.forEach(i => i.remove());
-
-      if (!res.ok) {
-        chatCont.insertAdjacentHTML('beforeend', `<div class="bubble sys">Hata: ${esc(res.error?.message || 'bilinmiyor')}</div>`);
-      } else {
-        await syncState();
-      }
-    } catch (e) {
-      const indicators = document.querySelectorAll('.typing-indicator');
-      indicators.forEach(i => i.remove());
-      chatCont.insertAdjacentHTML('beforeend', `<div class="bubble sys">Bağlantı hatası: ${esc(describeError(e))}</div>`);
-      if (e.code === 'E_TOKEN') showLogin('Süre doldu.');
+      const result = await api('/api/new', { method: 'POST' });
+      const id = result?.data?.conversation?.id || result?.data?.id;
+      if (!result?.ok || !id) throw { message: 'Yeni sohbet açılamadı.' };
+      state.busy = false;
+      await syncState(id);
+    } catch (error) {
+      chatStatus(error.status ? describeError(error) : (error.message || 'Yeni sohbet açılamadı.'));
     } finally {
       state.busy = false;
-      $('sendBtn').disabled = false;
-      input.value = '';
-      input.style.height = 'auto';
+      updateChatControls();
     }
   };
 
+  $('unpairBtn').onclick = () => {
+    state.conv = null;
+    state.conversationId = '';
+    state.drafts.clear();
+    state.previousMessages = '';
+    state.caches = { team: [], memory: [], board: [] };
+    $('msgInput').value = '';
+    $('conversationPicker').replaceChildren();
+    for (const id of ['chat-container', 'team-list', 'memory-list', 'board-list', 'leader-cycle']) {
+      $(id).replaceChildren();
+    }
+    chatStatus('');
+    $('overlay-error').hidden = true;
+    showLogin('Bu telefondaki eşleşme kaldırıldı.');
+  };
+
+  $('sendBtn').onclick = async () => {
+    const input = $('msgInput');
+    const text = input.value.trim();
+    if (!text || state.busy || !state.isConnected) return;
+    const conversationId = state.conversationId;
+    state.busy = true;
+    input.readOnly = true;
+    updateChatControls();
+    chatStatus('Yanıt bekleniyor…');
+    let sent = false;
+    try {
+      const result = await api('/api/send', {
+        method: 'POST', body: { text, conversationId: conversationId || null }
+      });
+      sent = Boolean(result?.ok);
+      if (sent) {
+        input.value = '';
+        input.style.height = 'auto';
+        state.drafts.delete(conversationId);
+        chatStatus('');
+      } else chatStatus(result?.error?.message || 'Mesaj gönderilemedi. Taslağınız korundu.');
+    } catch (error) {
+      chatStatus(describeError(error) + ' Taslağınız korundu.');
+      if (error.code === 'E_TOKEN') showLogin('Kod değişti. Bilgisayardan güncel kodu alın.');
+    } finally {
+      state.busy = false;
+      input.readOnly = false;
+      updateChatControls();
+    }
+    if (sent) await syncState(conversationId);
+  };
+
   $('msgInput').oninput = function() {
+    rememberDraft();
+    updateChatControls();
     this.style.height = 'auto';
     this.style.height = Math.min(140, this.scrollHeight) + 'px';
   };
 
+  $('tokenIn').onkeydown = (event) => {
+    if (event.key === 'Enter' && !event.isComposing) $('pairBtn').click();
+  };
   $('msgInput').onkeydown = e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
       e.preventDefault();
       $('sendBtn').click();
     }

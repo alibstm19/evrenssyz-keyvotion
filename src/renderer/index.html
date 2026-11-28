@@ -875,6 +875,15 @@
             <button type="button" data-memory-scope="project" aria-pressed="false">Proje</button>
           </div>
           <input class="kv-input kv-input--search" type="search" placeholder="Hafızada ara…" data-field="memory-filter" aria-label="Hafızada ara">
+          <select class="kv-input kv-input--sm" data-field="memory-kind" aria-label="Kayıt türü">
+            <option value="">Tüm türler</option><option value="preference">Tercihler</option>
+            <option value="decision">Kararlar</option><option value="fact">Olgular</option>
+            <option value="correction">Düzeltmeler</option>
+          </select>
+          <select class="kv-input kv-input--sm" data-field="memory-sort" aria-label="Kayıt sırası">
+            <option value="">Bağlam önceliği</option><option value="recent">En yeni</option>
+          </select>
+          <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="memory-clear-filters">Filtreleri temizle</button>
         </div>
         <div class="kv-toolbar__group">
           <span class="kv-muted kv-mono" data-field="memory-auto-state">otomatik kayıt açık</span>
@@ -883,6 +892,27 @@
         </div>
       </div>
 
+      <div class="kv-split">
+        <aside class="kv-panel kv-split__aside">
+          <div class="kv-panel__header"><span>Kayıtlar</span><span class="kv-muted" data-field="memory-count" aria-live="polite">0</span></div>
+          <div class="kv-panel__body kv-list" data-memory-list>
+            <p class="kv-empty">Hafıza boş.</p>
+          </div>
+        </aside>
+        <div class="kv-split__main">
+          <div class="kv-panel kv-panel--fill">
+            <div class="kv-panel__header">
+              <span data-field="memory-detail-title">Kayıt seçin</span>
+              <span class="kv-muted kv-mono" data-field="memory-path">—</span>
+            </div>
+            <div class="kv-panel__body kv-report" data-memory-detail>
+              <p class="kv-empty">Soldan bir kayıt seçin.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <details class="kv-panel kv-memory-insights">
+        <summary class="kv-panel__header">Zihin haritası ve bağlam akışı</summary>
       <!-- zihin haritası: her nokta bir çıkarım, üzerine gelince özet -->
       <div class="kv-panel kv-panel--wide">
         <div class="kv-panel__header">
@@ -912,25 +942,7 @@
         </div>
       </div>
 
-      <div class="kv-split">
-        <aside class="kv-panel kv-split__aside">
-          <div class="kv-panel__header"><span>Kayıtlar</span><span class="kv-muted" data-field="memory-count">0</span></div>
-          <div class="kv-panel__body kv-list" data-memory-list>
-            <p class="kv-empty">Hafıza boş.</p>
-          </div>
-        </aside>
-        <div class="kv-split__main">
-          <div class="kv-panel kv-panel--fill">
-            <div class="kv-panel__header">
-              <span data-field="memory-detail-title">Kayıt seçin</span>
-              <span class="kv-muted kv-mono" data-field="memory-path">—</span>
-            </div>
-            <div class="kv-panel__body kv-report" data-memory-detail>
-              <p class="kv-empty">Soldan bir kayıt seçin.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      </details>
     </section>
 
     <!-- ---------- PROJELER (T4-2) ---------- -->
@@ -1053,20 +1065,20 @@
           </div>
           <div class="kv-panel__body">
             <p class="kv-muted kv-remote__lead">
-              Telefon aynı Wi-Fi ağındaysa tarayıcıdan bağlanıp ekibe mesaj yazabilir,
-              hafızayı ve ekip durumunu okuyabilir. Dosya erişimi yoktur; yalnız sohbet uçları açılır.
+              Telefon ve bilgisayarı aynı Wi-Fi ağına bağla. Erişimi başlat, adresi telefonda aç ve eşleşme kodunu gir.
             </p>
 
             <div class="kv-remote__pair" data-field="remote-pair" hidden>
               <div class="kv-remote__code">
                 <span class="kv-remote__code-label">Eşleşme kodu</span>
                 <strong class="kv-mono" data-field="remote-token">—</strong>
-                <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="remote-copy-token" title="Kopyala">⧉</button>
+                <button class="kv-button kv-button--ghost kv-button--sm" type="button" data-action="remote-reveal-token" aria-pressed="false">Göster</button>
+                <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="remote-copy-token" title="Kodu kopyala" aria-label="Kodu kopyala">⧉</button>
               </div>
               <div class="kv-remote__url">
                 <span class="kv-remote__code-label">Telefonda aç</span>
                 <code data-field="remote-url">—</code>
-                <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="remote-copy-url" title="Bağlantıyı kopyala">⧉</button>
+                <button class="kv-iconbtn kv-iconbtn--sm" type="button" data-action="remote-copy-url" title="Adres kopyala" aria-label="Adres kopyala">⧉</button>
               </div>
             </div>
 
@@ -1074,7 +1086,8 @@
               <button class="kv-button" type="button" data-action="remote-start">▶ Başlat</button>
               <button class="kv-button kv-button--ghost" type="button" data-action="remote-stop">■ Durdur</button>
               <button class="kv-button kv-button--ghost" type="button" data-action="remote-rotate">↻ Kodu yenile</button>
-              <span class="kv-muted" data-field="remote-note"></span>
+              <button class="kv-button kv-button--ghost" type="button" data-action="remote-refresh">Durumu yenile</button>
+              <span class="kv-muted" data-field="remote-note" role="status"></span>
             </div>
 
             <div class="kv-remote__stats">
@@ -1100,8 +1113,8 @@
           <div class="kv-panel__header"><span>Güvenlik</span></div>
           <div class="kv-panel__body">
             <ul class="kv-remote__rules">
-              <li>Eşleşme kodu olmadan hiçbir uç nokta yanıt vermez (<code>401</code>).</li>
-              <li>Kod yalnız bu bilgisayarda, kullanıcı profilinizde saklanır.</li>
+              <li>Sohbet, pano, ekip ve hafıza verilerini açmak için eşleşme kodu gerekir.</li>
+              <li>Kodu yalnız güvendiğiniz cihazla paylaşın. Telefon tarayıcısı kodu açık sekmenin oturumunda tutar.</li>
               <li>Kod yenilendiğinde eski bağlantılar anında düşer.</li>
               <li>Telefon yalnız sohbet/hafıza/ekip görünümüne erişir; dosya sistemi yoktur.</li>
               <li>Sunucu uygulama kapanınca kendiliğinden kapanır.</li>
