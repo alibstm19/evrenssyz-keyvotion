@@ -33,7 +33,7 @@ Neden bu kadar önemli?
   panoda çalışır; kim ne yapıyor, ne bekliyor, ne bitti — hepsi görünür.
 - **Sizin makineniz, sizin veriniz.** Pano, raporlar, ayarlar ve katalog proje
   klasörünüzde durur. Sırlar Windows kasasıyla (DPAPI) şifrelenir.
-- **Ölçülebilir kalite.** 574 otomatik test ve yirmi yedi kalite kapısı depoyla
+- **Ölçülebilir kalite.** 585 otomatik test ve 28 kalite kapısı depoyla
   birlikte gelir; "çalışıyor" demek için ölçüm gerekir.
 - **Telefondan kontrol.** Aynı Wi-Fi ağındaki telefonunuzdan ekibi izler,
   mesaj gönderir, panoyu görürsünüz.
@@ -168,6 +168,7 @@ node tools/verify/tap-count.js tests   # {"tests":574,"pass":574,"fail":0}
 node tools/doctor.js                   # ortam, kanallar, sırlar, sözdizimi
 node tools/k3.js                       # doctor + tüm testler
 node tools/verify/html-check.js        # HTML DENGELI
+node tools/verify/public-content.js   # Izlenen dosyalarda veri ve anahtar denetimi
 node tools/verify/ldr-smoke.js         # DUMAN TESTI: GECTI (23 ekran, gerçek Electron)
 node tools/verify/remote-page-render.js # TELEFON SAYFASI: GECTI (390x844, gerçek tarayıcı)
 node tools/verify/tour-close.js        # TUR KAPANISI: GECTI (beyaz ekran gerilemesi)
@@ -192,10 +193,10 @@ node tools/verify/boot-budget.js       # ONYUKLEME BUTCESI: GECTI (ılık ortanc
 node tools/verify/chat-a11y.js         # SOHBET DUYURUSU: GECTI (yanıt durumu ve hatalar ekran okuyucuya ulaşır)
 ```
 
-Yani birlikte: **27 kalite kapısı depoyla birlikte gelir.** Her kapı gerçek bir
+Yani birlikte: **28 kalite kapısı depoyla birlikte gelir.** Her kapı gerçek bir
 betiktir; belge değildir.
 
-CI, dört statik kapıyı (tap-count, doctor, k3, html-check) Windows ve Ubuntu'da,
+CI, beş statik kapıyı (tap-count, doctor, k3, html-check, public-content) Windows ve Ubuntu'da,
 Node 22 ve 26 ile koşar; canlı Electron kapıları bir ekran gerektirdiği için
 yerelde çalışır. Her canlı kapı işletim sisteminden boş bir hata ayıklama portu
 ister (`listen(0)`), sabit port kullanmaz; `tests/tur14/gate-ports.test.js` bunu

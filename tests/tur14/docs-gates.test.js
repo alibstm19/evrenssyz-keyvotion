@@ -59,7 +59,7 @@ test('docs 3: CI komutları README’de listelenir', () => {
     const listed = README_CMDS.some((c) => c === cmd || c.endsWith(cmd.replace('tools/', '')));
     assert.ok(listed, `CI’da koşan ${cmd} README listesinde yok`);
   }
-  assert.match(README, /CI, dört statik kapıyı \(tap-count, doctor, k3, html-check\)/, 'CI kapsamı yanlış anlatılıyor');
+  assert.match(README, /CI, beş statik kapıyı \(tap-count, doctor, k3, html-check, public-content\)/, 'CI kapsamı yanlış anlatılıyor');
 });
 
 test('docs 4: release.md tüm README kapılarını kapsar', () => {

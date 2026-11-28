@@ -39,6 +39,7 @@ node tools/verify/tap-count.js tests   # {"tests":574,"pass":574,"fail":0}
 node tools/doctor.js                   # Total FAILS: 0 / Total WARNS: 0
 node tools/k3.js                       # K3 Gate Passed Successfully
 node tools/verify/html-check.js        # HTML DENGELI
+node tools/verify/public-content.js   # Kişisel veri ve anahtar denetimi
 node tools/verify/ldr-smoke.js         # DUMAN TESTI: GECTI (local, needs a desktop)
 node tools/verify/remote-page-render.js # TELEFON SAYFASI: GECTI (390x844, real browser)
 ```
