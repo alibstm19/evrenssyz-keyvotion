@@ -143,7 +143,7 @@ test('tur16/team-builder 4: plan iyi JSON -> source model, modeller yalnız havu
   };
   const builder = makeBuilder({ providers, models: { pool: () => POOL } });
 
-  const res = await builder.plan({ description: 'Mobil uygulama için tasarım ve test içeren bir ekip kur.', size: 6 });
+  const res = await builder.plan({ description: 'Mobil uygulama için tasarım ve test içeren bir ekip kur.', size: 3 });
   assert.equal(res.ok, true, JSON.stringify(res.error));
   assert.equal(res.data.source, 'model');
   assert.equal(res.data.members.length, 3);
@@ -259,4 +259,43 @@ test('tur16/team-builder 8: pickModelForArea boş havuzda kimlik uydurmaz', () =
   const chosen = pickModelForArea('tasarım', POOL, 0);
   assert.ok(['evren/deepseek-v4.1-flash', 'evren/mimo-v2.6-pro', 'evren/vision-xl'].includes(chosen));
   assert.equal(pickModelForArea('tasarım', POOL, 0), chosen, 'seçim deterministik olmalı');
+});
+
+test('local planning produces a full roster without contacting the model', async () => {
+  let contacted = false;
+  const builder = makeBuilder({ providers: { chat() { contacted = true; } } });
+  const result = await builder.plan({ description: 'İnşaat sitesi kurulacak.', size: 9, localOnly: true });
+  assert.equal(result.data.source, 'fallback');
+  assert.equal(result.data.members.length, 9);
+  assert.ok(result.data.members.some(({ code }) => code === 'WEB'));
+  assert.equal(contacted, false);
+});
+
+test('saving a revised roster preserves the existing live session and fallback model', async () => {
+  const saved = [];
+  const builder = makeBuilder({ roster: {
+    read: () => ({ ok: true, data: { entries: [{ code: 'LDR', sessionID: 'ses_leader', model: 'existing/model' }] } }),
+    append: (entry) => { saved.push(entry); return { ok: true }; }
+  } });
+  const result = await builder.apply({ members: [{ code: 'LDR', role: 'Lider' }] });
+  assert.equal(result.ok, true);
+  assert.equal(saved[0].sessionID, 'ses_leader');
+  assert.equal(saved[0].model, 'existing/model');
+});
+
+test('saving the first plan creates a roster and later saves keep existing sessions', async (t) => {
+  const fs = require('node:fs');
+  const os = require('node:os');
+  const { createRoster } = require('../../src/main/services/roster');
+  const projectDir = fs.mkdtempSync(path.join(os.tmpdir(), 'kv-first-roster-'));
+  t.after(() => fs.rmSync(projectDir, { recursive: true, force: true }));
+  const roster = createRoster({ getProjectDir: () => projectDir, backupRoot: path.join(projectDir, 'backup') });
+  const builder = makeBuilder({ roster });
+  const plan = await builder.plan({ description: 'İnşaat sitesi kurulacak.', size: 9, localOnly: true });
+  assert.equal((await builder.apply({ members: plan.data.members })).ok, true);
+  assert.equal(roster.read().data.entries.length, 9);
+  assert.equal(roster.setLeader('ses_original').ok, true);
+  assert.equal((await builder.apply({ members: [{ code: 'LDR', role: 'Lider | yeni', responsibility: 'Birinci satır\nİkinci satır' }] })).ok, true);
+  assert.equal(roster.read().data.entries.length, 9);
+  assert.equal(roster.read().data.nextLeaderSessionID, 'ses_original');
 });

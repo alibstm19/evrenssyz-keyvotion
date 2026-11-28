@@ -161,7 +161,7 @@ function createOAuthService(options = {}) {
   const timeoutMs = Number.isFinite(options.timeoutMs) ? options.timeoutMs : OAUTH_TIMEOUT_MS;
   const getCredentials = typeof options.getCredentials === 'function'
     ? options.getCredentials
-    : (provider) => ({
+    : (_id, provider) => ({
       clientId: process.env[provider.clientIdKey] || null,
       clientSecret: process.env[provider.clientSecretKey] || null
     });
@@ -248,7 +248,7 @@ function createOAuthService(options = {}) {
     const flow = {
       flowId, accountId, providerId, redirectUri: null,
       verifier, state, code: null, settled: false, error: null,
-      server: null, timer: null
+      server: null, timer: null, onConnected: input.onConnected
     };
 
     const server = serverFactory((req, res) => {
@@ -374,10 +374,31 @@ function createOAuthService(options = {}) {
       refreshToken: token.refresh_token || null,
       expiresAt: Number.isFinite(expiresIn) && expiresIn > 0 ? Date.now() + expiresIn * 1000 : null
     };
-    writeRecord(flow.accountId, rec);
-    flows.delete(flowId);
+    try {
+      writeRecord(flow.accountId, rec);
+      if (typeof flow.onConnected === 'function') await flow.onConnected(safeSummary(rec));
+    } finally {
+      flows.delete(flowId);
+    }
     emit('oauth:connected', { accountId: flow.accountId, providerId: flow.providerId });
     return safeSummary(rec);
+  }
+
+  function accessToken(accountId, providerId) {
+    requireCipher(safeStorage);
+    if (!validAccountId(accountId)) return '';
+    const rec = readRecord(accountId);
+    if (!rec || rec.providerId !== providerId || (rec.expiresAt != null && rec.expiresAt <= Date.now())) return '';
+    return rec.accessToken || '';
+  }
+
+  function configured(providerId) {
+    try {
+      const provider = PROVIDERS[providerId];
+      if (!provider) return false;
+      credentialsFor(provider);
+      return true;
+    } catch { return false; }
   }
 
   function status(input = {}) {
@@ -440,7 +461,7 @@ function createOAuthService(options = {}) {
     for (const [id, flow] of [...flows.entries()]) { closeFlow(flow); flows.delete(id); }
   }
 
-  return { PROVIDERS, OAUTH_TIMEOUT_MS, begin, complete, status, refresh, revoke, shutdown };
+  return { PROVIDERS, OAUTH_TIMEOUT_MS, begin, complete, status, refresh, revoke, shutdown, accessToken, configured };
 }
 
 module.exports = { PROVIDERS, OAUTH_TIMEOUT_MS, pkceChallenge, createOAuthService };

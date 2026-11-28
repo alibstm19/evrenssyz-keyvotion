@@ -30,7 +30,8 @@ const MAX_SIZE = 9;
 const DEFAULT_SIZE = 6;
 const MEMBER_MIN = 2;
 const MEMBER_MAX = 9;
-const TIMEOUT_MS = 60000;
+const TIMEOUT_MS = 11000;
+const PLAN_BUDGET_MS = 15000;
 
 /*
  * Keyword -> role table for the deterministic fallback plan.
@@ -434,15 +435,16 @@ function createTeamBuilder(deps) {
     const leaderCode = str(p.leaderCode);
     const pool = safePool();
 
+    let deadline;
     try {
-      if (!providers || typeof providers.chat !== 'function') {
+      if (p.localOnly === true || !providers || typeof providers.chat !== 'function') {
         return ok({
           source: 'fallback',
-          ...fallbackPlan(description, size, pool, ['Sağlayıcı bağlı değil; yedek plan kullanıldı.'])
+          ...fallbackPlan(description, size, pool, [p.localOnly === true ? 'Yerel plan kullanıldı.' : 'Sağlayıcı bağlı değil. Yerel plan kullanıldı.'])
         });
       }
 
-      const res = await providers.chat({
+      const request = providers.chat({
         messages: [
           { role: 'system', content: 'Yalnızca geçerli JSON döndüren bir kadro planlayıcısısın.' },
           { role: 'user', content: buildPrompt(description, size, pool, leaderCode, safeProjectName()) }
@@ -451,6 +453,9 @@ function createTeamBuilder(deps) {
         maxTokens: 1200,
         timeoutMs: TIMEOUT_MS
       });
+      const res = await Promise.race([request, new Promise((resolve) => {
+        deadline = setTimeout(() => resolve(fail(CODES.TIMEOUT, 'Model planlama süresini aştı.')), PLAN_BUDGET_MS);
+      })]);
 
       if (!res || !res.ok) {
         const reason = res && res.error && res.error.message
@@ -469,10 +474,10 @@ function createTeamBuilder(deps) {
         summaryFallback: `Kadro: ${description.slice(0, 120)}`
       });
 
-      if (!valid.ok) {
+      if (!valid.ok || valid.data.members.length !== size) {
         return ok({
           source: 'fallback',
-          ...fallbackPlan(description, size, pool, [`Model yanıtı geçersiz: ${valid.error.message}`])
+          ...fallbackPlan(description, size, pool, [`Model yanıtı geçersiz: ${valid.ok ? 'Üye sayısı istenen sayıyla eşleşmedi.' : valid.error.message}`])
         });
       }
 
@@ -488,6 +493,8 @@ function createTeamBuilder(deps) {
         source: 'fallback',
         ...fallbackPlan(description, size, pool, [`Model çağrısı başarısız: ${message}`])
       });
+    } finally {
+      clearTimeout(deadline);
     }
   }
 
@@ -522,8 +529,12 @@ function createTeamBuilder(deps) {
      * silently dropping roster rows is forbidden. Every member is appended;
      * append() updates an existing code in place.
      */
+    if (typeof roster.applyPlan === 'function') return roster.applyPlan(members);
+
     const applied = [];
     const codes = [];
+    const current = typeof roster.read === 'function' ? await roster.read() : null;
+    const existing = new Map((current?.data?.entries || []).map((entry) => [entry.code, entry]));
 
     for (const member of members) {
       const code = str(member.code).toUpperCase();
@@ -531,8 +542,8 @@ function createTeamBuilder(deps) {
         role: str(member.role) || code,
         code,
         responsibility: str(member.responsibility),
-        model: str(member.model),
-        sessionID: null
+        model: str(member.model) || existing.get(code)?.model || '',
+        sessionID: existing.get(code)?.sessionID || null
       };
 
       let res;

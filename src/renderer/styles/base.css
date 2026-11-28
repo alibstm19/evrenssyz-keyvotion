@@ -490,6 +490,14 @@ textarea {
   box-shadow: var(--kv-shadow-md);
 }
 
+.kv-modal__dialog[data-wide="true"] {
+  width: min(760px, 100%);
+}
+
+.kv-connect-management {
+  flex-wrap: wrap;
+}
+
 /* ---------- toast ---------- */
 [data-toast-root] {
   position: fixed;

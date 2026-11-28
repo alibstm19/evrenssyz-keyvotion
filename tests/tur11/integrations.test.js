@@ -271,3 +271,13 @@ test('tur11/integrations 13: shutdown bekleyen istek yoksa no-op', async (t) => 
   await service.shutdown();
   assert.equal(typeof service.shutdown(), 'object');
 });
+
+test('OAuth-approved accounts use the token resolver without storing a duplicate token', async (t) => {
+  const { service, statePath } = await makeService(t, {
+    extra: { getOAuthToken: (id, provider) => id === 'fixture-oauth' && provider === 'fixture' ? 'oauth-token' : '' }
+  });
+  service.linkOAuth({ accountId: 'fixture-oauth', providerId: 'fixture' });
+  assert.equal(service.list().accounts[0].id, 'fixture-oauth');
+  assert.equal((await service.test({ id: 'fixture-oauth' })).state, 'connected');
+  assert.doesNotMatch(fs.readFileSync(statePath, 'utf8'), /oauth-token|tokenCipher/);
+});

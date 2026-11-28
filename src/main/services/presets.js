@@ -92,7 +92,14 @@ function createPresetsService(options) {
 
   /* --------------------------------------------------------------- list */
   function list() {
-    return load().map(publicPreset);
+    const oauth = asService(opts.oauth);
+    return load().map((preset) => {
+      const view = publicPreset(preset);
+      if (preset.authMode === 'oauth2' && typeof oauth?.configured === 'function') {
+        view.oauthReady = oauth.configured(preset.refId);
+      }
+      return view;
+    });
   }
 
   /* ------------------------------------------------------------- resolve */
@@ -134,7 +141,10 @@ function createPresetsService(options) {
       const accountId = typeof supplied.accountId === 'string' && supplied.accountId
         ? supplied.accountId
         : `${preset.refId}-${Date.now().toString(36)}`;
-      const started = oauth.begin({ providerId: preset.refId, accountId });
+      const integrations = asService(opts.integrations);
+      const input = { providerId: preset.refId, accountId };
+      if (typeof integrations?.linkOAuth === 'function') input.onConnected = integrations.linkOAuth;
+      const started = oauth.begin(input);
       return Promise.resolve(started).then((flow) => ({
         ...base,
         next: 'oauth',

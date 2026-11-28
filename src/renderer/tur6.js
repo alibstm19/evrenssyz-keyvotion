@@ -295,42 +295,45 @@ async function refreshGraph() {
     return;
   }
   t6.graph = res.data;
-  renderMindMap(host, res.data, {
-    maxNodes: 140,
-    onSelect: (node) => {
-      if (node.kind === 'hub') return;
-      const entry = ctx.store.memory.entries.find((e) => e.id === node.id);
-      if (!entry) {
-        ctx.store.memory.entries.unshift({
-          id: node.id, text: node.text, scope: node.scope, kind: node.kind,
-          role: node.role, weight: node.weight, at: node.at, source: node.source, tags: []
-        });
-      }
-      ctx.store.memory.selected = node.id;
-      renderMemoryDetail(ctx);
-    }
-  });
+  renderGraph();
   const total = $('[data-field="memory-flow-total"]');
   if (total) total.textContent = `${res.data.total} kayıt`;
   const auto = $('[data-field="memory-auto-state"]');
   if (auto) auto.textContent = `otomatik kayıt açık · ${res.data.total} kayıt`;
 }
 
-function renderMemoryDetail(c) {
-  /* ayrıntı paneli app.js'te; seçimi oraya taşımak için tıklama taklidi yeterli */
-  const root = document.querySelector('[data-memory-detail]');
-  if (!root) return;
-  const entry = c.store.memory.entries.find((e) => e.id === c.store.memory.selected);
-  if (!entry) return;
-  root.replaceChildren(c.el('div', { class: 'kv-mem-detail' }, [
-    c.el('div', { class: 'kv-mem-detail__text', text: entry.text }),
-    c.el('div', { class: 'kv-row' }, [
-      c.badge(entry.scope || 'proje', entry.scope === 'user' ? 'success' : 'info'),
-      c.badge(entry.kind || 'olgu', 'idle'),
-      c.el('span', { class: 'kv-muted kv-mono', text: entry.id })
-    ]),
-    c.el('p', { class: 'kv-muted kv-mono', text: `${entry.at || ''} · rol ${entry.role || '—'} · kaynak ${entry.source || '—'}` })
-  ]));
+function renderGraph() {
+  const host = $('[data-memory-graph]');
+  const inspector = $('[data-mind-inspector]');
+  const graph = t6.graph;
+  if (!host || !inspector || !graph) return;
+  const q = ($('[data-mind-search]')?.value || '').trim().toLocaleLowerCase('tr');
+  const scope = $('[data-mind-scope]')?.value;
+  const nodes = graph.nodes.filter((node) => node.kind === 'hub' ||
+    ((!scope || node.scope === scope) &&
+      (!q || [node.label, node.text, ...(node.tags || [])].join(' ').toLocaleLowerCase('tr').includes(q))));
+  inspector.replaceChildren(ctx.el('h3', { text: 'Düğüm ayrıntısı' }),
+    ctx.el('p', { class: 'kv-muted', text: 'Bir noktayı seçerek kaydı ve ilişkilerini inceleyin.' }));
+  renderMindMap(host, { ...graph, nodes }, {
+    maxNodes: 140,
+    filtered: Boolean(scope || q),
+    onSelect: (node, related, select) => {
+      inspector.replaceChildren(
+        ctx.el('h3', { text: node.label || 'Hafıza kaydı' }),
+        ctx.el('p', { class: 'kv-muted', text: [node.kind, node.role, node.at?.slice(0, 10)].filter(Boolean).join(' · ') }),
+        ctx.el('p', { text: node.text || '' }),
+        ctx.el('p', { class: 'kv-muted', text: (node.tags || []).length ? node.tags.join(' · ') : '' })
+      );
+      const entry = ctx.store.memory.entries.find((row) => row.id === node.id);
+      if (entry) inspector.append(ctx.el('button', { class: 'kv-button kv-button--ghost kv-button--sm',
+        type: 'button', text: 'Kaydın tamamını aç', onclick: () => ctx.openMemoryRecord?.(entry.id) }));
+      if (related.length) {
+        inspector.append(ctx.el('h4', { text: 'Bağlı kayıtlar' }), ...related.map((entry) =>
+          ctx.el('button', { class: 'kv-button kv-button--ghost kv-button--sm',
+            type: 'button', text: entry.label, onclick: () => select(entry.id) })));
+      }
+    }
+  });
 }
 
 /* -------------------------------------------------------------------- sunucu */
@@ -811,6 +814,8 @@ export function initTur6(context) {
   }
 
   /* --- Lider masası formu --- */
+  $('[data-mind-search]')?.addEventListener('input', renderGraph);
+  $('[data-mind-scope]')?.addEventListener('change', renderGraph);
   const deskForm = $('[data-desk-form]');
   if (deskForm) {
     deskForm.addEventListener('submit', (e) => { e.preventDefault(); deskSend(); });
@@ -897,6 +902,7 @@ export async function tur6Action(action) {
       }
       return true;
     }
+    case 'mind-refresh': await refreshGraph(); return true;
     case 'desk-send': await deskSend(); return true;
     case 'votion-open': openVotion(true); return true;
     case 'votion-close': openVotion(false); return true;

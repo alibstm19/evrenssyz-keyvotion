@@ -587,7 +587,8 @@ function go(screen) {
     else s.removeAttribute('aria-hidden');
   }
   for (const b of $$('[data-nav-item]')) {
-    const on = b.dataset.navItem === screen;
+    const on = (!b.hidden && b.dataset.navItem === screen) ||
+      (b.dataset.navItem === 'connect' && ['integrations', 'mcps', 'catalog'].includes(screen));
     if (on) b.setAttribute('aria-current', 'page');
     else b.removeAttribute('aria-current');
   }
@@ -1538,7 +1539,7 @@ function setAppInert(on) {
   }
 }
 
-function modal({ title, sub, body = [], actions = [] }) {
+function modal({ title, sub, body = [], actions = [], wide = false }) {
   const root = $('[data-modal-root]');
   if (!root) return;
   modalReturnFocus = document.activeElement;
@@ -1546,7 +1547,7 @@ function modal({ title, sub, body = [], actions = [] }) {
   root.replaceChildren();
   const titleId = 'kv-modal-title';
   const dialog = el('div', { class: 'kv-modal', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': titleId }, [
-    el('div', { class: 'kv-modal__dialog' }, [
+    el('div', { class: 'kv-modal__dialog', 'data-wide': wide ? 'true' : null }, [
       el('h2', { class: 'kv-modal__title', id: titleId, text: title }),
       sub ? el('p', { class: 'kv-modal__sub', text: sub }) : null,
       ...[].concat(body),
@@ -2132,12 +2133,22 @@ function openTeamAuto() {
   for (const n of [3, 4, 5, 6, 7, 8, 9]) {
     size.append(el('option', { value: String(n), text: `${n} kişi`, selected: n === 6 }));
   }
-  const status = el('p', { class: 'kv-muted', 'data-field': 'team-plan-status', text: '' });
+  const status = el('p', { class: 'kv-muted', 'data-field': 'team-plan-status', role: 'status', text: '' });
   const preview = el('div', { class: 'kv-panel', 'data-field': 'team-plan-preview', hidden: true });
 
   let planned = null;
+  let revision = 0;
+  const invalidate = () => {
+    revision += 1;
+    planned = null;
+    applyBtn.disabled = true;
+    preview.hidden = true;
+    status.textContent = 'Değişiklikleri görmek için tekrar planlayın.';
+  };
+  desc.addEventListener('input', invalidate);
+  size.addEventListener('change', invalidate);
   const applyBtn = el('button', {
-    class: 'kv-button', type: 'button', text: 'Ekibi kur', disabled: true,
+    class: 'kv-button', type: 'button', text: 'Kadroya kaydet', disabled: true,
     onclick: async () => {
       if (!planned) return;
       applyBtn.disabled = true;
@@ -2146,67 +2157,85 @@ function openTeamAuto() {
         confirmToken: makeConfirmToken()
       });
       if (r.ok) {
-        notify('Ekip kuruldu', `${(r.data.applied || []).length} üye kadroya eklendi`, 'success');
+        notify('Kadro kaydedildi', `${(r.data.applied || []).length} rol kaydedildi. Canlı seanslar bu işlemle başlatılmaz.`, 'success');
         closeModal();
         refreshTeam();
       } else {
         applyBtn.disabled = false;
-        notify('Ekip kurulamadı', (r.error && r.error.message) || 'kadro yazılamadı', 'danger');
+        const detail = r.error?.detail;
+        status.textContent = [r.error?.message || 'Kadro yazılamadı.',
+          detail?.applied?.length ? `Kaydedilen roller: ${detail.applied.join(', ')}.` : '',
+          detail?.failed ? `Hata alınan rol: ${detail.failed}.` : ''].filter(Boolean).join(' ');
       }
     }
   });
 
   const planBtn = el('button', {
     class: 'kv-button kv-button--ghost', type: 'button', text: 'Planla',
-    onclick: async () => {
-      const description = desc.value.trim();
-      if (description.length < 20) {
-        toast('Projeyi en az birkaç cümleyle anlatın.', 'warning');
-        desc.focus();
-        return;
-      }
-      planBtn.disabled = true;
-      status.textContent = 'Plan hazırlanıyor…';
-      const r = await call(KV && KV.team && KV.team.plan, {
-        description,
-        size: Number(size.value)
-      });
-      planBtn.disabled = false;
-      if (!r.ok) {
-        status.textContent = (r.error && r.error.message) || 'Plan oluşturulamadı.';
-        return;
-      }
-      planned = r.data;
-      preview.hidden = false;
-      preview.replaceChildren(el('div', { class: 'kv-panel__header' }, [
-        el('span', { text: 'Önerilen kadro' }),
-        el('span', { class: 'kv-badge', 'data-tone': 'info', text: planned.source === 'model' ? 'model' : 'yedek plan' })
-      ]));
-      const body = el('div', { class: 'kv-panel__body' });
-      if (planned.summary) body.append(el('p', { text: planned.summary }));
-      const list = el('div', { class: 'kv-grid' });
-      for (const m of planned.members || []) {
-        list.append(el('div', { class: 'kv-panel' }, [
-          el('div', { class: 'kv-row' }, [
-            el('strong', { class: 'kv-mono', text: m.code }),
-            el('span', { text: m.role }),
-            el('span', { class: 'kv-muted kv-mono', text: m.model || 'model seçilmedi' })
-          ]),
-          el('p', { class: 'kv-muted', text: m.responsibility || '' })
-        ]));
-      }
-      body.append(list);
-      if (Array.isArray(planned.notes) && planned.notes.length) {
-        body.append(el('p', { class: 'kv-muted', text: planned.notes.join(' ') }));
-      }
-      preview.append(body);
-      status.textContent = 'Önizleme hazır. Uygunsa “Ekibi kur”.';
-      applyBtn.disabled = false;
-    }
+    onclick: async () => { await plan(false); }
   });
+  const localBtn = el('button', { class: 'kv-button kv-button--ghost', type: 'button',
+    text: 'Yerel plan', onclick: async () => { await plan(true); } });
+
+  async function plan(localOnly) {
+    const description = desc.value.trim();
+    if (description.length < 20) {
+      toast('Projeyi en az birkaç cümleyle anlatın.', 'warning');
+      desc.focus();
+      return;
+    }
+    const request = ++revision;
+    planned = null;
+    preview.hidden = true;
+    applyBtn.disabled = true;
+    planBtn.disabled = true;
+    localBtn.disabled = true;
+    status.textContent = 'Plan hazırlanıyor…';
+    const r = await call(KV && KV.team && KV.team.plan, {
+      description,
+      size: Number(size.value),
+      localOnly
+    });
+    planBtn.disabled = false;
+    localBtn.disabled = false;
+    if (request !== revision || !preview.isConnected) return;
+    if (!r.ok) {
+      status.textContent = r.error?.code === 'E_TIMEOUT'
+        ? 'Planlayıcı zaman aşımına uğradı. Yerel plan seçeneğiyle tekrar deneyin.'
+        : (r.error?.message || 'Plan oluşturulamadı.');
+      return;
+    }
+    planned = r.data;
+    preview.hidden = false;
+    preview.replaceChildren(el('div', { class: 'kv-panel__header' }, [
+      el('span', { text: 'Önerilen kadro' }),
+      el('span', { class: 'kv-badge', 'data-tone': 'info', text: planned.source === 'model' ? 'Model önerisi' : 'Yerel plan' })
+    ]));
+    const body = el('div', { class: 'kv-panel__body' });
+    if (planned.summary) body.append(el('p', { text: planned.summary }));
+    const list = el('div', { class: 'kv-grid' });
+    for (const m of planned.members || []) {
+      list.append(el('div', { class: 'kv-panel' }, [
+        el('div', { class: 'kv-row' }, [
+          el('strong', { class: 'kv-mono', text: m.code }),
+          el('span', { text: m.role }),
+          el('span', { class: 'kv-muted kv-mono', text: m.model || 'model seçilmedi' })
+        ]),
+        el('p', { class: 'kv-muted', text: m.responsibility || '' })
+      ]));
+    }
+    body.append(list);
+    if (Array.isArray(planned.notes) && planned.notes.length) {
+      body.append(el('p', { class: 'kv-muted', text: planned.notes.join(' ') }));
+    }
+    preview.append(body);
+    status.textContent = 'Önizleme hazır. Kadroyu kaydedebilir veya girdileri değiştirip yeniden planlayabilirsiniz.';
+    applyBtn.disabled = false;
+  }
 
   modal({
     title: 'Otomatik ekip kur',
+    wide: true,
     sub: 'Projeyi anlatın; lider adayı kadroyu ve çalışma alanlarına göre modelleri önerir. Uygulamadan önce önizlersiniz.',
     body: [
       el('div', { class: 'kv-field' }, [el('label', { text: 'Proje tanımı' }), desc]),
@@ -2216,6 +2245,7 @@ function openTeamAuto() {
     ],
     actions: [
       el('button', { class: 'kv-button kv-button--ghost', type: 'button', text: 'Vazgeç', onclick: closeModal }),
+      localBtn,
       planBtn,
       applyBtn
     ]
@@ -2871,6 +2901,7 @@ async function dispatchAction(action, actionEl, sessionId) {
     case 'team-add': if (!store.models.pool.length) refreshModels(); openTeamAdd(); break;
   case 'team-auto': if (!store.models.pool.length) refreshModels(); openTeamAuto(); break;
     case 'set-leader': openSetLeader(sessionId, actionEl.dataset.roleCode); break;
+    case 'mind-refresh': await tur6Action('mind-refresh'); break;
     case 'team-show-roster': revealDetail($('[data-team-grid]')); break;
     case 'desk-status':
     case 'desk-blockers': {
@@ -3034,6 +3065,9 @@ async function dispatchAction(action, actionEl, sessionId) {
     /* --- Tur 14 (T-147): hazır bağlantılar (UI §15.9) --- */
     case 'preset-close': closePreset(); break;
     case 'preset-refresh': await refreshPresets(); break;
+    case 'connect-home': navOpen(navEntryOf('screen', 'connect')); break;
+    case 'connect-accounts': navOpen(navEntryOf('screen', 'integrations')); break;
+    case 'connect-mcp': navOpen(navEntryOf('screen', 'mcps')); break;
     case 'preset-pick': pickPreset(actionEl.dataset.presetId || ''); break;
     case 'preset-reset': resetPresets(); break;
     case 'preset-connect': confirmPresetApply(); break;
@@ -3988,6 +4022,7 @@ function openMemoryAdd() {
             if (button.isConnected) closeModal();
             notify('Hafızaya eklendi', `${scopeLabel(scope.value)} · ${kindLabel(kind.value)}`, 'success');
             await refreshMemory();
+            await tur6Action('mind-refresh');
             await refreshChatMemoryHint();
           } else {
             notify('Hafıza yazılamadı', (res.error && res.error.message) || 'hata', 'danger');
@@ -5045,7 +5080,7 @@ function bindTur4() {
       case 'chat-delete': chatDelete(); break;
       case 'chat-preview': chatPreview(); break;
       case 'memory-add': openMemoryAdd(); break;
-      case 'memory-refresh': refreshMemory(); break;
+      case 'memory-refresh': refreshMemory(); tur6Action('mind-refresh'); break;
       case 'memory-clear-filters': clearMemoryFilters(); break;
       case 'memory-copy-context': showMemoryContext(); break;
       case 'project-new': openProjectNew(); break;
@@ -6299,6 +6334,7 @@ function presetMissingFields(preset) {
 function presetReadyOf(p) {
   const mark = store.preset.marks[p.id];
   if (mark === 'connected' || mark === 'installed' || mark === 'error') return mark;
+  if (p.authMode === 'oauth2' && p.oauthReady === false) return 'needs-fields';
   if (p.authMode === 'install') return 'ready';
   const required = (p.fields || []).filter((f) => f.required);
   if (!required.length) return 'ready';
@@ -6426,7 +6462,7 @@ function syncPresetActions() {
   const busy = Boolean(store.preset.busy);
   $('[data-preset-form]')?.setAttribute('aria-busy', String(busy));
   if (test) test.disabled = busy || !p || !store.preset.accounts[p.refId];
-  if (connect) connect.disabled = busy;
+  if (connect) connect.disabled = busy || p?.oauthReady === false;
 }
 
 /** B3: summary + docsUrl + her zaman görünür adım listesi (UI-153). */
@@ -6549,7 +6585,10 @@ function renderPresetForm() {
   const connect = $('[data-preset-connect]');
   const test = $('[data-preset-test]');
   const votionSlot = $('[data-field="preset-votion-slot"]');
-  if (hint) hint.textContent = p ? `${p.name || p.id} · ${p.authMode || 'none'}` : 'Kart seçin.';
+  if (hint) hint.textContent = p?.oauthReady === false
+    ? 'Tarayıcıyla bağlanmak için bu sağlayıcının OAuth uygulama kimliği ve sırrı yapılandırılmalı. Kurulum adımları sağlayıcı belgelerinde.'
+    : p?.authMode === 'oauth2' ? 'Tarayıcı onayından sonra hesap otomatik olarak Bağlı hesaplar bölümüne eklenir.'
+      : '';
   if (connect) {
     connect.hidden = !p;
     connect.textContent = p?.authMode === 'install' ? 'Kur'
@@ -6732,6 +6771,7 @@ async function applyPreset(p) {
   if (d.next === 'oauth') {
     /* OAuth2: kart "Hazır" kalır; onay tarayıcıda tamamlanır. */
     delete store.preset.marks[p.id];
+    store.preset.pendingOAuth = { accountId: d.accountId, presetId: p.id };
     const url = /^https:\/\//i.test(String(d.authUrl || '')) ? String(d.authUrl) : '';
     setPresetResult(url ? 'Tarayıcıda sağlayıcı onayını tamamlayın.' : 'Sağlayıcı bir onay adresi göndermedi.');
     const node = $('[data-preset-result]');
@@ -6758,12 +6798,34 @@ async function applyPreset(p) {
     store.preset.marks[p.id] = 'installed';
     setPresetResult('MCP sunucusu kuruldu.');
   } else {
-    store.preset.marks[p.id] = 'connected';
+    delete store.preset.marks[p.id];
     if (p.kind === 'integration' && d.accountId) store.preset.accounts[p.refId] = String(d.accountId);
-    setPresetResult('Bağlantı kaydedildi.');
+    setPresetResult('Bağlantı kaydedildi. “Test et” ile erişimi doğrulayın.');
   }
   renderPresetGrid();
   renderPresetForm();
+}
+
+function bindPresetOAuth() {
+  KV?.onIntegration?.((event) => {
+    const pending = store.preset.pendingOAuth;
+    if (!pending || event?.accountId !== pending.accountId) return;
+    if (!['oauth:connected', 'oauth:failed', 'oauth:timeout', 'oauth:callback'].includes(event.type)) return;
+    if (event.type === 'oauth:callback' && event.ok) return;
+    store.preset.pendingOAuth = null;
+    if (event.type === 'oauth:connected') {
+      refreshPresets();
+      if (store.screen === 'connect' && store.preset.selected === pending.presetId) {
+        setPresetResult('Hesap onaylandı ve Bağlı hesaplar bölümüne eklendi.');
+      }
+      return;
+    }
+    if (store.screen === 'connect' && store.preset.selected === pending.presetId) {
+      setPresetResult(event.type === 'oauth:timeout'
+        ? 'Onay süresi doldu. Bağlantıyı tekrar başlatın.'
+        : 'Onay tamamlanamadı. Sağlayıcı ayarlarını kontrol edip tekrar deneyin.');
+    }
+  });
 }
 
 /** "Test et": testCapability yoksa düğme gizli; varsa kayıtlı hesap test edilir. */
@@ -6822,6 +6884,7 @@ async function refreshPresets() {
   if (intRes && intRes.ok && intRes.data) {
     const accounts = Array.isArray(intRes.data.accounts) ? intRes.data.accounts : [];
     st.accounts = {};
+    for (const p of st.items) if (st.marks[p.id] === 'connected') delete st.marks[p.id];
     for (const a of accounts) {
       if (!a || !a.providerId) continue;
       st.accounts[a.providerId] = String(a.id || '');
@@ -7308,6 +7371,11 @@ async function boot() {
     store,
     hhmm,
     makeConfirmToken,
+    openMemoryRecord: (id) => {
+      store.memory.selected = id;
+      renderMemory();
+      revealDetail($('[data-memory-detail]'));
+    },
     setGoSilent: (v) => { goSilent = Boolean(v); }
   });
   initTur8({
@@ -7332,6 +7400,7 @@ async function boot() {
     votionPrefill: (text) => tur6VotionPrefill(text)
   });
   bindEvents();
+  bindPresetOAuth();
   renderNotifications();
   setConnection('connecting');
   goSilent = true;

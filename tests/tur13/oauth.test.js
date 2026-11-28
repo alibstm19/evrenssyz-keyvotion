@@ -204,3 +204,28 @@ test('tur13/oauth 11: refresh yeni token yazar; revoke dosyayı siler', async (t
   assert.equal(fs.existsSync(path.join(dir, 'oauth', 'acct-8.bin')), false);
   assert.equal(svc.status({ accountId: 'acct-8' }).connected, false);
 });
+
+test('default OAuth reads the actual provider configuration and links the saved account', async (t) => {
+  const idKey = 'OAUTH_GITHUB_CLIENT_ID';
+  const secretKey = 'OAUTH_GITHUB_CLIENT_SECRET';
+  const previousId = process.env[idKey];
+  const previousSecret = process.env[secretKey];
+  t.after(() => {
+    if (previousId === undefined) delete process.env[idKey]; else process.env[idKey] = previousId;
+    if (previousSecret === undefined) delete process.env[secretKey]; else process.env[secretKey] = previousSecret;
+  });
+  process.env[idKey] = 'configured-client';
+  process.env[secretKey] = 'configured-test-secret';
+  const { svc } = make(t, { getCredentials: undefined });
+  assert.equal(svc.configured('github'), true);
+  const linked = [];
+  const flow = await svc.begin({ providerId: 'github', accountId: 'account-config',
+    onConnected: (account) => linked.push(account) });
+  assert.equal(new URL(flow.authUrl).searchParams.get('client_id'), 'configured-client');
+  await httpGet(`${flow.redirectUri}?code=CODE1&state=${STATE}`);
+  await svc.complete({ flowId: flow.flowId });
+  assert.equal(linked[0].accountId, 'account-config');
+  assert.equal(linked[0].accessToken, undefined);
+  assert.equal(svc.accessToken('account-config', 'github'), ACCESS);
+  assert.equal(svc.accessToken('account-config', 'gmail'), '');
+});

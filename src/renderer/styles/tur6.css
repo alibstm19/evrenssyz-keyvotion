@@ -1376,3 +1376,50 @@
     grid-row: auto;
   }
 }
+
+.kv-mind-controls {
+  flex-wrap: wrap;
+  margin-block-end: var(--kv-space-3);
+}
+
+.kv-mind-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(190px, 1fr);
+  gap: var(--kv-space-3);
+}
+
+.kv-mind-inspector {
+  background: var(--kv-bg-elev-1);
+  border: var(--t6-hair);
+  border-radius: var(--kv-radius-md);
+  padding: var(--kv-space-3);
+  overflow-wrap: anywhere;
+}
+
+.kv-mind-inspector button {
+  max-inline-size: 100%;
+  white-space: normal;
+  text-align: start;
+  margin-block-end: var(--kv-space-2);
+}
+
+.kv-mind__canvas { pointer-events: none; }
+
+.kv-mind__lobe {
+  fill: color-mix(in srgb, var(--kv-accent) 10%, transparent);
+  stroke: color-mix(in srgb, var(--kv-accent) 55%, transparent);
+  stroke-width: .3;
+}
+
+.kv-mind__edge { stroke-width: .24; }
+.kv-mind__edge--hot { stroke-width: .65; stroke-opacity: 1; }
+.kv-mind__node { animation: none; }
+.kv-mind__node[aria-pressed="true"], .kv-mind__node--related {
+  outline: 2px solid var(--kv-fg);
+  outline-offset: 3px;
+  z-index: 3;
+}
+
+@media (max-width: 1050px) {
+  .kv-mind-layout { grid-template-columns: 1fr; }
+}

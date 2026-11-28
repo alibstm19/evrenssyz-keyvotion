@@ -241,7 +241,8 @@ function createIntegrationsService(opts) {
       id: account.id,
       providerId: account.providerId,
       label: account.label,
-      state: account.state || 'unknown',
+      state: account.oauth && !options.getOAuthToken?.(account.id, account.providerId)
+        ? 'error' : account.state || 'unknown',
       scopes: provider && Array.isArray(provider.scopes) ? provider.scopes.slice() : [],
       lastTestAt: account.lastTestAt || null
     };
@@ -305,6 +306,26 @@ function createIntegrationsService(opts) {
     return { id, state: 'unknown' };
   }
 
+  function linkOAuth({ accountId, providerId }) {
+    const provider = findProvider(providerId);
+    if (!provider) throw makeError('E_NOT_FOUND', 'Sağlayıcı katalogda yok.');
+    const state = readState(statePath);
+    const account = state.accounts.find((row) => row.id === accountId);
+    if (account && (account.providerId !== providerId || !account.oauth)) {
+      throw makeError('E_FORBIDDEN', 'Bu hesap kimliği kullanılıyor.');
+    }
+    if (account) {
+      account.state = 'connected';
+    } else {
+      state.accounts.push({
+        id: accountId, providerId, label: provider.name || providerId, oauth: true,
+        createdAt: new Date().toISOString(), lastTestAt: null, state: 'connected'
+      });
+    }
+    writeState(statePath, state);
+    emit({ type: 'state', id: accountId, state: 'connected' });
+  }
+
   function remove(input) {
     const id = input && input.id;
     const state = readState(statePath);
@@ -321,6 +342,11 @@ function createIntegrationsService(opts) {
 
   function secretsOf(account) {
     requireCipher(safeStorage);
+    if (account.oauth) {
+      const token = options.getOAuthToken?.(account.id, account.providerId);
+      if (!token) throw makeError('E_UNAUTHORIZED', 'OAuth onayının süresi dolmuş. Hesabı yeniden bağlayın.');
+      return { token, fields: {} };
+    }
     let fields = {};
     try { fields = JSON.parse(decrypt(safeStorage, account.fieldsCipher)) || {}; } catch { fields = {}; }
     if (typeof fields !== 'object' || Array.isArray(fields)) fields = {};
@@ -483,7 +509,7 @@ function createIntegrationsService(opts) {
     return Promise.allSettled([...inFlight]).then(() => undefined);
   }
 
-  return { list, save, remove, test, capabilities, invoke, shutdown };
+  return { list, save, linkOAuth, remove, test, capabilities, invoke, shutdown };
 }
 
 module.exports = { createIntegrationsService };

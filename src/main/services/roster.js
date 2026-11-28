@@ -301,6 +301,45 @@ function createRoster(options) {
     return ok({ code: wanted, checked: true, source: 'roster' });
   }
 
+  function applyPlan(members) {
+    const file = rosterPath();
+    const current = read();
+    const entries = new Map((current.data?.entries || []).map((entry) => [entry.code, entry]));
+    const cell = (value) => String(value || '').replace(/[|\r\n]+/g, ' ').trim();
+    const codes = [];
+    for (const member of members) {
+      const code = member.code.trim().toUpperCase();
+      if (!isValidCode(code)) return fail(CODES.BAD_REQUEST, 'Kadroda geçersiz rol kodu var.');
+      const previous = entries.get(code);
+      entries.set(code, {
+        role: cell(member.role) || code,
+        code,
+        responsibility: cell(member.responsibility),
+        model: cell(member.model) || previous?.model || '',
+        sessionID: previous?.sessionID || null
+      });
+      codes.push(code);
+    }
+    const next = [...entries.values()];
+    if (current.ok) {
+      const result = write(next);
+      if (!result.ok) return result;
+    } else {
+      try {
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        const rows = next.map((entry) =>
+          `| ${entry.role} | ${entry.code} | ${entry.responsibility} | \`${entry.model}\` | \`\` |`);
+        fs.writeFileSync(file, [
+          '# Kadro', '', '| Rol | Kod | Sorumluluk | Açılış modeli (varsayılan) | Seans |',
+          '|---|---|---|---|---|', ...rows, ''
+        ].join('\n'), { encoding: 'utf8', flag: 'wx' });
+      } catch {
+        return fail(CODES.INTERNAL, 'Kadro dosyası oluşturulamadı. Proje klasörünü ve yazma izinlerini kontrol edin.');
+      }
+    }
+    return ok({ applied: codes, codes, entries: next });
+  }
+
   /** Kadrodan satir cikarir (seans arsivlenirken). */
   function remove(code) {
     const current = read();
@@ -315,7 +354,7 @@ function createRoster(options) {
     return ok({ removed: key, backup: res.data.backup, entries });
   }
 
-  return { read, write, append, remove, setLeader, assertUniqueCode, rosterPath, ROLE_CODES, isValidCode };
+  return { read, write, append, applyPlan, remove, setLeader, assertUniqueCode, rosterPath, ROLE_CODES, isValidCode };
 }
 
 module.exports = {

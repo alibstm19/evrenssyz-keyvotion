@@ -1543,18 +1543,18 @@ function registerChannels(runtime) {
   /* --- Tur 12 (T-120): entegrasyon kayit defteri (6 invoke, gercek servis) ---
    * Ornek tembel: ilgili kanal ilk cagrilana kadar ne surec ne dosya acilir. */
   const getIntegrations = () => {
-    if (!runtime.integrations) {
-      const projectDir = typeof runtime.getProjectDir === 'function'
-        ? (runtime.getProjectDir() || app.getPath('userData'))
-        : app.getPath('userData');
+    const projectDir = runtime.getProjectDir?.() || app.getPath('userData');
+    if (!runtime.integrations || runtime.integrationsProjectDir !== projectDir) {
       runtime.integrations = createIntegrationsService({
         catalogPath: path.join(__dirname, 'services', 'integration-catalog.json'),
         statePath: path.join(projectDir, '.keyvotion', 'integrations.json'),
         safeStorage,
         allowInsecureLoopback: false,
+        getOAuthToken: (accountId, providerId) => getOAuth().accessToken(accountId, providerId),
         onEvent: (packet) => push(CHANNELS.EVENT_INTEGRATION, packet)
       });
     }
+    runtime.integrationsProjectDir = projectDir;
     return runtime.integrations;
   };
 
@@ -1703,8 +1703,10 @@ function registerChannels(runtime) {
     const denied = confirm.verify(payload.confirmToken, CHANNELS.OAUTH_START);
     if (denied) return denied;
 
+    const integrations = getIntegrations();
     const res = await oauthRun(() => getOAuth().begin({
-      providerId: payload.providerId, accountId: payload.accountId
+      providerId: payload.providerId, accountId: payload.accountId,
+      onConnected: integrations.linkOAuth
     }));
     if (res.ok) {
       audit.append({

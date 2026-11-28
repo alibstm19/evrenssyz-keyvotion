@@ -366,7 +366,8 @@ function createMemoryService(options) {
         x: Math.round(x * 10) / 10,
         y: Math.round(y * 10) / 10,
         text: clipText(e.text, 220),
-        source: e.source || ''
+        source: e.source || '',
+        tags: (e.tags || []).slice(0, 8)
       });
       edges.push({ from: 'hub', to: e.id, kind: 'scope' });
 
